@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { getUpcomingEvents, getLatestPriceByJurisdiction, getIDXCarbonMonthly } from "@/lib/data";
-import AlertBanner from "./components/AlertBanner";
-import PriceBarChart from "./components/PriceBarChart";
-import IDXLineChart from "./components/IDXLineChart";
+import AlertBanner from "@/components/dashboard/AlertBanner";
+import PriceBarChart from "@/components/dashboard/PriceBarChart";
+import IDXLineChart from "@/components/dashboard/IDXLineChart";
+import AIAnalystPanel from "@/components/ai/AIAnalystPanel";
 
 export const metadata: Metadata = {
   title: "Carbon Climatch — Carbon Intelligence Platform for Indonesian CFOs",
@@ -48,43 +49,6 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-[#0b1120] text-white font-sans">
-      {/* ── NAVBAR ─────────────────────────────────────────────── */}
-      <nav className="sticky top-0 z-50 border-b border-white/5 bg-[#0b1120]/90 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          {/* Logo */}
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/15 border border-emerald-500/30">
-              <svg className="h-5 w-5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.148 2.148A12.061 12.061 0 0116.5 7.605" />
-              </svg>
-            </div>
-            <div>
-              <span className="font-bold tracking-tight text-white text-lg leading-none">carbon</span>
-              <span className="font-bold tracking-tight text-emerald-400 text-lg leading-none">climatch</span>
-            </div>
-          </div>
-
-          {/* Nav links */}
-          <div className="hidden md:flex items-center gap-6 text-sm">
-            <a href="#overview" className="text-slate-400 hover:text-white transition-colors">Overview</a>
-            <a href="#market" className="text-slate-400 hover:text-white transition-colors">Market</a>
-            <a href="#regulatory" className="text-slate-400 hover:text-white transition-colors">Regulatory</a>
-            <a href="#ai-analysis" className="text-slate-400 hover:text-white transition-colors">AI Analysis</a>
-          </div>
-
-          {/* CTA */}
-          <a
-            href="#ai-analysis"
-            className="hidden md:flex items-center gap-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 transition-colors px-4 py-2 text-sm font-semibold text-black"
-          >
-            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-            </svg>
-            Get AI Analysis
-          </a>
-        </div>
-      </nav>
-
       <main className="mx-auto max-w-7xl px-6 pb-24">
 
         {/* ── HERO ──────────────────────────────────────────────── */}
@@ -306,97 +270,15 @@ export default function DashboardPage() {
         </section>
 
         {/* ── AI ANALYSIS PANEL ─────────────────────────────────── */}
-        <section id="ai-analysis" className="scroll-mt-24">
-          <div className="relative overflow-hidden rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-slate-900 via-[#0a1f17] to-[#0b1120] p-8 md:p-12">
-            {/* Glow */}
-            <div className="pointer-events-none absolute -top-20 -right-20 h-64 w-64 rounded-full bg-emerald-500 opacity-[0.07] blur-3xl" />
-
-            <div className="relative z-10 max-w-2xl">
-              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-400 uppercase tracking-widest">
-                <svg className="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-                </svg>
-                Powered by Gemini
-              </div>
-
-              <h2 className="text-2xl md:text-3xl font-extrabold text-white mb-3">
-                AI Carbon Analyst Panel
-              </h2>
-              <p className="text-slate-400 leading-relaxed mb-6 text-sm md:text-base">
-                Ask our Gemini-powered carbon intelligence analyst to assess your
-                company&apos;s CBAM exposure, recommend carbon credit strategies,
-                or explain the impact of upcoming regulations on your sector.
-              </p>
-
-              {/* Feature bullets */}
-              <ul className="space-y-3 mb-8">
-                {[
-                  { icon: "📋", text: "Sector-specific CBAM liability estimation based on export data" },
-                  { icon: "📉", text: "Carbon credit portfolio optimization recommendations" },
-                  { icon: "📅", text: "Regulatory deadline briefings tailored to your industry" },
-                  { icon: "🔍", text: "Benchmarking against regional carbon markets (EU, Singapore, Korea)" },
-                ].map((item) => (
-                  <li key={item.text} className="flex items-start gap-3 text-sm text-slate-300">
-                    <span className="text-base shrink-0 mt-0.5">{item.icon}</span>
-                    {item.text}
-                  </li>
-                ))}
-              </ul>
-
-              {/* CTA */}
-              <div className="flex flex-wrap gap-3">
-                <a
-                  href="/analyst"
-                  id="launch-ai-analyst"
-                  className="group inline-flex items-center gap-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 transition-all duration-200 px-7 py-3.5 text-sm font-bold text-black shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40"
-                >
-                  <svg className="h-4 w-4 group-hover:rotate-12 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-                  </svg>
-                  Launch AI Analyst
-                </a>
-                <a
-                  href="/calculator"
-                  className="inline-flex items-center gap-2 rounded-lg border border-white/10 hover:border-white/20 bg-white/5 hover:bg-white/10 transition-all duration-200 px-6 py-3.5 text-sm font-semibold text-white"
-                >
-                  CBAM Calculator →
-                </a>
-              </div>
-            </div>
-
-            {/* Decorative right panel — analyst card */}
-            <div className="absolute right-8 top-1/2 -translate-y-1/2 hidden lg:block">
-              <div className="rounded-xl border border-white/8 bg-slate-900/80 backdrop-blur w-64 p-5 shadow-2xl">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="h-9 w-9 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center">
-                    <svg className="h-5 w-5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-white">Carbon Analyst AI</p>
-                    <p className="text-[10px] text-emerald-400">● Online</p>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <div className="rounded-lg bg-slate-800/80 px-3 py-2.5 text-xs text-slate-300 leading-relaxed">
-                    Your steel sector faces an estimated{" "}
-                    <span className="text-red-400 font-semibold">$2.4M CBAM liability</span>{" "}
-                    in 2026. Here&apos;s how to reduce it…
-                  </div>
-                  <div className="flex justify-end">
-                    <div className="rounded-lg bg-emerald-500/20 border border-emerald-500/20 px-3 py-2 text-xs text-emerald-300">
-                      What sectors are most exposed?
-                    </div>
-                  </div>
-                  <div className="rounded-lg bg-slate-800/80 px-3 py-2.5 text-xs text-slate-300 leading-relaxed">
-                    Steel, cement, and aluminum exporters to the EU face the highest CBAM burden…
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+        <section id="ai-analysis" className="scroll-mt-24 pt-12">
+          <AIAnalystPanel 
+            requestType="dashboard_summary" 
+            data={{ 
+              latestPrices, 
+              idxMonthly: idxMonthly.slice(-6) 
+            }}
+            triggerLabel="Generate Market Intelligence Summary"
+          />
         </section>
 
       </main>

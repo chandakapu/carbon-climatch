@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Navbar from "@/components/layout/Navbar";
 import { calculateCBAMExposure } from "@/lib/calculations";
 import { getCBAMConfig, getIDXCarbonMonthly } from "@/lib/data";
 import type { CBAMCalculationResult } from "@/types";
@@ -110,8 +109,6 @@ export default function CalculatorPage() {
 
     return (
         <div className="min-h-screen bg-[#0b1120] text-white font-sans">
-            <Navbar />
-
             <main className="mx-auto max-w-3xl px-6 py-12">
                 <div className="mb-10">
                     <h1 className="text-3xl font-bold tracking-tight text-white mb-2">
