@@ -41,6 +41,7 @@ yarn-error.log*
 next-env.d.ts
 
 # AI Context
-AGENTS.md
-CLAUDE.md
-GEMINI.md
+# (Uncomment if you want to keep these private)
+# AGENTS.md
+# CLAUDE.md
+# GEMINI.md
