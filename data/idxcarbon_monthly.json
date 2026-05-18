@@ -1,0 +1,74 @@
+[
+  {
+    "month": "2025-05",
+    "avg_price_idr": 59693,
+    "volume_tco2e": 564,
+    "transactions": 15
+  },
+  {
+    "month": "2025-06",
+    "avg_price_idr": 61350,
+    "volume_tco2e": 8,
+    "transactions": 7
+  },
+  {
+    "month": "2025-07",
+    "avg_price_idr": 83457,
+    "volume_tco2e": 35,
+    "transactions": 10
+  },
+  {
+    "month": "2025-08",
+    "avg_price_idr": 78262,
+    "volume_tco2e": 5465,
+    "transactions": 18
+  },
+  {
+    "month": "2025-09",
+    "avg_price_idr": 67047,
+    "volume_tco2e": 1234,
+    "transactions": 14
+  },
+  {
+    "month": "2025-10",
+    "avg_price_idr": 62818,
+    "volume_tco2e": 601,
+    "transactions": 16
+  },
+  {
+    "month": "2025-11",
+    "avg_price_idr": 67660,
+    "volume_tco2e": 15012,
+    "transactions": 20
+  },
+  {
+    "month": "2025-12",
+    "avg_price_idr": 39346,
+    "volume_tco2e": 190264,
+    "transactions": 29
+  },
+  {
+    "month": "2026-01",
+    "avg_price_idr": 40025,
+    "volume_tco2e": 117455,
+    "transactions": 16
+  },
+  {
+    "month": "2026-02",
+    "avg_price_idr": 74020,
+    "volume_tco2e": 2218,
+    "transactions": 4
+  },
+  {
+    "month": "2026-03",
+    "avg_price_idr": 42660,
+    "volume_tco2e": 43117,
+    "transactions": 9
+  },
+  {
+    "month": "2026-04",
+    "avg_price_idr": 76862,
+    "volume_tco2e": 554,
+    "transactions": 15
+  }
+]

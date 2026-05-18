@@ -1,0 +1,41 @@
+{
+    "eu_ets_price_usd": 65,
+    "sectors": [
+        {
+            "id": "steel",
+            "name": "Iron & Steel",
+            "emission_factor_tco2_per_ton": 1.85,
+            "cbam_applicable": true
+        },
+        {
+            "id": "cement",
+            "name": "Cement",
+            "emission_factor_tco2_per_ton": 0.83,
+            "cbam_applicable": true
+        },
+        {
+            "id": "aluminum",
+            "name": "Aluminium",
+            "emission_factor_tco2_per_ton": 11.5,
+            "cbam_applicable": true
+        },
+        {
+            "id": "fertilizers",
+            "name": "Fertilizers",
+            "emission_factor_tco2_per_ton": 2.1,
+            "cbam_applicable": true
+        },
+        {
+            "id": "hydrogen",
+            "name": "Hydrogen",
+            "emission_factor_tco2_per_ton": 10.0,
+            "cbam_applicable": true
+        },
+        {
+            "id": "palm_oil",
+            "name": "Palm Oil",
+            "emission_factor_tco2_per_ton": 0.5,
+            "cbam_applicable": false
+        }
+    ]
+}

@@ -1,0 +1,92 @@
+[
+  {
+    "id": "nek-phase2",
+    "title": "Indonesia NEK ETS Phase 2 begins",
+    "date": "2025-01-01",
+    "type": "domestic",
+    "status": "active",
+    "description": "ETS expands to captive coal plants (>25 MW) and gas-fired power plants, increasing coverage to 563 installations.",
+    "affected_sectors": ["energy", "manufacturing"],
+    "source_url": "https://icapcarbonaction.com/en/ets/indonesian-economic-value-carbon"
+  },
+  {
+    "id": "pr110-2025",
+    "title": "Presidential Regulation No. 110/2025 issued",
+    "date": "2025-10-10",
+    "type": "domestic",
+    "status": "active",
+    "description": "Replaces PR 98/2021. Establishes a new national carbon pricing governance framework, introduces the SRUK registry, and formalizes carbon allocation ceilings.",
+    "affected_sectors": ["all"],
+    "source_url": "https://www.arma-law.com/news-event/newsflash/reshaping-indonesias-carbon-governance"
+  },
+  {
+    "id": "corsia-indonesia",
+    "title": "Indonesia begins CORSIA participation",
+    "date": "2026-01-01",
+    "type": "international",
+    "status": "upcoming",
+    "description": "Indonesia starts participation in the Carbon Offsetting and Reduction Scheme for International Aviation (CORSIA), allowing domestic offsets for aviation compliance.",
+    "affected_sectors": ["aviation", "forestry"],
+    "source_url": "https://www.icao.int/environmental-protection/CORSIA/Pages/default.aspx"
+  },
+  {
+    "id": "cbam-definitive",
+    "title": "EU CBAM definitive phase begins",
+    "date": "2026-01-01",
+    "type": "international",
+    "status": "upcoming",
+    "description": "Financial adjustments now required. Indonesian exporters of steel, cement, aluminum, fertilizers, and hydrogen must surrender CBAM certificates.",
+    "affected_sectors": ["steel", "cement", "aluminum", "fertilizers", "hydrogen"],
+    "source_url": "https://taxation-customs.ec.europa.eu/carbon-border-adjustment-mechanism_en"
+  },
+  {
+    "id": "market-full-operation",
+    "title": "National Carbon Market Full Operation",
+    "date": "2026-06-30",
+    "type": "domestic",
+    "status": "upcoming",
+    "description": "Target date for the unified national carbon market and registry (SRUK) to be fully operational under the new regulatory framework.",
+    "affected_sectors": ["energy", "finance"],
+    "source_url": "https://carbonherald.com/indonesia-to-launch-full-carbon-market-by-june-2026/"
+  },
+  {
+    "id": "trading-resumption",
+    "title": "Resumption of large-scale carbon trading",
+    "date": "2026-07-01",
+    "type": "domestic",
+    "status": "upcoming",
+    "description": "Active trading and transactions are expected to resume at scale following the alignment with PR 110/2025.",
+    "affected_sectors": ["all"],
+    "source_url": "https://www.ssek.com/blog/indonesias-new-carbon-governance-framework"
+  },
+  {
+    "id": "ets-industry-expansion",
+    "title": "ETS expansion to industrial sectors",
+    "date": "2027-01-01",
+    "type": "domestic",
+    "status": "planned",
+    "description": "Transition year for expanding the ETS to nine industrial sectors, including cement, steel, pulp and paper, and textiles.",
+    "affected_sectors": ["cement", "steel", "textiles", "pulp_paper", "ceramics", "food_beverage", "fertilizers", "chemicals"],
+    "source_url": "https://icapcarbonaction.com/en/ets/indonesian-economic-value-carbon"
+  },
+  {
+    "id": "cbam-first-report",
+    "title": "First annual EU CBAM declaration due",
+    "date": "2027-09-30",
+    "type": "international",
+    "status": "planned",
+    "description": "Deadline for the first annual CBAM declaration covering embedded emissions for the 2026 calendar year.",
+    "affected_sectors": ["steel", "cement", "aluminum", "fertilizers", "hydrogen"],
+    "source_url": "https://taxation-customs.ec.europa.eu/carbon-border-adjustment-mechanism_en"
+  },
+  {
+    "id": "nek-phase3",
+    "title": "Indonesia NEK ETS Phase 3 begins",
+    "date": "2028-01-01",
+    "type": "domestic",
+    "status": "planned",
+    "description": "ETS moves toward economy-wide coverage and absolute emission caps aligned with the Second NDC target.",
+    "affected_sectors": ["all"],
+    "source_url": "https://icapcarbonaction.com/en/ets/indonesian-economic-value-carbon"
+  }
+]

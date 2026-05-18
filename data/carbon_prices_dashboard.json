@@ -1,0 +1,1440 @@
+[
+  {
+    "id": "Tax_AL",
+    "instrument_name": "Albania carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Albania",
+    "coverage_jurisdiction_pct": 73.0,
+    "price_usd": 14.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2024": 13.1114,
+      "2025": 13.6919
+    }
+  },
+  {
+    "id": "ETS_CA_Alberta",
+    "instrument_name": "Alberta TIER",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "Alberta",
+    "coverage_jurisdiction_pct": 59.0,
+    "price_usd": 66.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 21.1015,
+      "2021": 31.8345,
+      "2022": 39.9616,
+      "2023": 48.0307,
+      "2024": 58.9449,
+      "2025": 66.2113
+    }
+  },
+  {
+    "id": "Tax_AN",
+    "instrument_name": "Andorra carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Andorra",
+    "coverage_jurisdiction_pct": 95.0,
+    "price_usd": 32.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2025": 32.364
+    }
+  },
+  {
+    "id": "Tax_AR",
+    "instrument_name": "Argentina carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Argentina",
+    "coverage_jurisdiction_pct": 38.0,
+    "price_usd": 5.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 6.342,
+      "2021": 5.3216,
+      "2022": 4.9956,
+      "2023": 3.2183,
+      "2024": 0.8116,
+      "2025": 5.3279
+    }
+  },
+  {
+    "id": "ETS_AU2",
+    "instrument_name": "Australia Safeguard Mechanism",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "Australia",
+    "coverage_jurisdiction_pct": 26.0,
+    "price_usd": 22.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2024": 21.9037,
+      "2025": 21.8161
+    }
+  },
+  {
+    "id": "ETS_AT",
+    "instrument_name": "Austria ETS",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "Austria",
+    "coverage_jurisdiction_pct": 36.0,
+    "price_usd": 49.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2023": 35.3438,
+      "2024": 48.3705,
+      "2025": 48.546
+    }
+  },
+  {
+    "id": "Tax_MX_BC",
+    "instrument_name": "Baja California carbon tax",
+    "type": "Carbon tax",
+    "status": "Abolished",
+    "jurisdiction": "Baja California",
+    "coverage_jurisdiction_pct": null,
+    "price_usd": 8.317,
+    "price_year": 2021,
+    "yearly_prices_usd": {
+      "2021": 8.317
+    }
+  },
+  {
+    "id": "ETS_CN_Beijing",
+    "instrument_name": "Beijing pilot ETS",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "Beijing",
+    "coverage_jurisdiction_pct": 17.0,
+    "price_usd": 12.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 12.2042,
+      "2021": 4.3233,
+      "2022": 6.528,
+      "2023": 12.9577,
+      "2024": 14.5122,
+      "2025": 12.1526
+    }
+  },
+  {
+    "id": "Tax_CA_BC",
+    "instrument_name": "BC carbon tax",
+    "type": "Carbon tax",
+    "status": "Abolished",
+    "jurisdiction": "British Columbia",
+    "coverage_jurisdiction_pct": null,
+    "price_usd": 58.9449,
+    "price_year": 2024,
+    "yearly_prices_usd": {
+      "2020": 28.1353,
+      "2021": 35.8138,
+      "2022": 39.9616,
+      "2023": 48.0307,
+      "2024": 58.9449
+    }
+  },
+  {
+    "id": "ETS_CA_BC",
+    "instrument_name": "BC OBPS",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "British Columbia",
+    "coverage_jurisdiction_pct": 26.0,
+    "price_usd": 66.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2021": 19.8965,
+      "2022": 19.9808,
+      "2023": 18.4734,
+      "2024": 58.9449,
+      "2025": 66.2113
+    }
+  },
+  {
+    "id": "ETS_US_California",
+    "instrument_name": "California CaT",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "California",
+    "coverage_jurisdiction_pct": 76.0,
+    "price_usd": 29.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 15.3,
+      "2021": 17.94,
+      "2022": 30.82,
+      "2023": 29.84,
+      "2024": 38.59,
+      "2025": 29.27
+    }
+  },
+  {
+    "id": "Tax_CA",
+    "instrument_name": "Canada federal fuel charge",
+    "type": "Carbon tax",
+    "status": "Abolished",
+    "jurisdiction": "Canada",
+    "coverage_jurisdiction_pct": null,
+    "price_usd": 58.9449,
+    "price_year": 2024,
+    "yearly_prices_usd": {
+      "2020": 21.1015,
+      "2021": 31.8345,
+      "2022": 39.9616,
+      "2023": 48.0307,
+      "2024": 58.9449
+    }
+  },
+  {
+    "id": "ETS_CA",
+    "instrument_name": "Canada federal OBPS",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "Canada",
+    "coverage_jurisdiction_pct": 3.0,
+    "price_usd": 66.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2021": 31.8345,
+      "2022": 39.9616,
+      "2023": 48.0307,
+      "2024": 58.9449,
+      "2025": 66.2113
+    }
+  },
+  {
+    "id": "Tax_CL",
+    "instrument_name": "Chile carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Chile",
+    "coverage_jurisdiction_pct": 55.0,
+    "price_usd": 5.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 5.0,
+      "2021": 5.0,
+      "2022": 5.0,
+      "2023": 5.0,
+      "2024": 5.0,
+      "2025": 5.0
+    }
+  },
+  {
+    "id": "ETS_CN",
+    "instrument_name": "China national ETS",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "China",
+    "coverage_jurisdiction_pct": 51.0,
+    "price_usd": 12.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2022": 9.1998,
+      "2023": 8.1532,
+      "2024": 12.5731,
+      "2025": 11.7646
+    }
+  },
+  {
+    "id": "ETS_CN_Chongqing",
+    "instrument_name": "Chongqing pilot ETS",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "Chongqing",
+    "coverage_jurisdiction_pct": 14.0,
+    "price_usd": 6.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 5.3054,
+      "2021": 3.7146,
+      "2022": 5.6614,
+      "2023": 4.659,
+      "2024": 5.9887,
+      "2025": 5.5102
+    }
+  },
+  {
+    "id": "Tax_MX_Colima",
+    "instrument_name": "Colima carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Colima",
+    "coverage_jurisdiction_pct": 17.0,
+    "price_usd": 28.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2025": 27.7866
+    }
+  },
+  {
+    "id": "Tax_CO",
+    "instrument_name": "Colombia carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Colombia",
+    "coverage_jurisdiction_pct": 20.0,
+    "price_usd": 7.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 4.2449,
+      "2021": 4.6057,
+      "2022": 5.0133,
+      "2023": 5.0353,
+      "2024": 6.6785,
+      "2025": 6.5366
+    }
+  },
+  {
+    "id": "Tax_DK",
+    "instrument_name": "Denmark carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Denmark",
+    "coverage_jurisdiction_pct": 64.0,
+    "price_usd": 108.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 25.6735,
+      "2021": 27.9197,
+      "2022": 26.3674,
+      "2023": 26.2931,
+      "2024": 28.3995,
+      "2025": 108.4348
+    }
+  },
+  {
+    "id": "Tax_MX_Durango",
+    "instrument_name": "Durango carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Durango",
+    "coverage_jurisdiction_pct": 34.0,
+    "price_usd": 5.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2024": 6.036,
+      "2025": 4.9119
+    }
+  },
+  {
+    "id": "Tax_EE",
+    "instrument_name": "Estonia carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Estonia",
+    "coverage_jurisdiction_pct": 10.0,
+    "price_usd": 27.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 2.1872,
+      "2021": 2.3492,
+      "2022": 2.2104,
+      "2023": 2.175,
+      "2024": 2.1498,
+      "2025": 26.97
+    }
+  },
+  {
+    "id": "ETS_EU",
+    "instrument_name": "EU ETS",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "EU27+",
+    "coverage_jurisdiction_pct": 40.0,
+    "price_usd": 70.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 18.5365,
+      "2021": 49.7795,
+      "2022": 86.5261,
+      "2023": 96.2981,
+      "2024": 61.3015,
+      "2025": 70.3701
+    }
+  },
+  {
+    "id": "Tax_FI",
+    "instrument_name": "Finland carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Finland",
+    "coverage_jurisdiction_pct": 45.0,
+    "price_usd": 67.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 84.2072,
+      "2021": 90.4442,
+      "2022": 85.1004,
+      "2023": 83.7375,
+      "2024": 99.9849,
+      "2025": 66.8856
+    }
+  },
+  {
+    "id": "Tax_FR",
+    "instrument_name": "France carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "France",
+    "coverage_jurisdiction_pct": 41.0,
+    "price_usd": 48.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 48.7746,
+      "2021": 52.3872,
+      "2022": 49.2919,
+      "2023": 48.5025,
+      "2024": 47.9405,
+      "2025": 48.1145
+    }
+  },
+  {
+    "id": "ETS_CN_Fujian",
+    "instrument_name": "Fujian pilot ETS",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "Fujian",
+    "coverage_jurisdiction_pct": 16.0,
+    "price_usd": 5.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 1.281,
+      "2021": 1.2463,
+      "2022": 1.8258,
+      "2023": 4.659,
+      "2024": 3.7469,
+      "2025": 4.7273
+    }
+  },
+  {
+    "id": "ETS_DE",
+    "instrument_name": "Germany ETS",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "Germany",
+    "coverage_jurisdiction_pct": 39.0,
+    "price_usd": 49.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2021": 29.365,
+      "2022": 33.156,
+      "2023": 32.625,
+      "2024": 48.3705,
+      "2025": 48.546
+    }
+  },
+  {
+    "id": "Tax_MX_Guanajuato",
+    "instrument_name": "Guanajuato carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Guanajuato",
+    "coverage_jurisdiction_pct": 40.0,
+    "price_usd": 5.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2024": 2.7162,
+      "2025": 4.9119
+    }
+  },
+  {
+    "id": "ETS_CN_Guangdong",
+    "instrument_name": "Guangdong pilot ETS",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "Guangdong (except Shenzhen)",
+    "coverage_jurisdiction_pct": 12.0,
+    "price_usd": 5.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 4.1314,
+      "2021": 5.7157,
+      "2022": 12.5102,
+      "2023": 12.3419,
+      "2024": 8.9395,
+      "2025": 5.407
+    }
+  },
+  {
+    "id": "ETS_CN_Hubei",
+    "instrument_name": "Hubei pilot ETS",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "Hubei",
+    "coverage_jurisdiction_pct": 20.0,
+    "price_usd": 5.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 3.567,
+      "2021": 4.4115,
+      "2022": 7.2404,
+      "2023": 6.9622,
+      "2024": 5.6183,
+      "2025": 5.2721
+    }
+  },
+  {
+    "id": "Tax_HU",
+    "instrument_name": "Hungary carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Hungary",
+    "coverage_jurisdiction_pct": 32.0,
+    "price_usd": 39.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2024": 38.6964,
+      "2025": 38.8368
+    }
+  },
+  {
+    "id": "Tax_IS",
+    "instrument_name": "Iceland carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Iceland",
+    "coverage_jurisdiction_pct": 37.0,
+    "price_usd": 60.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 30.7438,
+      "2021": 35.3621,
+      "2022": 35.6128,
+      "2023": 36.1087,
+      "2024": 36.5082,
+      "2025": 60.0601
+    }
+  },
+  {
+    "id": "ETS_ID",
+    "instrument_name": "Indonesia ETS",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "Indonesia",
+    "coverage_jurisdiction_pct": 24.0,
+    "price_usd": 1.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2024": 0.6122,
+      "2025": 0.7244
+    }
+  },
+  {
+    "id": "Tax_IE",
+    "instrument_name": "Ireland carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Ireland",
+    "coverage_jurisdiction_pct": 34.0,
+    "price_usd": 69.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 28.5216,
+      "2021": 39.6785,
+      "2022": 45.69,
+      "2023": 53.1851,
+      "2024": 52.5689,
+      "2025": 68.5038
+    }
+  },
+  {
+    "id": "Tax_IL",
+    "instrument_name": "Israel carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Israel",
+    "coverage_jurisdiction_pct": 78.0,
+    "price_usd": 2.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2025": 1.5115
+    }
+  },
+  {
+    "id": "Tax_JP",
+    "instrument_name": "Japan carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Japan",
+    "coverage_jurisdiction_pct": 80.0,
+    "price_usd": 2.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 2.4964,
+      "2021": 2.4241,
+      "2022": 2.1977,
+      "2023": 2.012,
+      "2024": 1.9051,
+      "2025": 1.9292
+    }
+  },
+  {
+    "id": "ETS_KZ",
+    "instrument_name": "Kazakhstan ETS",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "Kazakhstan",
+    "coverage_jurisdiction_pct": 43.0,
+    "price_usd": 1.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 1.1125,
+      "2021": 1.1768,
+      "2022": 1.0808,
+      "2023": 1.1158,
+      "2024": 1.0592,
+      "2025": 0.9317
+    }
+  },
+  {
+    "id": "ETS_KR",
+    "instrument_name": "Korea ETS",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "Korea, Rep.",
+    "coverage_jurisdiction_pct": 79.0,
+    "price_usd": 6.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 32.7869,
+      "2021": 15.8926,
+      "2022": 18.7495,
+      "2023": 11.2364,
+      "2024": 6.3024,
+      "2025": 6.4531
+    }
+  },
+  {
+    "id": "Tax_LT",
+    "instrument_name": "Latvia carbon Tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Latvia",
+    "coverage_jurisdiction_pct": 2.0,
+    "price_usd": 16.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 9.8424,
+      "2021": 14.0952,
+      "2022": 16.578,
+      "2023": 16.3125,
+      "2024": 16.1235,
+      "2025": 16.182
+    }
+  },
+  {
+    "id": "Tax_LI",
+    "instrument_name": "Liechtenstein carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Liechtenstein",
+    "coverage_jurisdiction_pct": 72.0,
+    "price_usd": 136.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 99.4406,
+      "2021": 101.4746,
+      "2022": 129.8561,
+      "2023": 130.8116,
+      "2024": 132.1222,
+      "2025": 136.039
+    }
+  },
+  {
+    "id": "Tax_LU",
+    "instrument_name": "Luxembourg carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Luxembourg",
+    "coverage_jurisdiction_pct": 72.0,
+    "price_usd": 59.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2021": 40.1243,
+      "2022": 43.3459,
+      "2023": 45.0007,
+      "2024": 49.9076,
+      "2025": 58.5465
+    }
+  },
+  {
+    "id": "ETS_US_MA",
+    "instrument_name": "Massachusetts ETS",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "Massachusetts",
+    "coverage_jurisdiction_pct": 9.0,
+    "price_usd": 9.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 8.1986,
+      "2021": 6.5,
+      "2022": 0.5,
+      "2023": 12.05,
+      "2024": 2.25,
+      "2025": 9.3
+    }
+  },
+  {
+    "id": "Tax_MX",
+    "instrument_name": "Mexico carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Mexico",
+    "coverage_jurisdiction_pct": 29.0,
+    "price_usd": 4.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 2.3343,
+      "2021": 2.8902,
+      "2022": 3.1966,
+      "2023": 3.7897,
+      "2024": 4.3051,
+      "2025": 3.9428
+    }
+  },
+  {
+    "id": "ETS_MX",
+    "instrument_name": "Mexico ETS",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "Mexico",
+    "coverage_jurisdiction_pct": 36.0,
+    "price_usd": null,
+    "price_year": null,
+    "yearly_prices_usd": {}
+  },
+  {
+    "id": "Tax_MX_MC",
+    "instrument_name": "Mexico City carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Mexico City",
+    "coverage_jurisdiction_pct": 18.0,
+    "price_usd": 3.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2025": 2.8489
+    }
+  },
+  {
+    "id": "ETS_MO",
+    "instrument_name": "Montenegro ETS",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "Montenegro",
+    "coverage_jurisdiction_pct": 43.0,
+    "price_usd": 26.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2024": 25.7976,
+      "2025": 25.8912
+    }
+  },
+  {
+    "id": "Tax_MX_MO",
+    "instrument_name": "Morelos carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Morelos",
+    "coverage_jurisdiction_pct": 31.0,
+    "price_usd": 12.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2025": 12.2798
+    }
+  },
+  {
+    "id": "Tax_NL",
+    "instrument_name": "Netherlands carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Netherlands",
+    "coverage_jurisdiction_pct": 45.0,
+    "price_usd": 95.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2021": 35.238,
+      "2022": 46.1421,
+      "2023": 60.8347,
+      "2024": 71.4809,
+      "2025": 94.8265
+    }
+  },
+  {
+    "id": "Tax_CA_NB",
+    "instrument_name": "New Brunswick carbon tax",
+    "type": "Carbon tax",
+    "status": "Abolished",
+    "jurisdiction": "New Brunswick",
+    "coverage_jurisdiction_pct": null,
+    "price_usd": 48.0307,
+    "price_year": 2023,
+    "yearly_prices_usd": {
+      "2020": 21.1015,
+      "2021": 31.8345,
+      "2022": 39.9616,
+      "2023": 48.0307
+    }
+  },
+  {
+    "id": "ETS_CA_NB",
+    "instrument_name": "New Brunswick OBPS",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "New Brunswick",
+    "coverage_jurisdiction_pct": 54.0,
+    "price_usd": 66.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2022": 39.9616,
+      "2023": 48.0307,
+      "2024": 58.9449,
+      "2025": 66.2113
+    }
+  },
+  {
+    "id": "ETS_NZ",
+    "instrument_name": "New Zealand ETS",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "New Zealand",
+    "coverage_jurisdiction_pct": 44.0,
+    "price_usd": 32.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 14.304,
+      "2021": 25.7599,
+      "2022": 52.6224,
+      "2023": 34.1987,
+      "2024": 35.105,
+      "2025": 32.0071
+    }
+  },
+  {
+    "id": "Tax_CA_NL",
+    "instrument_name": "Newfoundland and Labrador carbon tax",
+    "type": "Carbon tax",
+    "status": "Abolished",
+    "jurisdiction": "Newfoundland and Labrador",
+    "coverage_jurisdiction_pct": null,
+    "price_usd": 48.0307,
+    "price_year": 2023,
+    "yearly_prices_usd": {
+      "2020": 14.0677,
+      "2021": 23.8758,
+      "2022": 39.9616,
+      "2023": 48.0307
+    }
+  },
+  {
+    "id": "ETS_CA_NL",
+    "instrument_name": "Newfoundland and Labrador PSS",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "Newfoundland and Labrador",
+    "coverage_jurisdiction_pct": 36.0,
+    "price_usd": 66.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2021": 23.8758,
+      "2022": 39.9616,
+      "2023": 48.0307,
+      "2024": 58.9449,
+      "2025": 66.2113
+    }
+  },
+  {
+    "id": "Tax_CA_NT",
+    "instrument_name": "Northwest Territories carbon tax",
+    "type": "Carbon tax",
+    "status": "Abolished",
+    "jurisdiction": "Northwest Territories",
+    "coverage_jurisdiction_pct": null,
+    "price_usd": 58.9449,
+    "price_year": 2024,
+    "yearly_prices_usd": {
+      "2020": 14.0677,
+      "2021": 23.8758,
+      "2022": 31.9693,
+      "2023": 48.0307,
+      "2024": 58.9449
+    }
+  },
+  {
+    "id": "Tax_NO",
+    "instrument_name": "Norway carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Norway",
+    "coverage_jurisdiction_pct": 65.0,
+    "price_usd": 134.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 63.2764,
+      "2021": 80.3528,
+      "2022": 96.3056,
+      "2023": 94.4909,
+      "2024": 107.7836,
+      "2025": 133.9205
+    }
+  },
+  {
+    "id": "ETS_CA_NS",
+    "instrument_name": "Nova Scotia OBPS",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "Nova Scotia",
+    "coverage_jurisdiction_pct": 36.0,
+    "price_usd": 66.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2021": 19.6578,
+      "2022": 23.0978,
+      "2023": 20.8749,
+      "2024": 58.9449,
+      "2025": 66.2113
+    }
+  },
+  {
+    "id": "ETS_CA_Ontario2",
+    "instrument_name": "Ontario EPS",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "Ontario",
+    "coverage_jurisdiction_pct": 26.0,
+    "price_usd": 66.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2022": 31.9693,
+      "2023": 48.0307,
+      "2024": 58.9449,
+      "2025": 66.2113
+    }
+  },
+  {
+    "id": "ETS_US_Oregon",
+    "instrument_name": "Oregon ETS",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "Oregon",
+    "coverage_jurisdiction_pct": 48.0,
+    "price_usd": null,
+    "price_year": null,
+    "yearly_prices_usd": {}
+  },
+  {
+    "id": "Tax_PL",
+    "instrument_name": "Poland carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Poland",
+    "coverage_jurisdiction_pct": 24.0,
+    "price_usd": 0.0983,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 0.0719,
+      "2021": 0.0786,
+      "2022": 0.0762,
+      "2024": 0.085,
+      "2025": 0.0983
+    }
+  },
+  {
+    "id": "Tax_PT",
+    "instrument_name": "Portugal carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Portugal",
+    "coverage_jurisdiction_pct": 40.0,
+    "price_usd": 73.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 13.7914,
+      "2021": 27.8139,
+      "2022": 26.1705,
+      "2023": 25.7514,
+      "2024": 25.453,
+      "2025": 72.7003
+    }
+  },
+  {
+    "id": "Tax_CA_PE",
+    "instrument_name": "Prince Edward Island carbon tax",
+    "type": "Carbon tax",
+    "status": "Abolished",
+    "jurisdiction": "Prince Edward Island",
+    "coverage_jurisdiction_pct": null,
+    "price_usd": 36.9467,
+    "price_year": 2023,
+    "yearly_prices_usd": {
+      "2020": 21.1015,
+      "2021": 23.8758,
+      "2022": 23.977,
+      "2023": 36.9467
+    }
+  },
+  {
+    "id": "ETS_CA_Quebec",
+    "instrument_name": "Quebec CaT",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "Quebec",
+    "coverage_jurisdiction_pct": 76.0,
+    "price_usd": 42.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 21.752,
+      "2021": 17.94,
+      "2022": 38.58,
+      "2023": 29.84,
+      "2024": 38.59,
+      "2025": 41.54
+    }
+  },
+  {
+    "id": "Tax_MX_Queretaro",
+    "instrument_name": "Queretaro carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Queretaro",
+    "coverage_jurisdiction_pct": 18.0,
+    "price_usd": 33.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2023": 32.2002,
+      "2024": 36.6982,
+      "2025": 32.7879
+    }
+  },
+  {
+    "id": "ETS_RGGI",
+    "instrument_name": "RGGI",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "RGGI",
+    "coverage_jurisdiction_pct": 14.0,
+    "price_usd": 23.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 5.13,
+      "2021": 8.69,
+      "2022": 13.89,
+      "2023": 15.3882,
+      "2024": 17.64,
+      "2025": 23.32
+    }
+  },
+  {
+    "id": "ETS_JP_Saitama",
+    "instrument_name": "Saitama ETS",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "Saitama",
+    "coverage_jurisdiction_pct": 16.0,
+    "price_usd": 1.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 5.5772,
+      "2021": 5.4157,
+      "2022": 3.838,
+      "2023": 1.0788,
+      "2024": 0.9492,
+      "2025": 0.9613
+    }
+  },
+  {
+    "id": "Tax_MX_SLP",
+    "instrument_name": "San Luis Potosí carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "San Luis Potosí",
+    "coverage_jurisdiction_pct": 68.0,
+    "price_usd": 17.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2025": 16.672
+    }
+  },
+  {
+    "id": "ETS_CA_SK",
+    "instrument_name": "Saskatchewan OBPS",
+    "type": "ETS",
+    "status": "Abolished",
+    "jurisdiction": "Saskatchewan",
+    "coverage_jurisdiction_pct": null,
+    "price_usd": 58.9449,
+    "price_year": 2024,
+    "yearly_prices_usd": {
+      "2021": 31.8345,
+      "2022": 39.9616,
+      "2023": 48.0307,
+      "2024": 58.9449
+    }
+  },
+  {
+    "id": "ETS_CN_Shanghai",
+    "instrument_name": "Shanghai pilot ETS",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "Shanghai",
+    "coverage_jurisdiction_pct": 21.0,
+    "price_usd": 11.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 5.0689,
+      "2021": 6.3152,
+      "2022": 9.2769,
+      "2023": 8.721,
+      "2024": 10.0618,
+      "2025": 10.7974
+    }
+  },
+  {
+    "id": "ETS_CN_Shenzhen",
+    "instrument_name": "Shenzhen pilot ETS",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "Shenzhen",
+    "coverage_jurisdiction_pct": 37.0,
+    "price_usd": 7.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 2.3845,
+      "2021": 1.12,
+      "2022": 0.6416,
+      "2023": 8.769,
+      "2024": 8.9561,
+      "2025": 6.5338
+    }
+  },
+  {
+    "id": "Tax_SG",
+    "instrument_name": "Singapore carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Singapore",
+    "coverage_jurisdiction_pct": 71.0,
+    "price_usd": 19.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 3.5102,
+      "2021": 3.7136,
+      "2022": 3.6857,
+      "2023": 3.7679,
+      "2024": 18.4788,
+      "2025": 18.6192
+    }
+  },
+  {
+    "id": "Tax_SL",
+    "instrument_name": "Slovenia carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Slovenia",
+    "coverage_jurisdiction_pct": 46.0,
+    "price_usd": 33.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 18.9193,
+      "2021": 20.3206,
+      "2022": 19.12,
+      "2024": 18.5958,
+      "2025": 33.281
+    }
+  },
+  {
+    "id": "Tax_ZA",
+    "instrument_name": "South Africa carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "South Africa",
+    "coverage_jurisdiction_pct": 82.0,
+    "price_usd": 13.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 7.0599,
+      "2021": 9.1509,
+      "2022": 9.8352,
+      "2023": 8.9256,
+      "2024": 10.0858,
+      "2025": 12.8489
+    }
+  },
+  {
+    "id": "Tax_ES",
+    "instrument_name": "Spain carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Spain",
+    "coverage_jurisdiction_pct": 2.0,
+    "price_usd": 16.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 16.404,
+      "2021": 17.619,
+      "2022": 16.578,
+      "2023": 16.3125,
+      "2024": 16.1235,
+      "2025": 16.182
+    }
+  },
+  {
+    "id": "Tax_MX_SoMexico",
+    "instrument_name": "State of Mexico carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "State of Mexico",
+    "coverage_jurisdiction_pct": 47.0,
+    "price_usd": 3.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2023": 2.3834,
+      "2024": 3.5009,
+      "2025": 2.8489
+    }
+  },
+  {
+    "id": "Tax_SE",
+    "instrument_name": "Sweden carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Sweden",
+    "coverage_jurisdiction_pct": 40.0,
+    "price_usd": 145.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 119.4323,
+      "2021": 136.0995,
+      "2022": 129.8881,
+      "2023": 125.5566,
+      "2024": 123.6961,
+      "2025": 144.6247
+    }
+  },
+  {
+    "id": "Tax_CH",
+    "instrument_name": "Switzerland carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Switzerland",
+    "coverage_jurisdiction_pct": 35.0,
+    "price_usd": 136.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 99.4406,
+      "2021": 101.4746,
+      "2022": 129.8561,
+      "2023": 130.8116,
+      "2024": 132.1222,
+      "2025": 136.039
+    }
+  },
+  {
+    "id": "ETS_CH",
+    "instrument_name": "Switzerland ETS",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "Switzerland",
+    "coverage_jurisdiction_pct": 13.0,
+    "price_usd": 65.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 19.8488,
+      "2021": 46.1031,
+      "2022": 65.5936,
+      "2023": 93.8077,
+      "2024": 59.1732,
+      "2025": 64.7496
+    }
+  },
+  {
+    "id": "Tax_CN_Taiwan",
+    "instrument_name": "Taiwan, China carbon fee",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Taiwan, China",
+    "coverage_jurisdiction_pct": 54.0,
+    "price_usd": 9.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2024": 9.1219,
+      "2025": 9.0804
+    }
+  },
+  {
+    "id": "Tax_MX_TA",
+    "instrument_name": "Tamaulipas carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Tamaulipas",
+    "coverage_jurisdiction_pct": 48.0,
+    "price_usd": 17.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2022": 13.1027,
+      "2023": 17.2502,
+      "2024": 19.6598,
+      "2025": 16.672
+    }
+  },
+  {
+    "id": "ETS_CN_Tianjin",
+    "instrument_name": "Tianjin pilot ETS",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "Tianjin",
+    "coverage_jurisdiction_pct": 18.0,
+    "price_usd": 5.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 2.8153,
+      "2021": 3.8044,
+      "2022": 4.4033,
+      "2023": 4.6036,
+      "2024": 4.7089,
+      "2025": 5.2969
+    }
+  },
+  {
+    "id": "ETS_JP_Tokyo",
+    "instrument_name": "Tokyo CaT",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "Tokyo",
+    "coverage_jurisdiction_pct": 19.0,
+    "price_usd": 4.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 5.5772,
+      "2021": 4.8741,
+      "2022": 4.419,
+      "2023": 5.2442,
+      "2024": 36.915,
+      "2025": 4.0053
+    }
+  },
+  {
+    "id": "Tax_UA",
+    "instrument_name": "Ukraine carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Ukraine",
+    "coverage_jurisdiction_pct": 32.0,
+    "price_usd": 1.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 0.3846,
+      "2021": 0.3594,
+      "2022": 1.0255,
+      "2023": 0.8204,
+      "2024": 0.7678,
+      "2025": 0.7304
+    }
+  },
+  {
+    "id": "Tax_UK",
+    "instrument_name": "UK Carbon Price Support",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "United Kingdom",
+    "coverage_jurisdiction_pct": 12.0,
+    "price_usd": 23.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 22.284,
+      "2021": 24.795,
+      "2022": 23.6538,
+      "2023": 22.2759,
+      "2024": 22.6188,
+      "2025": 23.2371
+    }
+  },
+  {
+    "id": "ETS_UK",
+    "instrument_name": "UK ETS",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "United Kingdom",
+    "coverage_jurisdiction_pct": 27.0,
+    "price_usd": 57.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2022": 98.5575,
+      "2023": 88.1259,
+      "2024": 45.0617,
+      "2025": 57.2278
+    }
+  },
+  {
+    "id": "Tax_UY",
+    "instrument_name": "Uruguay CO2 tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Uruguay",
+    "coverage_jurisdiction_pct": 5.0,
+    "price_usd": 159.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2022": 137.2954,
+      "2023": 155.8684,
+      "2024": 167.1738,
+      "2025": 158.7647
+    }
+  },
+  {
+    "id": "ETS_US_Washington",
+    "instrument_name": "Washington CCA",
+    "type": "ETS",
+    "status": "Implemented",
+    "jurisdiction": "Washington",
+    "coverage_jurisdiction_pct": 71.0,
+    "price_usd": 50.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2023": 22.2,
+      "2024": 25.75,
+      "2025": 50.0
+    }
+  },
+  {
+    "id": "Tax_MX_Yucatan",
+    "instrument_name": "Yucatan carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Yucatan",
+    "coverage_jurisdiction_pct": 32.0,
+    "price_usd": 15.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2023": 15.5253,
+      "2024": 17.6938,
+      "2025": 15.0049
+    }
+  },
+  {
+    "id": "Tax_MX_ZA",
+    "instrument_name": "Zacatecas carbon tax",
+    "type": "Carbon tax",
+    "status": "Implemented",
+    "jurisdiction": "Zacatecas",
+    "coverage_jurisdiction_pct": 50.0,
+    "price_usd": 12.0,
+    "price_year": 2025,
+    "yearly_prices_usd": {
+      "2020": 10.2075,
+      "2021": 14.1419,
+      "2022": 12.5988,
+      "2023": 13.8569,
+      "2024": 15.09,
+      "2025": 12.2798
+    }
+  }
+]
