@@ -1,64 +1,105 @@
-# Carbon Climatch
+# Carbon Climatch: Carbon Regulatory Analytics Platform
 
-A Next.js-based analytics platform designed for Indonesian CFOs and sustainability officers to understand their company's exposure to evolving carbon regulations, including EU CBAM and domestic carbon pricing (IDX Carbon).
+## 1. Overview
+Carbon Climatch is a comprehensive analytics platform designed for Chief Financial Officers (CFOs) and sustainability executives in Indonesia. The platform provides data-driven insights into the evolving carbon regulatory landscape, enabling organizations to quantify their financial exposure to domestic and international carbon pricing mechanisms.
 
-## Features
+By integrating market data from IDXCarbon with global benchmarks and the European Union's Carbon Border Adjustment Mechanism (CBAM), Carbon Climatch serves as a strategic decision-support tool for navigating the transition to a low-carbon economy.
 
-- **IDXCarbon Monitoring**: Visual analysis of Indonesia's domestic carbon market trends and monthly trading data.
-- **Global Price Comparison**: Benchmarking domestic carbon prices against international markets like EU ETS.
-- **CBAM Exposure Calculator**: Estimate the potential financial impact of the EU Carbon Border Adjustment Mechanism on exports based on sector-specific rates.
-- **AI Analyst Panel**: Integrated AI (powered by Gemini 1.5 Flash) to provide strategic insights on regulatory trends and complex data analysis.
+## 2. Core Modules
 
-## Tech Stack
+### 2.1 IDXCarbon Market Analytics
+The platform tracks and visualizes Indonesia's domestic carbon exchange (IDXCarbon) data. 
+- **Monthly Trading Insights**: Analysis of trading volumes and price trends based on historical data.
+- **Liquidity Monitoring**: Assessment of market depth and participation levels within the Indonesian Emissions Trading System (ETS).
 
-- **Framework**: [Next.js 15](https://nextjs.org/) (App Router)
-- **Language**: TypeScript
+### 2.2 Global Carbon Pricing Benchmarks
+Carbon Climatch provides a consolidated view of international carbon pricing instruments.
+- **Instrument Comparison**: Benchmarking the Indonesian carbon price against major global systems, such as the EU ETS.
+- **Coverage Analysis**: Detailed data on the percentage of jurisdictional emissions covered by various instruments.
+
+### 2.3 CBAM Exposure Calculator
+A specialized tool for Indonesian exporters to the European Union.
+- **Financial Impact Estimation**: Calculates potential liabilities under the EU CBAM based on sector-specific emission factors (e.g., Cement, Iron & Steel, Aluminum, Fertilizers, Electricity, Hydrogen).
+- **Carbon Credit Deductions**: Factors in carbon prices already paid in Indonesia to provide accurate net-cost projections.
+
+### 2.4 AI-Driven Strategic Insights
+Powered by the `gemini-3.1-flash-lite` model, the AI Analyst module translates complex data into actionable executive summaries.
+- **Automated Dashboard Summaries**: Synthesis of current market conditions.
+- **Regulatory Explainers**: Translation of complex policy updates into plain-language financial impacts.
+- **Strategy Optimization**: Comparative analysis of CAPEX versus OPEX carbon compliance strategies.
+
+## 3. Technical Architecture
+
+### 3.1 Technology Stack
+- **Frontend Framework**: Next.js (App Router architecture)
+- **Programming Language**: TypeScript
 - **Styling**: Tailwind CSS
-- **Charts**: Recharts
-- **AI**: Google Gemini 1.5 Flash API
+- **Data Visualization**: Recharts
+- **AI Integration**: Google Generative AI SDK (`@google/generative-ai`)
 
-## Data Sources
+### 3.2 Directory Structure
+```text
+carbon-climatch/
+├── data/               # Processed JSON datasets for application use
+├── raw_data/           # Source documents and processing scripts
+│   ├── carbon_prices/  # World Bank pricing data and Python transformation scripts
+│   └── Monthly Data.../ # Original PDF reports from IDXCarbon
+├── src/
+│   ├── app/            # Next.js routes and page components
+│   ├── components/     # Reusable UI elements (AI, Dashboard, Layout)
+│   ├── lib/            # Core business logic (Calculations, Data loading, AI)
+│   └── types/          # TypeScript interface definitions
+└── public/             # Static assets
+```
 
+### 3.3 Data Processing Pipeline
+The repository includes automated scripts for data transformation:
+- **`process_worldbank.py`**: A Python-based utility that extracts, cleans, and transforms World Bank carbon pricing data into structured JSON formats.
+
+## 4. Implementation Details
+
+### 4.1 CBAM Calculation Methodology
+The exposure is calculated using the following logical sequence:
+1. **Total Emissions Calculation**: Determined by multiplying export volume (tons) by sector-specific emission factors.
+2. **Gross Liability**: Total emissions multiplied by the current EU ETS carbon price.
+3. **Domestic Credit Offset**: Deducts the value of carbon prices already paid in the country of origin.
+4. **Net Liability**: The final projected financial obligation to the EU.
+
+### 4.2 AI Orchestration
+The AI analyst utilizes specialized system prompts to ensure professional, accurate, and concise financial advice. It is configured to handle four distinct request types: `dashboard_summary`, `cbam_result`, `regulation_explainer`, and `strategy_optimizer`.
+
+## 5. Data Governance
+The platform relies on authoritative data sources:
 - **World Bank**: Global carbon pricing data.
-- **IDX Carbon**: Indonesian monthly trading data (April 2025 - April 2026).
-- **EU Commission**: CBAM sector rates and emission factors.
+- **IDX Carbon**: Monthly Indonesian trading reports.
+- **European Commission**: CBAM sector rates and regulatory schedules.
 
-## Getting Started
+## 6. Setup and Installation
 
-### Prerequisites
+### 6.1 Prerequisites
+- Node.js 18.17.0 or higher.
+- A Google AI Studio API Key.
 
-- Node.js 18+
-- A Google AI Studio API Key (for Gemini integration)
-
-### Installation
-
-1. Clone the repository:
+### 6.2 Installation Steps
+1. **Clone the Repository**:
    ```bash
    git clone https://github.com/chandakapu/carbon-climatch.git
    cd carbon-climatch
    ```
-2. Install dependencies:
+2. **Install Dependencies**:
    ```bash
    npm install
    ```
-3. Create a `.env.local` file with your Gemini API key:
+3. **Configure Environment Variables**:
+   Create a `.env.local` file in the root directory:
    ```env
-   NEXT_PUBLIC_GEMINI_API_KEY=your_api_key_here
+   GEMINI_API_KEY=your_google_api_key_here
    ```
-4. Run the development server:
+4. **Launch Development Environment**:
    ```bash
    npm run dev
    ```
+   Access the application at `http://localhost:3000`.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-## Project Structure
-
-- `src/lib/calculations.ts`: Core logic for CBAM and carbon exposure math.
-- `src/lib/data.ts`: Data loading and transformation utilities.
-- `data/`: Processed JSON datasets.
-- `raw_data/`: Original source documents (PDFs/Excel).
-
-## License
-
-MIT
+## 7. License
+This project is licensed under the MIT License.
