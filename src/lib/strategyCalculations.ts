@@ -11,7 +11,7 @@ import type {
  * PMT formula — calculates fixed monthly payment for an amortised loan.
  * Returns the ANNUAL total (monthly payment × 12).
  */
-function pmt(principal: number, annualRate: number, termYears: number): number {
+export function pmt(principal: number, annualRate: number, termYears: number): number {
     if (principal <= 0) return 0;
     if (annualRate <= 0) return principal / termYears; // interest-free
     const monthlyRate = annualRate / 100 / 12;
