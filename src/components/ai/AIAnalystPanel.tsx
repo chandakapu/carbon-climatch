@@ -2,7 +2,7 @@
 import { useState } from "react";
 
 interface AIAnalystPanelProps {
-    requestType: "dashboard_summary" | "cbam_result" | "regulation_explainer";
+    requestType: "dashboard_summary" | "cbam_result" | "regulation_explainer" | "strategy_optimizer";
     data: Record<string, unknown>;
     triggerLabel?: string;
 }

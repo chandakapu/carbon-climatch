@@ -21,6 +21,7 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-6 text-sm">
           <Link href="/" className="text-slate-400 hover:text-white transition-colors">Dashboard</Link>
           <Link href="/calculator" className="text-slate-400 hover:text-white transition-colors">CBAM Calculator</Link>
+          <Link href="/strategy" className="text-slate-400 hover:text-white transition-colors">Strategy Optimizer</Link>
           <Link href="/timeline" className="text-slate-400 hover:text-white transition-colors">Regulatory Timeline</Link>
         </div>
 

@@ -4,7 +4,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 const model = genAI.getGenerativeModel({ model: "gemini-3.1-flash-lite" });
 
 export interface AnalysisRequest {
-    type: "dashboard_summary" | "cbam_result" | "regulation_explainer";
+    type: "dashboard_summary" | "cbam_result" | "regulation_explainer" | "strategy_optimizer";
     data: Record<string, unknown>;
     context?: string;
 }
@@ -58,6 +58,23 @@ who is not a climate expert:
 ${JSON.stringify(request.data, null, 2)}
 
 Focus on: what it means financially, who is affected, and what they should do now.
+    `.trim();
+    } else if (request.type === "strategy_optimizer") {
+        const d = request.data;
+        userPrompt = `
+A CFO has modeled three carbon compliance strategies over a ${d.horizon_years}-year horizon.
+Given:
+- Strategy A (OPEX — buy credits only): Total cost IDR ${Number(d.strategy_a_total).toLocaleString()}
+- Strategy B (CAPEX — green investment): Total cost IDR ${Number(d.strategy_b_total).toLocaleString()}
+- Strategy C (Mixed): Total cost IDR ${Number(d.strategy_c_total).toLocaleString()}
+- CAPEX break-even year vs OPEX: ${d.break_even_year ?? "No break-even within horizon"}
+- Recommended strategy: ${d.recommended_strategy}
+- Carbon price escalation assumption: ${d.carbon_price_escalation_pct}% per year
+- Emission reduction from CAPEX: ${d.emission_reduction_pct}%
+
+In 4 sentences: state which strategy is cheapest over the horizon, when CAPEX breaks even, 
+what risk the carbon price escalation assumption carries, and one specific action to take 
+in the next 90 days.
     `.trim();
     }
 

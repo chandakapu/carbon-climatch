@@ -46,3 +46,51 @@ export interface CBAMCalculationResult {
     indonesia_carbon_credit_usd: number;
     net_liability_usd: number;
 }
+
+// ── Strategy Optimizer Types ──────────────────────────────────────
+
+export interface StrategyInputs {
+    // Section 1 — Emission & Market Context
+    annual_emissions: number;            // tCO2e/year
+    carbon_price_idr: number;            // IDR per tCO2e
+    carbon_price_escalation_pct: number; // 0–20
+    planning_horizon_years: number;      // 1, 3, 5, or 10
+
+    // Section 2 — CAPEX Investment Details
+    capex_amount_idr: number;
+    emission_reduction_pct: number;      // 0–100
+    down_payment_pct: number;            // 0–100
+    interest_rate_pct: number;
+    loan_term_years: number;             // 3, 5, 7, or 10
+    maintenance_pct: number;
+    depreciation_method: "Straight-line" | "Declining Balance";
+    depreciation_life_years: number;     // 5, 8, 10, or 15
+
+    // Section 3 — Mixed Strategy & Tax
+    mixed_capex_allocation_pct: number;  // 0–100
+    corporate_tax_rate_pct: number;
+}
+
+export interface YearlyBreakdown {
+    year: number;
+    credit_cost: number;
+    capex_repayment: number;
+    maintenance: number;
+    tax_shield: number;
+    net_cost: number;
+}
+
+export interface StrategyResult {
+    name: string;
+    yearly: YearlyBreakdown[];
+    cumulative: number[];
+    total_cost: number;
+}
+
+export interface StrategyResults {
+    strategy_a: StrategyResult; // OPEX
+    strategy_b: StrategyResult; // CAPEX
+    strategy_c: StrategyResult; // Mixed
+    break_even_year: number | null;
+    recommended: "A" | "B" | "C";
+}
