@@ -8,7 +8,22 @@ export const metadata: Metadata = {
 };
 
 export default function TimelinePage() {
-  const events = getRegulatoryTimeline();
+  const events = getRegulatoryTimeline().map(event => {
+    let computedStatus = event.status;
+    const eventDate = new Date(event.date);
+    const now = new Date();
+    const daysDiff = Math.ceil((eventDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+    
+    if (event.status === "planned" && eventDate.getFullYear() > 2027) {
+      computedStatus = "planned";
+    } else if (daysDiff < 0) {
+      computedStatus = daysDiff < -180 ? "past" : "active";
+    } else {
+      computedStatus = "upcoming";
+    }
+
+    return { ...event, status: computedStatus };
+  });
 
   return (
     <div className="min-h-screen bg-[#0b1120] text-white font-sans">

@@ -19,7 +19,7 @@ export interface RegulatoryEvent {
     title: string;
     date: string;
     type: "domestic" | "international";
-    status: "active" | "upcoming" | "past";
+    status: "active" | "upcoming" | "past" | "planned";
     description: string;
     affected_sectors: string[];
     source_url: string;

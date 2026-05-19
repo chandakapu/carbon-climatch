@@ -37,10 +37,16 @@ export default function DashboardPage() {
   // IDXCarbon: latest price & change for KPI card
   const sortedIDX = [...idxMonthly].sort((a, b) => a.month.localeCompare(b.month));
   const latestIDX = sortedIDX[sortedIDX.length - 1];
-  const prevIDX = sortedIDX[sortedIDX.length - 2];
   const idxPriceUSD = latestIDX ? (latestIDX.avg_price_idr / 16000).toFixed(2) : "—";
-  const idxChange = latestIDX && prevIDX
-    ? (((latestIDX.avg_price_idr - prevIDX.avg_price_idr) / prevIDX.avg_price_idr) * 100).toFixed(1)
+  
+  const last3Months = sortedIDX.slice(-3);
+  const prev3Months = sortedIDX.slice(-6, -3);
+  
+  const avgLast3 = last3Months.length === 3 ? last3Months.reduce((sum, item) => sum + item.avg_price_idr, 0) / 3 : null;
+  const avgPrev3 = prev3Months.length === 3 ? prev3Months.reduce((sum, item) => sum + item.avg_price_idr, 0) / 3 : null;
+  
+  const idxChange = avgLast3 !== null && avgPrev3 !== null && avgPrev3 !== 0
+    ? (((avgLast3 - avgPrev3) / avgPrev3) * 100).toFixed(1)
     : null;
 
   // EU ETS for KPI reference
@@ -131,7 +137,7 @@ export default function DashboardPage() {
             </p>
             {idxChange !== null && (
               <p className={`text-xs mt-2 font-semibold ${Number(idxChange) >= 0 ? "text-emerald-400" : "text-red-400"}`}>
-                {Number(idxChange) >= 0 ? "▲" : "▼"} {Math.abs(Number(idxChange))}% MoM
+                {Number(idxChange) >= 0 ? "▲" : "▼"} {Math.abs(Number(idxChange))}% 3M Avg Trend
               </p>
             )}
           </div>
@@ -153,6 +159,9 @@ export default function DashboardPage() {
               ${indoPrice?.price_usd.toFixed(2) ?? "—"}
             </p>
             <p className="text-xs text-slate-400 mt-0.5">per tCO₂e · {indoPrice?.year ?? ""}</p>
+            <p className="text-xs text-slate-400 italic mt-1.5">
+              Low due to early-stage market liquidity. Proposed carbon tax floor: ~Rp 30,000/tCO2e
+            </p>
             <p className="text-xs mt-2 text-emerald-400 font-semibold">✓ NEK ETS Phase 2</p>
           </div>
 
