@@ -3,7 +3,7 @@
 import React from "react";
 import type { StrategyInputs, StrategyResults } from "@/types";
 import {
-    BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+    BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend,
     LineChart, Line, ReferenceLine,
     ResponsiveContainer,
 } from "recharts";
@@ -93,7 +93,7 @@ export default function StrategyReport({ inputs, results, aiAnalysis }: Strategy
                         <h3 className="text-xl font-semibold text-white">Executive AI Analysis</h3>
                     </div>
                     <p className="text-slate-200 leading-relaxed text-lg italic">
-                        "{aiAnalysis}"
+                        &ldquo;{aiAnalysis}&rdquo;
                     </p>
                 </div>
 
