@@ -18,6 +18,29 @@ const USD_TO_IDR = 16000;
 const COLORS = { credit: "#10b981", capex: "#3b82f6", maint: "#64748b", shield: "#f59e0b" };
 const LINE_COLORS = { A: "#ef4444", B: "#3b82f6", C: "#a855f7" };
 
+/*
+ * All colors are defined as inline hex/rgba styles instead of Tailwind classes.
+ * Tailwind CSS v4 resolves class-based colors to oklch()/lab() functions, which
+ * html2canvas cannot parse, producing blank PDF pages.
+ */
+
+// Design tokens — hex equivalents of the Tailwind palette used in the app
+const C = {
+    bg: "#0b1120",
+    cardBg: "rgba(15,23,42,0.6)",    // slate-900/60
+    cardBgAlt: "rgba(30,41,59,0.4)", // slate-800/40
+    border: "#334155",               // slate-700
+    borderLight: "rgba(255,255,255,0.1)",
+    text: "#ffffff",
+    textMuted: "#cbd5e1",            // slate-300
+    textDim: "#94a3b8",              // slate-400
+    textDimmer: "#64748b",           // slate-500
+    emerald: "#10b981",
+    emeraldDim: "rgba(16,185,129,0.1)",
+    emeraldBorder: "rgba(16,185,129,0.3)",
+    emeraldText: "#34d399",          // emerald-400
+};
+
 function formatIdr(v: number) {
     return `IDR ${v.toLocaleString("id-ID", { maximumFractionDigits: 0 })}`;
 }
@@ -44,70 +67,88 @@ export default function StrategyReport({ inputs, results, aiAnalysis }: Strategy
     }));
 
     return (
-        <div className="bg-[#0b1120] text-white p-10 w-[800px] font-sans" style={{ position: "absolute", left: "-9999px", top: 0 }}>
+        <div
+            style={{
+                backgroundColor: C.bg,
+                color: C.text,
+                padding: 40,
+                width: 800,
+                fontFamily: "Inter, system-ui, sans-serif",
+                position: "absolute",
+                left: "-9999px",
+                top: 0,
+            }}
+        >
             {/* PAGE 1 */}
-            <div id="report-page-1" className="min-h-[1100px] flex flex-col">
-                <div className="flex justify-between items-start border-b border-slate-700 pb-6 mb-8">
+            <div id="report-page-1" style={{ minHeight: 1100, display: "flex", flexDirection: "column" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", borderBottom: `1px solid ${C.border}`, paddingBottom: 24, marginBottom: 32 }}>
                     <div>
-                        <h1 className="text-3xl font-bold text-white">Carbon Strategy Compliance Report</h1>
-                        <p className="text-slate-400 mt-1">Generated for: Indonesian Strategic Finance Team</p>
+                        <h1 style={{ fontSize: 28, fontWeight: 700, color: C.text, margin: 0 }}>Carbon Strategy Compliance Report</h1>
+                        <p style={{ color: C.textDim, marginTop: 4, fontSize: 14 }}>Generated for: Indonesian Strategic Finance Team</p>
                     </div>
-                    <div className="text-right">
-                        <p className="text-emerald-500 font-bold text-xl">carbon-climatch</p>
-                        <p className="text-slate-500 text-xs mt-1">{new Date().toLocaleDateString()}</p>
+                    <div style={{ textAlign: "right" }}>
+                        <p style={{ color: C.emerald, fontWeight: 700, fontSize: 20, margin: 0 }}>carbon-climatch</p>
+                        <p style={{ color: C.textDimmer, fontSize: 11, marginTop: 4 }}>{new Date().toLocaleDateString()}</p>
                     </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-8 mb-10">
-                    <div className="bg-slate-900/60 border border-slate-700 rounded-xl p-6">
-                        <h2 className="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-4">Key Assumptions</h2>
-                        <div className="space-y-2 text-sm">
-                            <div className="flex justify-between"><span className="text-slate-400">Annual Emissions:</span> <span>{inputs.annual_emissions.toLocaleString()} tCO2e</span></div>
-                            <div className="flex justify-between"><span className="text-slate-400">Carbon Price:</span> <span>{formatIdr(inputs.carbon_price_idr)}</span></div>
-                            <div className="flex justify-between"><span className="text-slate-400">Price Escalation:</span> <span>{inputs.carbon_price_escalation_pct}% / year</span></div>
-                            <div className="flex justify-between"><span className="text-slate-400">Planning Horizon:</span> <span>{inputs.planning_horizon_years} Years</span></div>
-                            <div className="flex justify-between"><span className="text-slate-400">CAPEX Investment:</span> <span>{formatIdr(inputs.capex_amount_idr)}</span></div>
-                            <div className="flex justify-between"><span className="text-slate-400">Emission Reduction:</span> <span>{inputs.emission_reduction_pct}%</span></div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32, marginBottom: 40 }}>
+                    <div style={{ backgroundColor: C.cardBg, border: `1px solid ${C.border}`, borderRadius: 12, padding: 24 }}>
+                        <h2 style={{ fontSize: 12, fontWeight: 600, color: C.textMuted, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 16, marginTop: 0 }}>Key Assumptions</h2>
+                        <div style={{ fontSize: 14 }}>
+                            {[
+                                ["Annual Emissions:", `${inputs.annual_emissions.toLocaleString()} tCO2e`],
+                                ["Carbon Price:", formatIdr(inputs.carbon_price_idr)],
+                                ["Price Escalation:", `${inputs.carbon_price_escalation_pct}% / year`],
+                                ["Planning Horizon:", `${inputs.planning_horizon_years} Years`],
+                                ["CAPEX Investment:", formatIdr(inputs.capex_amount_idr)],
+                                ["Emission Reduction:", `${inputs.emission_reduction_pct}%`],
+                            ].map(([label, val]) => (
+                                <div key={label} style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
+                                    <span style={{ color: C.textDim }}>{label}</span>
+                                    <span style={{ color: C.text }}>{val}</span>
+                                </div>
+                            ))}
                         </div>
                     </div>
 
-                    <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-6">
-                        <h2 className="text-sm font-semibold text-emerald-400 uppercase tracking-wider mb-4">Recommended Strategy</h2>
-                        <div className="mb-4">
-                            <p className="text-xs text-emerald-500/70 font-medium">OPTIMAL PATHWAY</p>
-                            <p className="text-2xl font-bold text-white">Strategy {results.recommended}</p>
+                    <div style={{ backgroundColor: C.emeraldDim, border: `1px solid ${C.emeraldBorder}`, borderRadius: 12, padding: 24 }}>
+                        <h2 style={{ fontSize: 12, fontWeight: 600, color: C.emeraldText, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 16, marginTop: 0 }}>Recommended Strategy</h2>
+                        <div style={{ marginBottom: 16 }}>
+                            <p style={{ fontSize: 11, color: "rgba(16,185,129,0.7)", fontWeight: 500, margin: 0 }}>OPTIMAL PATHWAY</p>
+                            <p style={{ fontSize: 24, fontWeight: 700, color: C.text, margin: "4px 0 0" }}>Strategy {results.recommended}</p>
                         </div>
-                        <div className="space-y-1">
-                            <p className="text-xs text-slate-400">Total Cost Over Horizon:</p>
-                            <p className="text-xl font-bold text-white">
+                        <div>
+                            <p style={{ fontSize: 11, color: C.textDim, margin: 0 }}>Total Cost Over Horizon:</p>
+                            <p style={{ fontSize: 20, fontWeight: 700, color: C.text, margin: "4px 0 0" }}>
                                 {formatIdr(results[`strategy_${results.recommended.toLowerCase() as "a"|"b"|"c"}`].total_cost)}
                             </p>
-                            <p className="text-xs text-slate-500">~USD {(results[`strategy_${results.recommended.toLowerCase() as "a"|"b"|"c"}`].total_cost / USD_TO_IDR).toLocaleString()} equivalent</p>
+                            <p style={{ fontSize: 11, color: C.textDimmer, margin: "4px 0 0" }}>~USD {(results[`strategy_${results.recommended.toLowerCase() as "a"|"b"|"c"}`].total_cost / USD_TO_IDR).toLocaleString()} equivalent</p>
                         </div>
                     </div>
                 </div>
 
-                <div className="bg-slate-800/40 border border-slate-600 rounded-xl p-8 flex-grow">
-                    <div className="flex items-center gap-2 mb-6">
-                        <span className="text-2xl">🤖</span>
-                        <h3 className="text-xl font-semibold text-white">Executive AI Analysis</h3>
+                <div style={{ backgroundColor: C.cardBgAlt, border: `1px solid ${C.border}`, borderRadius: 12, padding: 32, flexGrow: 1 }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 24 }}>
+                        <span style={{ fontSize: 24 }}>🤖</span>
+                        <h3 style={{ fontSize: 20, fontWeight: 600, color: C.text, margin: 0 }}>Executive AI Analysis</h3>
                     </div>
-                    <p className="text-slate-200 leading-relaxed text-lg italic">
-                        &ldquo;{aiAnalysis}&rdquo;
+                    <p style={{ color: C.textMuted, lineHeight: 1.7, fontSize: 16, fontStyle: "italic", margin: 0 }}>
+                        &ldquo;{aiAnalysis || "Run AI analysis to populate this section."}&rdquo;
                     </p>
                 </div>
 
-                <div className="mt-10 pt-6 border-t border-slate-800 text-center text-xs text-slate-500">
+                <div style={{ marginTop: 40, paddingTop: 24, borderTop: `1px solid ${C.border}`, textAlign: "center", fontSize: 11, color: C.textDimmer }}>
                     CONFIDENTIAL - For Internal Use Only. This report is generated by carbon-climatch and contains estimates based on market assumptions.
                 </div>
             </div>
 
             {/* PAGE 2 */}
-            <div id="report-page-2" className="min-h-[1100px] flex flex-col pt-10">
-                <div className="mb-12">
-                    <h2 className="text-2xl font-bold text-white mb-2">Annual Cost Breakdown</h2>
-                    <p className="text-slate-400 text-sm mb-6">Comparative breakdown of costs (Credits vs. Investment vs. Tax Shield) over the planning horizon.</p>
-                    <div className="h-[350px] w-full">
+            <div id="report-page-2" style={{ minHeight: 1100, display: "flex", flexDirection: "column", paddingTop: 40 }}>
+                <div style={{ marginBottom: 48 }}>
+                    <h2 style={{ fontSize: 24, fontWeight: 700, color: C.text, marginBottom: 8, marginTop: 0 }}>Annual Cost Breakdown</h2>
+                    <p style={{ color: C.textDim, fontSize: 14, marginBottom: 24 }}>Comparative breakdown of costs (Credits vs. Investment vs. Tax Shield) over the planning horizon.</p>
+                    <div style={{ height: 350, width: "100%" }}>
                         <ResponsiveContainer width="100%" height="100%">
                             <BarChart data={barData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                                 <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
@@ -124,10 +165,10 @@ export default function StrategyReport({ inputs, results, aiAnalysis }: Strategy
                     </div>
                 </div>
 
-                <div className="mb-12">
-                    <h2 className="text-2xl font-bold text-white mb-2">Cumulative Cost & Break-even Analysis</h2>
-                    <p className="text-slate-400 text-sm mb-6">Total financial exposure over time, identifying the point where green investment outperforms simple credit purchasing.</p>
-                    <div className="h-[350px] w-full">
+                <div style={{ marginBottom: 48 }}>
+                    <h2 style={{ fontSize: 24, fontWeight: 700, color: C.text, marginBottom: 8, marginTop: 0 }}>Cumulative Cost & Break-even Analysis</h2>
+                    <p style={{ color: C.textDim, fontSize: 14, marginBottom: 24 }}>Total financial exposure over time, identifying the point where green investment outperforms simple credit purchasing.</p>
+                    <div style={{ height: 350, width: "100%" }}>
                         <ResponsiveContainer width="100%" height="100%">
                             <LineChart data={lineData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                                 <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
@@ -146,7 +187,7 @@ export default function StrategyReport({ inputs, results, aiAnalysis }: Strategy
                     </div>
                 </div>
 
-                <div className="mt-auto pt-6 border-t border-slate-800 text-center text-xs text-slate-500">
+                <div style={{ marginTop: "auto", paddingTop: 24, borderTop: `1px solid ${C.border}`, textAlign: "center", fontSize: 11, color: C.textDimmer }}>
                     Page 2 of 2 - Strategic Planning Horizon Analysis
                 </div>
             </div>
