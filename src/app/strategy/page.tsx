@@ -4,6 +4,8 @@ import { useState } from "react";
 import { calculateAllStrategies } from "@/lib/strategyCalculations";
 import type { StrategyInputs, StrategyResults } from "@/types";
 import AIAnalystPanel from "@/components/ai/AIAnalystPanel";
+import StrategyReport from "@/components/strategy/StrategyReport";
+import { generateMultiPagePdf } from "@/lib/pdfExport";
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
     LineChart, Line, ReferenceLine,
@@ -118,6 +120,9 @@ export default function StrategyPage() {
 
     // Results
     const [results, setResults] = useState<StrategyResults | null>(null);
+    const [lastInputs, setLastInputs] = useState<StrategyInputs | null>(null);
+    const [aiAnalysis, setAiAnalysis] = useState("");
+    const [isExporting, setIsExporting] = useState(false);
     const [error, setError] = useState("");
 
     const handleCalculate = () => {
@@ -136,7 +141,17 @@ export default function StrategyPage() {
             depreciation_method: depMethod, depreciation_life_years: Number(depLife),
             mixed_capex_allocation_pct: mixedAllocation, corporate_tax_rate_pct: Number(taxRate),
         };
+        setLastInputs(inputs);
         setResults(calculateAllStrategies(inputs));
+    };
+
+    const handleExportPdf = async () => {
+        setIsExporting(true);
+        try {
+            await generateMultiPagePdf(["report-page-1", "report-page-2"], "Carbon-Strategy-Report.pdf");
+        } finally {
+            setIsExporting(false);
+        }
     };
 
     // Prepare chart data
@@ -235,6 +250,26 @@ export default function StrategyPage() {
                 {/* ── Results Dashboard ───────────────────────────────── */}
                 {results && (
                     <div className="space-y-8 animate-in fade-in">
+                        <div className="flex justify-between items-center mb-6">
+                            <h2 className="text-xl font-bold text-white">Analysis Results</h2>
+                            <button
+                                onClick={handleExportPdf}
+                                disabled={isExporting}
+                                className="flex items-center gap-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 px-4 py-2 text-xs font-semibold text-white transition-all disabled:opacity-50"
+                            >
+                                {isExporting ? (
+                                    <>
+                                        <div className="w-3 h-3 border-2 border-slate-400 border-t-transparent rounded-full animate-spin" />
+                                        Exporting...
+                                    </>
+                                ) : (
+                                    <>
+                                        <span>📄</span>
+                                        Export PDF Report
+                                    </>
+                                )}
+                            </button>
+                        </div>
                         {/* 1. Summary Cards */}
                         <div className="grid gap-4 sm:grid-cols-3">
                             {strategies.map(s => (
@@ -345,7 +380,17 @@ export default function StrategyPage() {
                                 carbon_price_escalation_pct: escalation,
                                 emission_reduction_pct: emissionReduction,
                             }}
+                            onAnalysisComplete={setAiAnalysis}
                         />
+
+                        {/* Hidden Report for PDF Capture */}
+                        {lastInputs && (
+                            <StrategyReport
+                                inputs={lastInputs}
+                                results={results}
+                                aiAnalysis={aiAnalysis}
+                            />
+                        )}
 
                         {/* Disclaimer */}
                         <p className="text-center text-xs text-slate-500 border-t border-slate-800 pt-6">

@@ -5,12 +5,14 @@ interface AIAnalystPanelProps {
     requestType: "dashboard_summary" | "cbam_result" | "regulation_explainer" | "strategy_optimizer";
     data: Record<string, unknown>;
     triggerLabel?: string;
+    onAnalysisComplete?: (analysis: string) => void;
 }
 
 export default function AIAnalystPanel({
     requestType,
     data,
-    triggerLabel = "Get AI Analysis"
+    triggerLabel = "Get AI Analysis",
+    onAnalysisComplete
 }: AIAnalystPanelProps) {
     const [analysis, setAnalysis] = useState<string>("");
     const [loading, setLoading] = useState(false);
@@ -31,6 +33,9 @@ export default function AIAnalystPanel({
 
             const result = await response.json();
             setAnalysis(result.analysis);
+            if (onAnalysisComplete) {
+                onAnalysisComplete(result.analysis);
+            }
         } catch {
             setError("Could not generate analysis. Check your connection and try again.");
         } finally {
