@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { calculateAllStrategies } from "@/lib/strategyCalculations";
 import type { StrategyInputs, StrategyResults } from "@/types";
 import AIAnalystPanel from "@/components/ai/AIAnalystPanel";
-import StrategyReport from "@/components/strategy/StrategyReport";
-import { generateMultiPagePdf } from "@/lib/pdfExport";
+import FormalReportCharts from "@/components/strategy/FormalReportCharts";
+import type { FormalReportChartsRef } from "@/components/strategy/FormalReportCharts";
+import { generateFormalReport } from "@/lib/pdfExport";
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
     LineChart, Line, ReferenceLine,
@@ -124,6 +125,7 @@ export default function StrategyPage() {
     const [aiAnalysis, setAiAnalysis] = useState("");
     const [isExporting, setIsExporting] = useState(false);
     const [error, setError] = useState("");
+    const chartsRef = useRef<FormalReportChartsRef>(null);
 
     const handleCalculate = () => {
         setError("");
@@ -146,9 +148,15 @@ export default function StrategyPage() {
     };
 
     const handleExportPdf = async () => {
+        if (!lastInputs || !results) return;
         setIsExporting(true);
         try {
-            await generateMultiPagePdf(["report-page-1", "report-page-2"], "Carbon-Strategy-Report.pdf");
+            // Make hidden charts visible briefly for capture
+            const chartImages = chartsRef.current
+                ? await chartsRef.current.captureCharts()
+                : { barChart: null, lineChart: null };
+
+            await generateFormalReport(lastInputs, results, aiAnalysis, chartImages);
         } finally {
             setIsExporting(false);
         }
@@ -383,14 +391,11 @@ export default function StrategyPage() {
                             onAnalysisComplete={setAiAnalysis}
                         />
 
-                        {/* Hidden Report for PDF Capture */}
-                        {lastInputs && (
-                            <StrategyReport
-                                inputs={lastInputs}
-                                results={results}
-                                aiAnalysis={aiAnalysis}
-                            />
-                        )}
+                        {/* Hidden formal charts for PDF capture */}
+                        <FormalReportCharts
+                            ref={chartsRef}
+                            results={results}
+                        />
 
                         {/* Disclaimer */}
                         <p className="text-center text-xs text-slate-500 border-t border-slate-800 pt-6">
