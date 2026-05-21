@@ -9,7 +9,6 @@ const BLACK = [0, 0, 0] as const;
 const DARK_GRAY = [74, 85, 104] as const;  // #4a5568 — muted text
 const MED_GRAY = [203, 213, 225] as const; // #cbd5e1 — table borders
 const LIGHT_GRAY = [241, 245, 249] as const; // #f1f5f9 — table header bg
-const WHITE = [255, 255, 255] as const;
 
 const USD_TO_IDR = 16000;
 
@@ -118,25 +117,200 @@ function drawText(pdf: jsPDF, text: string, y: number, options?: {
     return y + (size * 0.45 + 2);
 }
 
-/** Draw body text that may wrap to multiple lines */
-function drawWrappedText(pdf: jsPDF, text: string, y: number, options?: {
-    color?: RGB; size?: number; font?: string; style?: string; indent?: number; maxWidth?: number;
-}): number {
-    const pageW = pdf.internal.pageSize.getWidth();
-    const { color = BLACK, size = 11, font = "times", style = "normal", indent = 0 } = options ?? {};
-    const maxWidth = options?.maxWidth ?? (pageW - MARGIN_LEFT - MARGIN_RIGHT - indent);
-
-    pdf.setFont(font, style);
-    pdf.setFontSize(size);
-    pdf.setTextColor(...color);
-
-    const lines = pdf.splitTextToSize(text, maxWidth);
-    const lineHeight = size * 0.45 + 1.5;
-
-    pdf.text(lines, MARGIN_LEFT + indent, y);
-
-    return y + lines.length * lineHeight + 2;
+interface StyledChunk {
+    text: string;
+    bold: boolean;
+    italic: boolean;
+    code: boolean;
 }
+
+interface StyledToken {
+    text: string;
+    bold: boolean;
+    italic: boolean;
+    code: boolean;
+}
+
+function parseStyledChunks(text: string): StyledChunk[] {
+    const chunks: StyledChunk[] = [];
+    let index = 0;
+    let isBold = false;
+    let isItalic = false;
+    let isCode = false;
+    let currentText = "";
+
+    while (index < text.length) {
+        if (text.startsWith("**", index)) {
+            if (currentText) {
+                chunks.push({ text: currentText, bold: isBold, italic: isItalic, code: isCode });
+                currentText = "";
+            }
+            isBold = !isBold;
+            index += 2;
+        } else if (text.startsWith("*", index)) {
+            if (currentText) {
+                chunks.push({ text: currentText, bold: isBold, italic: isItalic, code: isCode });
+                currentText = "";
+            }
+            isItalic = !isItalic;
+            index += 1;
+        } else if (text.startsWith("`", index)) {
+            if (currentText) {
+                chunks.push({ text: currentText, bold: isBold, italic: isItalic, code: isCode });
+                currentText = "";
+            }
+            isCode = !isCode;
+            index += 1;
+        } else {
+            currentText += text[index];
+            index += 1;
+        }
+    }
+    if (currentText) {
+        chunks.push({ text: currentText, bold: isBold, italic: isItalic, code: isCode });
+    }
+    return chunks;
+}
+
+function tokenizeChunk(chunk: StyledChunk): StyledToken[] {
+    const tokens: StyledToken[] = [];
+    const matches = chunk.text.match(/\s+|\S+/g);
+    if (matches) {
+        for (const m of matches) {
+            tokens.push({
+                text: m,
+                bold: chunk.bold,
+                italic: chunk.italic,
+                code: chunk.code
+            });
+        }
+    }
+    return tokens;
+}
+
+function getStyledTextWidth(pdf: jsPDF, text: string, bold: boolean, italic: boolean, code: boolean, fontSize: number): number {
+    const prevFont = pdf.getFont();
+    let style = "normal";
+    if (bold && italic) style = "bolditalic";
+    else if (bold) style = "bold";
+    else if (italic) style = "italic";
+
+    const fontName = code ? "courier" : "times";
+    pdf.setFont(fontName, style);
+    pdf.setFontSize(fontSize);
+    const w = pdf.getTextWidth(text);
+    pdf.setFont(prevFont.fontName, prevFont.fontStyle);
+    return w;
+}
+
+/** Draw body text with basic markdown formatting support (bold, italic, lists, inline code) */
+function drawMarkdownText(
+    pdf: jsPDF,
+    text: string,
+    y: number,
+    options?: {
+        color?: RGB;
+        size?: number;
+        indent?: number;
+        maxWidth?: number;
+        lineHeight?: number;
+    }
+): number {
+    const pageW = pdf.internal.pageSize.getWidth();
+    const { color = BLACK, size = 10, indent = 0 } = options ?? {};
+    const maxWidth = options?.maxWidth ?? (pageW - MARGIN_LEFT - MARGIN_RIGHT - indent);
+    const lineHeight = options?.lineHeight ?? (size * 0.45 + 1.5);
+
+    const paragraphs = text.split(/\r?\n/);
+    let currentY = y;
+
+    for (const para of paragraphs) {
+        if (!para.trim()) {
+            currentY += lineHeight * 0.5;
+            continue;
+        }
+
+        let isListItem = false;
+        let cleanPara = para;
+        let currentIndent = indent;
+
+        if (para.trim().startsWith("- ") || para.trim().startsWith("* ")) {
+            isListItem = true;
+            // Trim leading spaces and remove the list marker
+            cleanPara = para.trim().replace(/^[\-\*]\s+/, "");
+            currentIndent = indent + 5;
+        }
+
+        const chunks = parseStyledChunks(cleanPara);
+        const tokens: StyledToken[] = [];
+        for (const chunk of chunks) {
+            tokens.push(...tokenizeChunk(chunk));
+        }
+
+        let currentLineTokens: { token: StyledToken; width: number }[] = [];
+        let currentLineWidth = 0;
+        const linesOfTokens: typeof currentLineTokens[] = [];
+        const paraMaxWidth = maxWidth - (currentIndent - indent);
+
+        for (const token of tokens) {
+            const w = getStyledTextWidth(pdf, token.text, token.bold, token.italic, token.code, size);
+            if (currentLineWidth + w > paraMaxWidth && currentLineTokens.length > 0) {
+                linesOfTokens.push(currentLineTokens);
+                currentLineTokens = [];
+                currentLineWidth = 0;
+                if (token.text === " ") {
+                    continue;
+                }
+            }
+            currentLineTokens.push({ token, width: w });
+            currentLineWidth += w;
+        }
+        if (currentLineTokens.length > 0) {
+            linesOfTokens.push(currentLineTokens);
+        }
+
+        for (let i = 0; i < linesOfTokens.length; i++) {
+            const line = linesOfTokens[i];
+            let currentX = MARGIN_LEFT + currentIndent;
+
+            if (isListItem && i === 0) {
+                pdf.setFont("helvetica", "bold");
+                pdf.setFontSize(size);
+                pdf.setTextColor(16, 185, 129); // emerald/green bullet
+                pdf.text("•", MARGIN_LEFT + indent + 1.5, currentY);
+            }
+
+            pdf.setTextColor(...color);
+            pdf.setFontSize(size);
+
+            for (const item of line) {
+                let style = "normal";
+                if (item.token.bold && item.token.italic) style = "bolditalic";
+                else if (item.token.bold) style = "bold";
+                else if (item.token.italic) style = "italic";
+
+                const fontName = item.token.code ? "courier" : "times";
+                pdf.setFont(fontName, style);
+                
+                if (item.token.code) {
+                    pdf.setTextColor(16, 185, 129);
+                } else {
+                    pdf.setTextColor(...color);
+                }
+
+                pdf.text(item.token.text, currentX, currentY);
+                currentX += item.width;
+            }
+
+            currentY += lineHeight;
+        }
+
+        currentY += 1.5;
+    }
+
+    return currentY;
+}
+
 
 interface TableOptions {
     colWidths: number[];
@@ -239,19 +413,6 @@ function drawTable(
     }
 
     return y + 4;
-}
-
-/** Draw a key-value pair on a single line */
-function drawKeyValue(pdf: jsPDF, key: string, value: string, y: number): number {
-    pdf.setFont("times", "normal");
-    pdf.setFontSize(10);
-    pdf.setTextColor(...DARK_GRAY);
-    pdf.text(key, MARGIN_LEFT + 4, y);
-    pdf.setTextColor(...BLACK);
-    pdf.setFont("times", "bold");
-    pdf.text(value, MARGIN_LEFT + 80, y);
-    pdf.setFont("times", "normal");
-    return y + 5.5;
 }
 
 /** Draw confidentiality disclaimer */
@@ -372,8 +533,8 @@ export async function generateFormalReport(
     y = drawSectionTitle(pdf, "AI Strategic Analysis", y);
 
     const analysisText = aiAnalysis || "AI analysis was not generated. Run the AI Strategy Analysis on the dashboard to populate this section.";
-    y = drawWrappedText(pdf, `"${analysisText}"`, y, {
-        size: 10, style: "italic", color: DARK_GRAY,
+    y = drawMarkdownText(pdf, analysisText, y, {
+        size: 10, color: DARK_GRAY,
     });
 
     // Page 1 disclaimer

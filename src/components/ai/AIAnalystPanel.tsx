@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import MarkdownRenderer from "../ui/MarkdownRenderer";
 
 interface AIAnalystPanelProps {
     requestType: "dashboard_summary" | "cbam_result" | "regulation_explainer" | "strategy_optimizer";
@@ -75,7 +76,7 @@ export default function AIAnalystPanel({
 
             {analysis && (
                 <div>
-                    <p className="text-slate-200 text-sm leading-relaxed">{analysis}</p>
+                    <MarkdownRenderer content={analysis} />
                     <button
                         onClick={handleAnalyze}
                         className="mt-3 text-xs text-slate-400 hover:text-slate-300 underline"

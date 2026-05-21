@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { calculateCBAMExposure } from "@/lib/calculations";
 import { getCBAMConfig, getIDXCarbonMonthly } from "@/lib/data";
 import type { CBAMCalculationResult } from "@/types";
+import MarkdownRenderer from "@/components/ui/MarkdownRenderer";
 
 const USD_TO_IDR = 16000;
 
@@ -253,7 +254,7 @@ export default function CalculatorPage() {
                             )}
 
                             {analysis && !analysisLoading && (
-                                <p className="text-slate-200 text-sm leading-relaxed">{analysis}</p>
+                                <MarkdownRenderer content={analysis} />
                             )}
                         </div>
                     </div>
