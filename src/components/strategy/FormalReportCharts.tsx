@@ -32,6 +32,7 @@ export interface FormalReportChartsRef {
 
 const FormalReportCharts = forwardRef<FormalReportChartsRef, FormalReportChartsProps>(
     function FormalReportCharts({ results }, ref) {
+        const containerRef = useRef<HTMLDivElement>(null);
         const barRef = useRef<HTMLDivElement>(null);
         const lineRef = useRef<HTMLDivElement>(null);
 
@@ -40,22 +41,46 @@ const FormalReportCharts = forwardRef<FormalReportChartsRef, FormalReportChartsP
                 let barChart: string | null = null;
                 let lineChart: string | null = null;
 
-                if (barRef.current) {
-                    const canvas = await html2canvas(barRef.current, {
-                        scale: 2,
-                        backgroundColor: "#ffffff",
-                        logging: false,
-                    });
-                    barChart = canvas.toDataURL("image/png");
-                }
+                const container = containerRef.current;
+                if (!container) return { barChart, lineChart };
 
-                if (lineRef.current) {
-                    const canvas = await html2canvas(lineRef.current, {
-                        scale: 2,
-                        backgroundColor: "#ffffff",
-                        logging: false,
-                    });
-                    lineChart = canvas.toDataURL("image/png");
+                // Temporarily make visible for html2canvas
+                const orig = {
+                    visibility: container.style.visibility,
+                    opacity: container.style.opacity,
+                    zIndex: container.style.zIndex,
+                };
+                container.style.visibility = "visible";
+                container.style.opacity = "1";
+                container.style.zIndex = "-9999";
+
+                // Wait for Recharts SVGs to render after becoming visible
+                await new Promise<void>((r) => requestAnimationFrame(() => requestAnimationFrame(() => r())));
+                await new Promise<void>((r) => setTimeout(r, 600));
+
+                try {
+                    if (barRef.current) {
+                        const canvas = await html2canvas(barRef.current, {
+                            scale: 2,
+                            backgroundColor: "#ffffff",
+                            logging: false,
+                        });
+                        barChart = canvas.toDataURL("image/png");
+                    }
+
+                    if (lineRef.current) {
+                        const canvas = await html2canvas(lineRef.current, {
+                            scale: 2,
+                            backgroundColor: "#ffffff",
+                            logging: false,
+                        });
+                        lineChart = canvas.toDataURL("image/png");
+                    }
+                } finally {
+                    // Restore hidden state
+                    container.style.visibility = orig.visibility;
+                    container.style.opacity = orig.opacity;
+                    container.style.zIndex = orig.zIndex;
                 }
 
                 return { barChart, lineChart };
@@ -84,6 +109,7 @@ const FormalReportCharts = forwardRef<FormalReportChartsRef, FormalReportChartsP
 
         return (
             <div
+                ref={containerRef}
                 style={{
                     position: "fixed",
                     left: 0,
