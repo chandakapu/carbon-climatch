@@ -92,6 +92,11 @@ export default function CalculatorPage() {
         const volume = Number(exportVolume);
         if (!exportVolume.trim() || Number.isNaN(volume) || volume <= 0) {
             setValidationError("Enter a positive annual export volume in tons.");
+            // Focus the invalid field for proper keyboard accessibility
+            const inputEl = document.getElementById("export-volume");
+            if (inputEl) {
+                inputEl.focus();
+            }
             return;
         }
 
@@ -112,10 +117,10 @@ export default function CalculatorPage() {
         <div className="min-h-screen bg-[#0b1120] text-white font-sans">
             <main className="mx-auto max-w-3xl px-6 py-12">
                 <div className="mb-10">
-                    <h1 className="text-3xl font-bold tracking-tight text-white mb-2">
+                    <h1 className="text-3xl font-bold tracking-tight text-white mb-2 text-balance">
                         CBAM Exposure Calculator
                     </h1>
-                    <p className="text-slate-400 text-sm leading-relaxed">
+                    <p className="text-slate-400 text-sm leading-relaxed text-pretty">
                         Estimate your EU Carbon Border Adjustment Mechanism liability based on
                         sector emission factors, export volume, and current carbon prices.
                     </p>
@@ -150,16 +155,24 @@ export default function CalculatorPage() {
                         >
                             Annual export volume to EU (tons)
                         </label>
+                        <span id="export-volume-hint" className="block text-xs text-slate-500 mb-1.5 text-pretty">
+                            Enter a positive number of metric tons.
+                        </span>
                         <input
                             id="export-volume"
                             type="number"
-                            min="0"
+                            required
+                            min="0.0001"
                             step="any"
                             value={exportVolume}
                             onChange={(e) => setExportVolume(e.target.value)}
                             placeholder="e.g. 10000"
+                            aria-describedby="export-volume-hint export-volume-error"
                             className="w-full rounded-lg border border-slate-600 bg-slate-800 px-4 py-2.5 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
                         />
+                        <span id="export-volume-error" className="error-msg-inline hidden text-red-400 text-xs mt-1.5 font-medium">
+                            ❌ Please enter a positive number for the export volume.
+                        </span>
                     </div>
 
                     {validationError && (
@@ -177,7 +190,7 @@ export default function CalculatorPage() {
 
                 {result && (
                     <div className="mt-8 rounded-xl border border-white/10 bg-slate-900/80 p-6 space-y-5">
-                        <h2 className="text-lg font-semibold text-white">Results</h2>
+                        <h2 className="text-lg font-semibold text-white text-balance">Results</h2>
 
                         <div className="grid gap-4 sm:grid-cols-2">
                             <div className="rounded-lg bg-slate-800/60 p-4">

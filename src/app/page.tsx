@@ -71,12 +71,12 @@ export default function DashboardPage() {
                 Carbon Intelligence Platform
               </div>
 
-              <h1 className="text-4xl md:text-5xl font-extrabold leading-tight tracking-tight text-white mb-4">
-                Navigate Indonesia&apos;s Carbon<br />
+              <h1 className="text-4xl md:text-5xl font-extrabold leading-tight tracking-tight text-white mb-4 text-balance">
+                Navigate Indonesia&apos;s Carbon{" "}
                 <span className="text-emerald-400">Compliance Landscape</span>
               </h1>
 
-              <p className="text-slate-400 text-lg leading-relaxed mb-8 max-w-2xl">
+              <p className="text-slate-400 text-lg leading-relaxed mb-8 max-w-2xl text-pretty">
                 Real-time carbon market intelligence for Indonesian CFOs. Track IDXCarbon prices,
                 benchmark against global markets, quantify CBAM liability, and get AI-powered
                 regulatory analysis — all in one platform.
@@ -182,8 +182,8 @@ export default function DashboardPage() {
         <section id="regulatory" className="mb-10">
           <div className="mb-4 flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-bold text-white">Upcoming Regulatory Events</h2>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <h2 className="text-lg font-bold text-white text-balance">Upcoming Regulatory Events</h2>
+              <p className="text-xs text-slate-500 mt-0.5 text-pretty">
                 {upcomingEvents.length} upcoming event{upcomingEvents.length !== 1 ? "s" : ""} requiring action
               </p>
             </div>
@@ -206,8 +206,8 @@ export default function DashboardPage() {
         {/* ── MARKET CHARTS ─────────────────────────────────────── */}
         <section id="market" className="mb-10">
           <div className="mb-6">
-            <h2 className="text-lg font-bold text-white">Carbon Market Overview</h2>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <h2 className="text-lg font-bold text-white text-balance">Carbon Market Overview</h2>
+            <p className="text-xs text-slate-500 mt-0.5 text-pretty">
               Latest carbon price benchmarks and IDXCarbon 12-month trend
             </p>
           </div>
@@ -216,7 +216,7 @@ export default function DashboardPage() {
             {/* Price Comparison Bar Chart */}
             <div className="rounded-2xl border border-white/5 bg-slate-900/60 p-6">
               <div className="mb-5">
-                <h3 className="font-semibold text-white text-sm">Carbon Price Comparison</h3>
+                <h3 className="font-semibold text-white text-sm text-balance">Carbon Price Comparison</h3>
                 <p className="text-xs text-slate-500 mt-0.5">USD / tCO₂e — latest available year</p>
               </div>
 
@@ -247,7 +247,7 @@ export default function DashboardPage() {
             {/* IDXCarbon Monthly Line Chart */}
             <div className="rounded-2xl border border-white/5 bg-slate-900/60 p-6">
               <div className="mb-5">
-                <h3 className="font-semibold text-white text-sm">IDXCarbon Monthly Price</h3>
+                <h3 className="font-semibold text-white text-sm text-balance">IDXCarbon Monthly Price</h3>
                 <p className="text-xs text-slate-500 mt-0.5">12-month trend · IDR converted to USD (Rp 16,000/$)</p>
               </div>
 

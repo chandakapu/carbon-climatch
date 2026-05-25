@@ -38,3 +38,25 @@ html {
 ::-webkit-scrollbar-thumb:hover {
   background: #10b981;
 }
+
+/* Interaction-based input validation visual feedback */
+input:user-invalid, select:user-invalid {
+  border-color: #f87171 !important; /* red-400 */
+  background-color: rgba(127, 29, 29, 0.15) !important;
+  outline-color: #f87171 !important;
+}
+
+input:user-valid, select:user-valid {
+  border-color: #34d399 !important; /* emerald-400 */
+}
+
+/* Custom inline error messages reveal */
+.error-msg-inline {
+  display: none;
+}
+
+input:user-invalid ~ .error-msg-inline,
+select:user-invalid ~ .error-msg-inline {
+  display: block;
+}
+

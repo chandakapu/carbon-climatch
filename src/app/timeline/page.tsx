@@ -29,10 +29,10 @@ export default function TimelinePage() {
     <div className="min-h-screen bg-[#0b1120] text-white font-sans">
       <main className="mx-auto max-w-5xl px-6 py-12">
         <div className="mb-12">
-          <h1 className="text-3xl font-bold tracking-tight text-white mb-2">
+          <h1 className="text-3xl font-bold tracking-tight text-white mb-2 text-balance">
             Regulatory Timeline
           </h1>
-          <p className="text-slate-400 text-sm leading-relaxed max-w-2xl">
+          <p className="text-slate-400 text-sm leading-relaxed max-w-2xl text-pretty">
             Stay ahead of domestic and international carbon regulations. This timeline tracks 
             key enforcement dates for Indonesia&apos;s NEK ETS and the EU&apos;s Carbon Border Adjustment Mechanism (CBAM).
           </p>
@@ -61,8 +61,8 @@ export default function TimelinePage() {
                       {event.status}
                     </span>
                   </div>
-                  <h3 className="text-white font-bold mb-2">{event.title}</h3>
-                  <p className="text-slate-400 text-xs leading-relaxed mb-4">
+                  <h3 className="text-white font-bold mb-2 text-balance">{event.title}</h3>
+                  <p className="text-slate-400 text-xs leading-relaxed mb-4 text-pretty">
                     {event.description}
                   </p>
                   <div className="flex flex-wrap gap-2">

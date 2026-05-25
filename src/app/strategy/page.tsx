@@ -42,15 +42,43 @@ function Section({ title, defaultOpen, children }: { title: string; defaultOpen?
 }
 
 /* ── Reusable Input Components ───────────────────────────────── */
-function NumInput({ id, label, value, onChange, suffix }: { id: string; label: string; value: string; onChange: (v: string) => void; suffix?: string }) {
+function NumInput({ 
+    id, 
+    label, 
+    value, 
+    onChange, 
+    suffix,
+    required = true,
+    min = "0.0001"
+}: { 
+    id: string; 
+    label: string; 
+    value: string; 
+    onChange: (v: string) => void; 
+    suffix?: string;
+    required?: boolean;
+    min?: string;
+}) {
     return (
         <div>
             <label htmlFor={id} className="block text-xs font-medium text-slate-300 mb-1.5">{label}</label>
             <div className="relative">
-                <input id={id} type="number" min="0" step="any" value={value} onChange={e => onChange(e.target.value)}
-                    className="w-full rounded-lg border border-slate-600 bg-slate-800 px-4 py-2.5 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50" />
+                <input 
+                    id={id} 
+                    type="number" 
+                    required={required} 
+                    min={min} 
+                    step="any" 
+                    value={value} 
+                    onChange={e => onChange(e.target.value)}
+                    aria-describedby={`${id}-error`}
+                    className="w-full rounded-lg border border-slate-600 bg-slate-800 px-4 py-2.5 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50" 
+                />
                 {suffix && <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500">{suffix}</span>}
             </div>
+            <span id={`${id}-error`} className="error-msg-inline hidden text-red-400 text-xs mt-1.5 font-medium">
+                ❌ Please enter a valid number.
+            </span>
         </div>
     );
 }
@@ -130,9 +158,21 @@ export default function StrategyPage() {
     const handleCalculate = () => {
         setError("");
         const e = Number(annualEmissions), p = Number(carbonPriceIdr), c = Number(capexAmount);
-        if (!e || e <= 0) { setError("Enter a positive annual emissions value."); return; }
-        if (!p || p <= 0) { setError("Enter a valid carbon price."); return; }
-        if (!c || c <= 0) { setError("Enter a valid CAPEX amount."); return; }
+        if (!e || e <= 0) { 
+            setError("Enter a positive annual emissions value."); 
+            document.getElementById("annual-emissions")?.focus();
+            return; 
+        }
+        if (!p || p <= 0) { 
+            setError("Enter a valid carbon price."); 
+            document.getElementById("carbon-price")?.focus();
+            return; 
+        }
+        if (!c || c <= 0) { 
+            setError("Enter a valid CAPEX amount."); 
+            document.getElementById("capex-amount")?.focus();
+            return; 
+        }
 
         const inputs: StrategyInputs = {
             annual_emissions: e, carbon_price_idr: p,
@@ -205,8 +245,8 @@ export default function StrategyPage() {
             <main className="mx-auto max-w-5xl px-6 py-12">
                 {/* Header */}
                 <div className="mb-10">
-                    <h1 className="text-3xl font-bold tracking-tight text-white mb-2">Carbon Strategy Optimizer</h1>
-                    <p className="text-slate-400 text-sm leading-relaxed max-w-2xl">
+                    <h1 className="text-3xl font-bold tracking-tight text-white mb-2 text-balance">Carbon Strategy Optimizer</h1>
+                    <p className="text-slate-400 text-sm leading-relaxed max-w-2xl text-pretty">
                         Compare OPEX (buy credits), CAPEX (green investment), and Mixed strategies
                         across your planning horizon to find the optimal carbon compliance path.
                     </p>
@@ -226,13 +266,13 @@ export default function StrategyPage() {
                     <Section title="🏭 CAPEX Investment Details" defaultOpen>
                         <div className="grid gap-4 sm:grid-cols-2 pt-4">
                             <NumInput id="capex-amount" label="CAPEX Amount (IDR)" value={capexAmount} onChange={setCapexAmount} suffix="IDR" />
-                            <NumInput id="interest-rate" label="Interest Rate (%)" value={interestRate} onChange={setInterestRate} suffix="%" />
+                            <NumInput id="interest-rate" label="Interest Rate (%)" value={interestRate} onChange={setInterestRate} suffix="%" min="0" />
                         </div>
                         <SliderInput id="emission-reduction" label="Emission Reduction from CAPEX" value={emissionReduction} onChange={setEmissionReduction} />
                         <SliderInput id="down-payment" label="Down Payment" value={downPayment} onChange={setDownPayment} />
                         <div className="grid gap-4 sm:grid-cols-2">
                             <SelectInput id="loan-term" label="Loan Term (years)" value={loanTerm} options={[3, 5, 7, 10]} onChange={setLoanTerm} />
-                            <NumInput id="maintenance" label="Annual Maintenance (% of CAPEX)" value={maintenancePct} onChange={setMaintenancePct} suffix="%" />
+                            <NumInput id="maintenance" label="Annual Maintenance (% of CAPEX)" value={maintenancePct} onChange={setMaintenancePct} suffix="%" min="0" />
                         </div>
                         <div className="grid gap-4 sm:grid-cols-2">
                             <SelectInput id="dep-method" label="Depreciation Method" value={depMethod} options={["Straight-line", "Declining Balance"]} onChange={v => setDepMethod(v as "Straight-line" | "Declining Balance")} />
@@ -244,7 +284,7 @@ export default function StrategyPage() {
                         <div className="pt-4">
                             <SliderInput id="mixed-alloc" label="CAPEX Allocation in Mixed Strategy" value={mixedAllocation} onChange={setMixedAllocation} />
                         </div>
-                        <NumInput id="tax-rate" label="Corporate Tax Rate (%)" value={taxRate} onChange={setTaxRate} suffix="%" />
+                        <NumInput id="tax-rate" label="Corporate Tax Rate (%)" value={taxRate} onChange={setTaxRate} suffix="%" min="0" />
                     </Section>
                 </div>
 
@@ -259,7 +299,7 @@ export default function StrategyPage() {
                 {results && (
                     <div className="space-y-8 animate-in fade-in">
                         <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-xl font-bold text-white">Analysis Results</h2>
+                            <h2 className="text-xl font-bold text-white text-balance">Analysis Results</h2>
                             <button
                                 onClick={handleExportPdf}
                                 disabled={isExporting}
@@ -297,8 +337,8 @@ export default function StrategyPage() {
 
                         {/* 2. Stacked Bar Chart */}
                         <div className="rounded-xl border border-white/10 bg-slate-900/60 p-6">
-                            <h2 className="text-lg font-semibold text-white mb-1">Annual Cost Breakdown</h2>
-                            <p className="text-xs text-slate-400 mb-4">Stacked components per strategy per year</p>
+                            <h2 className="text-lg font-semibold text-white mb-1 text-balance">Annual Cost Breakdown</h2>
+                            <p className="text-xs text-slate-400 mb-4 text-pretty">Stacked components per strategy per year</p>
                             <ResponsiveContainer width="100%" height={360}>
                                 <BarChart data={barData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
                                     <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
@@ -321,7 +361,7 @@ export default function StrategyPage() {
 
                         {/* 3. Break-even Line Chart */}
                         <div className="rounded-xl border border-white/10 bg-slate-900/60 p-6">
-                            <h2 className="text-lg font-semibold text-white mb-1">Cumulative Cost & Break-even</h2>
+                            <h2 className="text-lg font-semibold text-white mb-1 text-balance">Cumulative Cost & Break-even</h2>
                             <p className="text-xs text-slate-400 mb-4">
                                 {results.break_even_year
                                     ? `CAPEX breaks even vs OPEX at Year ${results.break_even_year}`
@@ -347,8 +387,8 @@ export default function StrategyPage() {
 
                         {/* 4. Budget Allocation Donut */}
                         <div className="rounded-xl border border-white/10 bg-slate-900/60 p-6">
-                            <h2 className="text-lg font-semibold text-white mb-1">Mixed Strategy — Budget Allocation</h2>
-                            <p className="text-xs text-slate-400 mb-4">How costs are distributed in the blended approach</p>
+                            <h2 className="text-lg font-semibold text-white mb-1 text-balance">Mixed Strategy — Budget Allocation</h2>
+                            <p className="text-xs text-slate-400 mb-4 text-pretty">How costs are distributed in the blended approach</p>
                             <div className="flex flex-col sm:flex-row items-center gap-6">
                                 <ResponsiveContainer width={260} height={260}>
                                     <PieChart>
