@@ -28,19 +28,30 @@ Always:
 
     if (request.type === "cbam_result") {
         const d = request.data;
+        
+        let portfolioBreakdown = "";
+        if (Array.isArray(d.items) && d.items.length > 0) {
+            portfolioBreakdown = "Portfolio Sector Breakdown:\n" + d.items.map((item: any) => 
+                `- ${item.sector}: Export Volume ${item.export_volume_tons?.toLocaleString()} tons, Emissions ${item.total_emissions_tco2?.toLocaleString()} tCO2e, Net Liability: USD ${item.net_liability_usd?.toLocaleString()}`
+            ).join("\n");
+        } else {
+            portfolioBreakdown = `- Sector: ${d.sector}\n- Export Volume: ${d.export_volume_tons?.toLocaleString()} tons\n- Emissions: ${d.total_emissions_tco2?.toLocaleString()} tCO2e\n- Net Liability: USD ${d.net_liability_usd?.toLocaleString()}`;
+        }
+
         userPrompt = `
-A CFO has just calculated their CBAM exposure using our calculator. Here are the results:
-- Sector: ${d.sector}
-- Annual export volume to EU: ${d.export_volume_tons} tons
-- Total emissions: ${d.total_emissions_tco2} tCO2e
-- Gross CBAM liability: USD ${d.cbam_liability_usd?.toLocaleString()}
-- Indonesia carbon credit deduction: USD ${d.indonesia_carbon_credit_usd?.toLocaleString()}
-- Net CBAM liability: USD ${d.net_liability_usd?.toLocaleString()} (IDR ${d.net_liability_idr?.toLocaleString()})
+A CFO has calculated their EU CBAM exposure for their export portfolio. Here are the results:
+${portfolioBreakdown}
+
+Aggregated Totals:
+- Total Export Volume: ${d.total_export_volume_tons?.toLocaleString() ?? d.export_volume_tons?.toLocaleString()} tons
+- Total Emissions: ${d.total_emissions_tco2?.toLocaleString() ?? d.total_emissions_tco2?.toLocaleString()} tCO2e
+- Total Gross CBAM Liability: USD ${(d.total_cbam_liability_usd ?? d.cbam_liability_usd)?.toLocaleString()}
+- Total Indonesia Carbon Credit Deduction: USD ${(d.total_indonesia_carbon_credit_usd ?? d.indonesia_carbon_credit_usd)?.toLocaleString()}
+- Total Net CBAM Liability: USD ${(d.total_net_liability_usd ?? d.net_liability_usd)?.toLocaleString()} (IDR ${(d.total_net_liability_idr ?? d.net_liability_idr)?.toLocaleString()})
 - EU ETS price used: USD ${d.eu_ets_price_usd}/tCO2e
 - Indonesia carbon price used: USD ${d.indonesia_carbon_price_usd}/tCO2e
 
-Provide a brief, plain-language interpretation of what these numbers mean for the company 
-and what actions the CFO should consider, given that CBAM full enforcement started January 2026.
+In exactly 3-5 sentences, provide a strategic risk analysis for the CFO. Identify which sector poses the highest exposure, discuss the buffering effect of domestic pricing offsets, and propose one immediate action to mitigate exposure (given that CBAM full enforcement started January 2026).
     `.trim();
     } else if (request.type === "dashboard_summary") {
         userPrompt = `

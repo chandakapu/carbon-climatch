@@ -1,278 +1,425 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { calculateCBAMExposure } from "@/lib/calculations";
+import { calculateCBAMPortfolio } from "@/lib/calculations";
 import { getCBAMConfig, getIDXCarbonMonthly } from "@/lib/data";
-import type { CBAMCalculationResult } from "@/types";
+import type { CBAMPortfolioItem, CBAMPortfolioResult } from "@/types";
 import MarkdownRenderer from "@/components/ui/MarkdownRenderer";
+import CBAMPortfolioCharts from "@/components/dashboard/CBAMPortfolioCharts";
 
 const USD_TO_IDR = 16000;
 
 function formatUsd(value: number): string {
-    return value.toLocaleString("en-US", {
-        style: "currency",
-        currency: "USD",
-        maximumFractionDigits: 0,
-    });
+  return value.toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  });
 }
 
 function formatIdr(value: number): string {
-    return `IDR ${value.toLocaleString("id-ID", { maximumFractionDigits: 0 })}`;
+  return `IDR ${value.toLocaleString("id-ID", { maximumFractionDigits: 0 })}`;
 }
 
 export default function CalculatorPage() {
-    const { applicableSectors, euEtsPriceUsd, idxPriceUsd, latestIdx } = useMemo(() => {
-        const config = getCBAMConfig();
-        const applicableSectors = config.sectors.filter((s) => s.cbam_applicable);
-        const sortedIDX = [...getIDXCarbonMonthly()].sort((a, b) => a.month.localeCompare(b.month));
-        const latestIdx = sortedIDX[sortedIDX.length - 1];
-        const idxPriceUsd = latestIdx ? latestIdx.avg_price_idr / USD_TO_IDR : 0;
+  const { applicableSectors, defaultEuPriceUsd, defaultIdxPriceUsd, latestIdx } = useMemo(() => {
+    const config = getCBAMConfig();
+    const applicableSectors = config.sectors.filter((s) => s.cbam_applicable);
+    const sortedIDX = [...getIDXCarbonMonthly()].sort((a, b) => a.month.localeCompare(b.month));
+    const latestIdx = sortedIDX[sortedIDX.length - 1];
+    const defaultIdxPriceUsd = latestIdx ? latestIdx.avg_price_idr / USD_TO_IDR : 2.0; // Fallback to ~$2 carbon tax floor
 
-        return {
-            applicableSectors,
-            euEtsPriceUsd: config.eu_ets_price_usd,
-            idxPriceUsd,
-            latestIdx,
-        };
-    }, []);
-
-    const [sectorId, setSectorId] = useState(applicableSectors[0]?.id ?? "");
-    const [exportVolume, setExportVolume] = useState("");
-    const [result, setResult] = useState<CBAMCalculationResult | null>(null);
-    const [validationError, setValidationError] = useState("");
-    const [analysis, setAnalysis] = useState("");
-    const [analysisLoading, setAnalysisLoading] = useState(false);
-    const [analysisError, setAnalysisError] = useState("");
-
-    const fetchAnalysis = async (calcResult: CBAMCalculationResult) => {
-        setAnalysisLoading(true);
-        setAnalysisError("");
-        setAnalysis("");
-
-        try {
-            const response = await fetch("/api/analyze", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    type: "cbam_result",
-                    data: {
-                        ...calcResult,
-                        net_liability_idr: calcResult.net_liability_usd * USD_TO_IDR,
-                        eu_ets_price_usd: euEtsPriceUsd,
-                        indonesia_carbon_price_usd: idxPriceUsd,
-                    },
-                }),
-            });
-
-            if (!response.ok) throw new Error("Analysis failed");
-
-            const { analysis: text } = await response.json();
-            setAnalysis(text);
-        } catch {
-            setAnalysisError(
-                "Could not generate analysis. Check your connection and try again."
-            );
-        } finally {
-            setAnalysisLoading(false);
-        }
+    return {
+      applicableSectors,
+      defaultEuPriceUsd: config.eu_ets_price_usd,
+      defaultIdxPriceUsd,
+      latestIdx,
     };
+  }, []);
 
-    const handleCalculate = () => {
-        setValidationError("");
-        setResult(null);
-        setAnalysis("");
-        setAnalysisError("");
+  // State management
+  const [portfolioItems, setPortfolioItems] = useState<CBAMPortfolioItem[]>([
+    { id: "1", sectorId: applicableSectors[0]?.id ?? "", export_volume_tons: 5000 },
+  ]);
+  const [euEtsPrice, setEuEtsPrice] = useState(defaultEuPriceUsd.toString());
+  const [indonesiaPrice, setIndonesiaPrice] = useState(defaultIdxPriceUsd.toFixed(2));
+  
+  const [result, setResult] = useState<CBAMPortfolioResult | null>(null);
+  const [validationError, setValidationError] = useState("");
+  const [analysis, setAnalysis] = useState("");
+  const [analysisLoading, setAnalysisLoading] = useState(false);
+  const [analysisError, setAnalysisError] = useState("");
 
-        const sector = applicableSectors.find((s) => s.id === sectorId);
-        if (!sector) {
-            setValidationError("Please select a valid sector.");
-            return;
+  // Handle adding a new product line
+  const handleAddItem = () => {
+    setPortfolioItems([
+      ...portfolioItems,
+      {
+        id: Date.now().toString(),
+        sectorId: applicableSectors[0]?.id ?? "",
+        export_volume_tons: 1000,
+      },
+    ]);
+  };
+
+  // Handle removing a product line
+  const handleRemoveItem = (id: string) => {
+    // Keep at least one item
+    if (portfolioItems.length === 1) {
+      setValidationError("Your portfolio must contain at least one product line.");
+      return;
+    }
+    setPortfolioItems(portfolioItems.filter((item) => item.id !== id));
+    setValidationError("");
+  };
+
+  // Handle modifying field values
+  const handleUpdateItem = (id: string, field: "sectorId" | "export_volume_tons", value: string | number) => {
+    setPortfolioItems(
+      portfolioItems.map((item) => {
+        if (item.id === id) {
+          return {
+            ...item,
+            [field]: field === "export_volume_tons" ? Number(value) : value,
+          };
         }
-
-        const volume = Number(exportVolume);
-        if (!exportVolume.trim() || Number.isNaN(volume) || volume <= 0) {
-            setValidationError("Enter a positive annual export volume in tons.");
-            // Focus the invalid field for proper keyboard accessibility
-            const inputEl = document.getElementById("export-volume");
-            if (inputEl) {
-                inputEl.focus();
-            }
-            return;
-        }
-
-        const calcResult = calculateCBAMExposure(
-            sector,
-            volume,
-            euEtsPriceUsd,
-            idxPriceUsd
-        );
-        setResult(calcResult);
-        fetchAnalysis(calcResult);
-    };
-
-    const netLiabilityIdr = result ? result.net_liability_usd * USD_TO_IDR : 0;
-    const indonesiaCreditIdr = result ? result.indonesia_carbon_credit_usd * USD_TO_IDR : 0;
-
-    return (
-        <div className="min-h-screen bg-[#0b1120] text-white font-sans">
-            <main className="mx-auto max-w-3xl px-6 py-12">
-                <div className="mb-10">
-                    <h1 className="text-3xl font-bold tracking-tight text-white mb-2 text-balance">
-                        CBAM Exposure Calculator
-                    </h1>
-                    <p className="text-slate-400 text-sm leading-relaxed text-pretty">
-                        Estimate your EU Carbon Border Adjustment Mechanism liability based on
-                        sector emission factors, export volume, and current carbon prices.
-                    </p>
-                </div>
-
-                <div className="rounded-xl border border-white/10 bg-slate-900/60 p-6 space-y-5">
-                    <div>
-                        <label
-                            htmlFor="sector"
-                            className="block text-sm font-medium text-slate-300 mb-2"
-                        >
-                            Select your sector
-                        </label>
-                        <select
-                            id="sector"
-                            value={sectorId}
-                            onChange={(e) => setSectorId(e.target.value)}
-                            className="w-full rounded-lg border border-slate-600 bg-slate-800 px-4 py-2.5 text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
-                        >
-                            {applicableSectors.map((sector) => (
-                                <option key={sector.id} value={sector.id}>
-                                    {sector.name}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-
-                    <div>
-                        <label
-                            htmlFor="export-volume"
-                            className="block text-sm font-medium text-slate-300 mb-2"
-                        >
-                            Annual export volume to EU (tons)
-                        </label>
-                        <span id="export-volume-hint" className="block text-xs text-slate-500 mb-1.5 text-pretty">
-                            Enter a positive number of metric tons.
-                        </span>
-                        <input
-                            id="export-volume"
-                            type="number"
-                            required
-                            min="0.0001"
-                            step="any"
-                            value={exportVolume}
-                            onChange={(e) => setExportVolume(e.target.value)}
-                            placeholder="e.g. 10000"
-                            aria-describedby="export-volume-hint export-volume-error"
-                            className="w-full rounded-lg border border-slate-600 bg-slate-800 px-4 py-2.5 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
-                        />
-                        <span id="export-volume-error" className="error-msg-inline hidden text-red-400 text-xs mt-1.5 font-medium">
-                            ❌ Please enter a positive number for the export volume.
-                        </span>
-                    </div>
-
-                    {validationError && (
-                        <p className="text-red-400 text-sm">{validationError}</p>
-                    )}
-
-                    <button
-                        type="button"
-                        onClick={handleCalculate}
-                        className="w-full rounded-lg bg-emerald-500 hover:bg-emerald-400 transition-colors px-4 py-3 text-sm font-bold text-black"
-                    >
-                        Calculate exposure
-                    </button>
-                </div>
-
-                {result && (
-                    <div className="mt-8 rounded-xl border border-white/10 bg-slate-900/80 p-6 space-y-5">
-                        <h2 className="text-lg font-semibold text-white text-balance">Results</h2>
-
-                        <div className="grid gap-4 sm:grid-cols-2">
-                            <div className="rounded-lg bg-slate-800/60 p-4">
-                                <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">
-                                    Total estimated emissions
-                                </p>
-                                <p className="text-xl font-bold text-white">
-                                    {result.total_emissions_tco2.toLocaleString("en-US", {
-                                        maximumFractionDigits: 2,
-                                    })}{" "}
-                                    <span className="text-sm font-normal text-slate-400">tCO2e</span>
-                                </p>
-                            </div>
-
-                            <div className="rounded-lg bg-slate-800/60 p-4">
-                                <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">
-                                    Gross CBAM liability
-                                </p>
-                                <p className="text-xl font-bold text-amber-400">
-                                    {formatUsd(result.cbam_liability_usd)}
-                                </p>
-                                <p className="text-sm text-slate-400 mt-0.5">
-                                    {formatIdr(result.cbam_liability_idr)}
-                                </p>
-                            </div>
-
-                            <div className="rounded-lg bg-slate-800/60 p-4">
-                                <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">
-                                    Indonesia carbon credit deduction
-                                </p>
-                                <p className="text-xl font-bold text-emerald-400">
-                                    {formatUsd(result.indonesia_carbon_credit_usd)}
-                                </p>
-                                <p className="text-sm text-slate-400 mt-0.5">
-                                    {formatIdr(indonesiaCreditIdr)}
-                                </p>
-                            </div>
-
-                            <div className="rounded-lg bg-slate-800/60 p-4">
-                                <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">
-                                    Net CBAM liability
-                                </p>
-                                <p className="text-xl font-bold text-red-400">
-                                    {formatUsd(result.net_liability_usd)}
-                                </p>
-                                <p className="text-sm text-slate-400 mt-0.5">
-                                    {formatIdr(netLiabilityIdr)}
-                                </p>
-                            </div>
-                        </div>
-
-                        <p className="text-xs text-slate-500">
-                            Prices used: EU ETS {formatUsd(euEtsPriceUsd)}/tCO2e · IDXCarbon{" "}
-                            {latestIdx
-                                ? `${latestIdx.month} (${formatIdr(latestIdx.avg_price_idr)}/tCO2e, ~${idxPriceUsd.toFixed(2)} USD)`
-                                : "N/A"}
-                        </p>
-
-                        <div className="border-t border-slate-700 pt-5">
-                            <div className="flex items-center gap-2 mb-3">
-                                <span className="text-emerald-400 text-lg">🤖</span>
-                                <h3 className="text-white font-medium text-sm">AI Analyst Summary</h3>
-                            </div>
-
-                            {analysisLoading && (
-                                <div className="flex items-center gap-2 text-slate-400 text-sm">
-                                    <div className="w-4 h-4 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin" />
-                                    Generating plain-language summary...
-                                </div>
-                            )}
-
-                            {analysisError && (
-                                <p className="text-red-400 text-sm">{analysisError}</p>
-                            )}
-
-                            {analysis && !analysisLoading && (
-                                <MarkdownRenderer content={analysis} />
-                            )}
-                        </div>
-                    </div>
-                )}
-            </main>
-        </div>
+        return item;
+      })
     );
+  };
+
+  // Fetch AI risk advisory
+  const fetchAnalysis = async (calcResult: CBAMPortfolioResult, euPriceUsd: number, indoPriceUsd: number) => {
+    setAnalysisLoading(true);
+    setAnalysisError("");
+    setAnalysis("");
+
+    try {
+      const response = await fetch("/api/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "cbam_result",
+          data: {
+            ...calcResult,
+            eu_ets_price_usd: euPriceUsd,
+            indonesia_carbon_price_usd: indoPriceUsd,
+          },
+        }),
+      });
+
+      if (!response.ok) throw new Error("Analysis failed");
+
+      const { analysis: text } = await response.json();
+      setAnalysis(text);
+    } catch {
+      setAnalysisError(
+        "Could not generate AI analysis. Check your connection and try again."
+      );
+    } finally {
+      setAnalysisLoading(false);
+    }
+  };
+
+  // Run calculation
+  const handleCalculate = () => {
+    setValidationError("");
+    setResult(null);
+    setAnalysis("");
+    setAnalysisError("");
+
+    // Validate global prices
+    const euPriceNum = Number(euEtsPrice);
+    const indoPriceNum = Number(indonesiaPrice);
+
+    if (Number.isNaN(euPriceNum) || euPriceNum < 0) {
+      setValidationError("Please enter a valid EU ETS Price.");
+      return;
+    }
+
+    if (Number.isNaN(indoPriceNum) || indoPriceNum < 0) {
+      setValidationError("Please enter a valid Indonesia Carbon Price.");
+      return;
+    }
+
+    // Validate sectors and volumes
+    for (const item of portfolioItems) {
+      if (!item.sectorId) {
+        setValidationError("Ensure all product lines have a selected sector.");
+        return;
+      }
+      if (Number.isNaN(item.export_volume_tons) || item.export_volume_tons <= 0) {
+        setValidationError("Enter a positive export volume for all product lines.");
+        // Focus the first invalid input for keyboard accessibility
+        const el = document.getElementById(`vol-${item.id}`);
+        el?.focus();
+        return;
+      }
+    }
+
+    const portfolioResult = calculateCBAMPortfolio(
+      portfolioItems,
+      applicableSectors,
+      euPriceNum,
+      indoPriceNum
+    );
+
+    setResult(portfolioResult);
+    fetchAnalysis(portfolioResult, euPriceNum, indoPriceNum);
+  };
+
+  return (
+    <div className="min-h-screen bg-[#0b1120] text-white font-sans">
+      <main className="mx-auto max-w-6xl px-6 py-12 space-y-10">
+        
+        {/* Header */}
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight text-white mb-2 text-balance">
+            CBAM Portfolio Exposure Calculator
+          </h1>
+          <p className="text-slate-400 text-sm leading-relaxed text-pretty max-w-3xl">
+            Model the aggregate EU Carbon Border Adjustment Mechanism exposure for your company&apos;s export portfolio. 
+            Specify export volumes across multiple manufacturing sectors, customize pricing offsets, and evaluate visual distributions.
+          </p>
+        </div>
+
+        {/* Configuration Panel */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          
+          {/* Global Assumptions */}
+          <div className="lg:col-span-1 rounded-xl border border-white/5 bg-slate-900/60 p-6 space-y-4 h-fit">
+            <h2 className="text-sm font-semibold text-white uppercase tracking-wider mb-2 border-b border-white/5 pb-2">
+              Carbon Pricing Parameters
+            </h2>
+
+            <div>
+              <label htmlFor="eu-price" className="block text-xs font-medium text-slate-300 mb-1.5">
+                EU ETS Carbon Price (USD/tCO₂e)
+              </label>
+              <input
+                id="eu-price"
+                type="number"
+                step="any"
+                min="0"
+                value={euEtsPrice}
+                onChange={(e) => setEuEtsPrice(e.target.value)}
+                className="w-full rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+              />
+              <span className="text-[10px] text-slate-500 mt-1 block">
+                Official EU ETS benchmark reference.
+              </span>
+            </div>
+
+            <div>
+              <label htmlFor="indo-price" className="block text-xs font-medium text-slate-300 mb-1.5">
+                Indonesia Domestic Price Offset (USD/tCO₂e)
+              </label>
+              <input
+                id="indo-price"
+                type="number"
+                step="any"
+                min="0"
+                value={indonesiaPrice}
+                onChange={(e) => setIndonesiaPrice(e.target.value)}
+                className="w-full rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+              />
+              <span className="text-[10px] text-slate-500 mt-1 block">
+                IDXCarbon benchmark: ~${defaultIdxPriceUsd.toFixed(2)}/tCO₂e
+                {latestIdx && ` (Rp ${latestIdx.avg_price_idr.toLocaleString("id-ID")}/t)`}
+              </span>
+            </div>
+
+            <div className="rounded-lg bg-slate-800/40 p-3 text-[11px] text-slate-400 space-y-1">
+              <p className="font-semibold text-white">Domestic Deduction Offset</p>
+              <p>
+                CBAM regulations permit the deduction of domestic carbon prices paid in the exporting country. 
+                Indonesia&apos;s NEK ETS or carbon tax paid will offset your total EU liability.
+              </p>
+            </div>
+          </div>
+
+          {/* Portfolio Table Editor */}
+          <div className="lg:col-span-2 rounded-xl border border-white/5 bg-slate-900/60 p-6 space-y-6">
+            <div className="flex items-center justify-between border-b border-white/5 pb-2">
+              <h2 className="text-sm font-semibold text-white uppercase tracking-wider">
+                Export Product Portfolio
+              </h2>
+              <button
+                type="button"
+                onClick={handleAddItem}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-400 hover:bg-emerald-500/20 transition-all"
+              >
+                <span>+</span> Add Product Line
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              {portfolioItems.map((item, index) => (
+                <div 
+                  key={item.id} 
+                  className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end p-4 rounded-lg bg-slate-800/40 border border-white/5"
+                >
+                  {/* Sector Selection */}
+                  <div className="sm:col-span-6">
+                    <label htmlFor={`sec-${item.id}`} className="block text-[11px] font-medium text-slate-400 mb-1">
+                      Sector Product Category
+                    </label>
+                    <select
+                      id={`sec-${item.id}`}
+                      value={item.sectorId}
+                      onChange={(e) => handleUpdateItem(item.id, "sectorId", e.target.value)}
+                      className="w-full rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-white text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                    >
+                      {applicableSectors.map((sector) => (
+                        <option key={sector.id} value={sector.id}>
+                          {sector.name} ({sector.emission_factor_tco2_per_ton.toFixed(3)} tCO₂/t)
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Volume Input */}
+                  <div className="sm:col-span-4">
+                    <label htmlFor={`vol-${item.id}`} className="block text-[11px] font-medium text-slate-400 mb-1">
+                      Annual Export Volume (tons)
+                    </label>
+                    <input
+                      id={`vol-${item.id}`}
+                      type="number"
+                      min="0.1"
+                      step="any"
+                      value={item.export_volume_tons || ""}
+                      onChange={(e) => handleUpdateItem(item.id, "export_volume_tons", e.target.value)}
+                      placeholder="e.g. 5000"
+                      className="w-full rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                    />
+                  </div>
+
+                  {/* Actions */}
+                  <div className="sm:col-span-2 flex justify-end">
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveItem(item.id)}
+                      disabled={portfolioItems.length === 1}
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-1 rounded-lg border border-red-500/20 hover:border-red-500/40 bg-red-500/10 hover:bg-red-500/20 px-3 py-2 text-xs font-semibold text-red-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {validationError && (
+              <p className="text-red-400 text-xs font-medium" role="alert">
+                ⚠️ {validationError}
+              </p>
+            )}
+
+            <button
+              type="button"
+              onClick={handleCalculate}
+              className="w-full rounded-lg bg-emerald-500 hover:bg-emerald-400 transition-colors py-3 text-sm font-bold text-black shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/35"
+            >
+              Run Portfolio Exposure Calculation
+            </button>
+          </div>
+        </div>
+
+        {/* Calculation Output Results */}
+        {result && (
+          <div className="space-y-8 animate-fadeIn">
+            
+            {/* KPI Cards Grid */}
+            <div className="grid gap-4 grid-cols-2 md:grid-cols-5">
+              
+              <div className="rounded-xl border border-white/5 bg-slate-900/60 p-4">
+                <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">
+                  Export Volume
+                </p>
+                <p className="text-lg font-bold text-white">
+                  {result.total_export_volume_tons.toLocaleString("en-US", { maximumFractionDigits: 0 })}
+                  <span className="text-xs font-normal text-slate-400 ml-1">tons</span>
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-white/5 bg-slate-900/60 p-4">
+                <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">
+                  Embedded Emissions
+                </p>
+                <p className="text-lg font-bold text-white">
+                  {result.total_emissions_tco2.toLocaleString("en-US", { maximumFractionDigits: 0 })}
+                  <span className="text-xs font-normal text-slate-400 ml-1">tCO₂e</span>
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-white/5 bg-slate-900/60 p-4">
+                <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">
+                  Gross CBAM Liability
+                </p>
+                <p className="text-lg font-bold text-amber-400">
+                  {formatUsd(result.total_cbam_liability_usd)}
+                </p>
+                <p className="text-[10px] text-slate-500 mt-0.5">
+                  {formatIdr(result.total_cbam_liability_idr)}
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-white/5 bg-slate-900/60 p-4">
+                <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">
+                  Domestic Offset Credit
+                </p>
+                <p className="text-lg font-bold text-emerald-400">
+                  {formatUsd(result.total_indonesia_carbon_credit_usd)}
+                </p>
+                <p className="text-[10px] text-slate-500 mt-0.5">
+                  {formatIdr(result.total_indonesia_carbon_credit_usd * USD_TO_IDR)}
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-red-500/20 bg-red-950/20 p-4 col-span-2 md:col-span-1">
+                <p className="text-[10px] text-red-400 uppercase tracking-wider mb-1">
+                  Net CBAM Exposure
+                </p>
+                <p className="text-lg font-bold text-red-400 font-sans">
+                  {formatUsd(result.total_net_liability_usd)}
+                </p>
+                <p className="text-[10px] text-red-500/70 mt-0.5 font-medium">
+                  {formatIdr(result.total_net_liability_idr)}
+                </p>
+              </div>
+            </div>
+
+            {/* Visual Analytics */}
+            <CBAMPortfolioCharts portfolioResult={result} />
+
+            {/* AI Advisor Panel */}
+            <div className="rounded-xl border border-white/5 bg-slate-900/60 p-6 space-y-4">
+              <div className="flex items-center gap-2 border-b border-white/5 pb-2">
+                <span className="text-emerald-400 text-lg">🤖</span>
+                <h3 className="text-white font-semibold text-sm">AI Analyst Portfolio Exposure Summary</h3>
+              </div>
+
+              {analysisLoading && (
+                <div className="flex items-center gap-3 text-slate-400 text-sm py-4">
+                  <div className="w-5 h-5 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin" />
+                  Analyzing portfolio risk metrics and calculating mitigation strategy offsets...
+                </div>
+              )}
+
+              {analysisError && (
+                <p className="text-red-400 text-sm font-medium">{analysisError}</p>
+              )}
+
+              {analysis && !analysisLoading && (
+                <div className="prose prose-invert prose-sm max-w-none text-slate-300">
+                  <MarkdownRenderer content={analysis} />
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </main>
+    </div>
+  );
 }

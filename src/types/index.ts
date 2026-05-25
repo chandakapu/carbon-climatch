@@ -94,3 +94,22 @@ export interface StrategyResults {
     break_even_year: number | null;
     recommended: "A" | "B" | "C";
 }
+
+// ── Multi-Sector CBAM Calculator Types ────────────────────────────
+
+export interface CBAMPortfolioItem {
+    id: string; // Unique row ID
+    sectorId: string; // Selected sector ID
+    export_volume_tons: number;
+}
+
+export interface CBAMPortfolioResult {
+    items: (CBAMCalculationResult & { id: string; sectorId: string })[];
+    total_export_volume_tons: number;
+    total_emissions_tco2: number;
+    total_cbam_liability_usd: number;
+    total_cbam_liability_idr: number;
+    total_indonesia_carbon_credit_usd: number;
+    total_net_liability_usd: number;
+    total_net_liability_idr: number;
+}
