@@ -60,3 +60,69 @@ select:user-invalid ~ .error-msg-inline {
   display: block;
 }
 
+/* Custom animations for login page */
+@theme {
+  --animate-element: fadeSlideIn 0.6s ease-out forwards;
+  --animate-slide-right: slideRightIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-testimonial: testimonialIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+
+  @keyframes fadeSlideIn {
+    from {
+      opacity: 0;
+      filter: blur(8px);
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      filter: blur(0px);
+      transform: translateY(0px);
+    }
+  }
+
+  @keyframes slideRightIn {
+    from {
+      opacity: 0;
+      filter: blur(12px);
+      transform: translateX(-40px);
+    }
+    to {
+      opacity: 1;
+      filter: blur(0px);
+      transform: translateX(0px);
+    }
+  }
+
+  @keyframes testimonialIn {
+    from {
+      opacity: 0;
+      filter: blur(4px);
+      transform: translateY(30px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      filter: blur(0px);
+      transform: translateY(0px) scale(1);
+    }
+  }
+}
+
+/* Initial hidden state for animated entrance elements */
+.animate-element, .animate-slide-right, .animate-testimonial {
+  opacity: 0;
+}
+
+/* Animation delay utility classes */
+.animate-delay-100 { animation-delay: 100ms; }
+.animate-delay-200 { animation-delay: 200ms; }
+.animate-delay-300 { animation-delay: 300ms; }
+.animate-delay-400 { animation-delay: 400ms; }
+.animate-delay-500 { animation-delay: 500ms; }
+.animate-delay-600 { animation-delay: 600ms; }
+.animate-delay-700 { animation-delay: 700ms; }
+.animate-delay-800 { animation-delay: 800ms; }
+.animate-delay-900 { animation-delay: 900ms; }
+.animate-delay-1000 { animation-delay: 1000ms; }
+.animate-delay-1200 { animation-delay: 1200ms; }
+.animate-delay-1400 { animation-delay: 1400ms; }
+
+
