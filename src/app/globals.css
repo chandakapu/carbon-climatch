@@ -104,6 +104,12 @@ select:user-invalid ~ .error-msg-inline {
       transform: translateY(0px) scale(1);
     }
   }
+
+  @keyframes border-beam {
+    100% {
+      offset-distance: 100%;
+    }
+  }
 }
 
 /* Initial hidden state for animated entrance elements */

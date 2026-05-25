@@ -3,6 +3,7 @@
 import { getRegulatoryTimeline } from "@/lib/data";
 import AIAnalystPanel from "@/components/ai/AIAnalystPanel";
 import { useLanguage } from "@/components/layout/LanguageContext";
+import { TracingBeam } from "@/components/ui/tracing-beam";
 
 export default function TimelinePage() {
   const { language, t } = useLanguage();
@@ -37,58 +38,65 @@ export default function TimelinePage() {
         </div>
 
         <div className="grid gap-8 lg:grid-cols-[1fr_300px]">
-          {/* Timeline list */}
-          <div className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-700 before:to-transparent">
-            {events.map((event) => {
-              const eventTitle = t(`timelineEvents.${event.id}.title`) !== `timelineEvents.${event.id}.title`
-                ? t(`timelineEvents.${event.id}.title`)
-                : event.title;
+          {/* Timeline list using TracingBeam */}
+          <div className="pl-6 md:pl-10">
+            <TracingBeam>
+              <div className="space-y-12">
+                {events.map((event) => {
+                  const eventTitle = t(`timelineEvents.${event.id}.title`) !== `timelineEvents.${event.id}.title`
+                    ? t(`timelineEvents.${event.id}.title`)
+                    : event.title;
 
-              const eventDesc = t(`timelineEvents.${event.id}.description`) !== `timelineEvents.${event.id}.description`
-                ? t(`timelineEvents.${event.id}.description`)
-                : event.description;
+                  const eventDesc = t(`timelineEvents.${event.id}.description`) !== `timelineEvents.${event.id}.description`
+                    ? t(`timelineEvents.${event.id}.description`)
+                    : event.description;
 
-              const statusLabel = 
-                event.status === "upcoming" ? (language === "id" ? "Mendatang" : "Upcoming") :
-                event.status === "active" ? (language === "id" ? "Aktif" : "Active") :
-                event.status === "past" ? (language === "id" ? "Selesai" : "Past") :
-                (language === "id" ? "Direncanakan" : "Planned");
+                  const statusLabel = 
+                    event.status === "upcoming" ? (language === "id" ? "Mendatang" : "Upcoming") :
+                    event.status === "active" ? (language === "id" ? "Aktif" : "Active") :
+                    event.status === "past" ? (language === "id" ? "Selesai" : "Past") :
+                    (language === "id" ? "Direncanakan" : "Planned");
 
-              return (
-                <div key={event.id} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                  {/* Dot */}
-                  <div className="flex items-center justify-center w-10 h-10 rounded-full border border-slate-700 bg-slate-900 text-slate-300 shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2">
-                    {event.type === "domestic" ? "🇮🇩" : "🇪🇺"}
-                  </div>
-                  {/* Content */}
-                  <div className="w-[calc(100%-4rem)] md:w-[45%] p-4 rounded-xl border border-white/5 bg-slate-900/50 backdrop-blur-sm">
-                    <div className="flex items-center justify-between mb-1">
-                      <time className="text-xs font-bold text-emerald-400 uppercase tracking-wider">
-                        {new Date(event.date).toLocaleDateString(language === "id" ? "id-ID" : "en-US", { month: "long", year: "numeric", day: "numeric" })}
-                      </time>
-                      <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${
-                        event.status === "upcoming" ? "bg-amber-500/10 text-amber-500 border border-amber-500/20" : 
-                        event.status === "active" ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20" :
-                        "bg-slate-500/10 text-slate-500 border border-slate-500/20"
-                      }`}>
-                        {statusLabel}
-                      </span>
+                  return (
+                    <div key={event.id} className="relative flex flex-col md:flex-row gap-4 items-start group">
+                      {/* Left Badge/Icon indicator */}
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center justify-center w-10 h-10 rounded-full border border-slate-700 bg-slate-900 text-slate-300 shadow shrink-0">
+                          {event.type === "domestic" ? "🇮🇩" : "🇪🇺"}
+                        </div>
+                      </div>
+                      
+                      {/* Content Card */}
+                      <div className="w-full p-6 rounded-xl border border-white/5 bg-slate-900/60 backdrop-blur-sm shadow-md hover:border-emerald-500/20 transition-all duration-300">
+                        <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+                          <time className="text-xs font-bold text-emerald-400 uppercase tracking-wider">
+                            {new Date(event.date).toLocaleDateString(language === "id" ? "id-ID" : "en-US", { month: "long", year: "numeric", day: "numeric" })}
+                          </time>
+                          <span className={`text-[10px] px-2 py-0.5 rounded-full font-bold uppercase ${
+                            event.status === "upcoming" ? "bg-amber-500/10 text-amber-500 border border-amber-500/20" : 
+                            event.status === "active" ? "bg-emerald-500/10 text-emerald-500 border border-emerald-500/20" :
+                            "bg-slate-500/10 text-slate-500 border border-slate-500/20"
+                          }`}>
+                            {statusLabel}
+                          </span>
+                        </div>
+                        <h3 className="text-white text-lg font-bold mb-2 text-balance">{eventTitle}</h3>
+                        <p className="text-slate-300 text-sm leading-relaxed mb-4 text-pretty">
+                          {eventDesc}
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          {event.affected_sectors.map(sector => (
+                            <span key={sector} className="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded uppercase tracking-wider">
+                              {sector}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
                     </div>
-                    <h3 className="text-white font-bold mb-2 text-balance">{eventTitle}</h3>
-                    <p className="text-slate-400 text-xs leading-relaxed mb-4 text-pretty">
-                      {eventDesc}
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      {event.affected_sectors.map(sector => (
-                        <span key={sector} className="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded uppercase tracking-wider">
-                          {sector}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+                  );
+                })}
+              </div>
+            </TracingBeam>
           </div>
 
           {/* Sidebar */}
