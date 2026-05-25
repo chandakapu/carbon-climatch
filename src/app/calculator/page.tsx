@@ -202,9 +202,18 @@ export default function CalculatorPage() {
             </h2>
 
             <div>
-              <label htmlFor="eu-price" className="block text-xs font-medium text-slate-300 mb-1.5">
-                {t("calculator.euEtsPriceLabel")}
-              </label>
+              <div className="flex justify-between items-center mb-1.5">
+                <label htmlFor="eu-price" className="block text-xs font-medium text-slate-300">
+                  {t("calculator.euEtsPriceLabel")}
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setEuEtsPrice(defaultEuPriceUsd.toString())}
+                  className="text-[10px] text-[#0CF2A0] hover:underline cursor-pointer"
+                >
+                  {language === "id" ? "Atur Ulang" : "Reset to Default"}
+                </button>
+              </div>
               <input
                 id="eu-price"
                 type="number"
@@ -221,9 +230,18 @@ export default function CalculatorPage() {
             </div>
 
             <div>
-              <label htmlFor="indo-price" className="block text-xs font-medium text-slate-300 mb-1.5">
-                {t("calculator.indoPriceLabel")}
-              </label>
+              <div className="flex justify-between items-center mb-1.5">
+                <label htmlFor="indo-price" className="block text-xs font-medium text-slate-300">
+                  {t("calculator.indoPriceLabel")}
+                </label>
+                <button
+                  type="button"
+                  onClick={() => setIndonesiaPrice(defaultIdxPriceUsd.toFixed(2))}
+                  className="text-[10px] text-[#0CF2A0] hover:underline cursor-pointer"
+                >
+                  {language === "id" ? "Atur Ulang" : "Reset to Default"}
+                </button>
+              </div>
               <input
                 id="indo-price"
                 type="number"

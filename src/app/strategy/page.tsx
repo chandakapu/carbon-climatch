@@ -8,6 +8,7 @@ import AIAnalystPanel from "@/components/ai/AIAnalystPanel";
 import FormalReportCharts from "@/components/strategy/FormalReportCharts";
 import type { FormalReportChartsRef } from "@/components/strategy/FormalReportCharts";
 import { generateFormalReport } from "@/lib/pdfExport";
+import { getCBAMConfig, getIDXCarbonMonthly } from "@/lib/data";
 import { useLanguage } from "@/components/layout/LanguageContext";
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
@@ -123,11 +124,33 @@ export default function StrategyPage() {
 
 
 
+    const config = getCBAMConfig();
+    const applicableSectors = config.sectors.filter((s) => s.cbam_applicable);
+    const sortedIDX = [...getIDXCarbonMonthly()].sort((a, b) => a.month.localeCompare(b.month));
+    const latestIdx = sortedIDX[sortedIDX.length - 1];
+    const defaultIdxPriceIdr = latestIdx ? latestIdx.avg_price_idr : 76862;
+    const defaultEuPriceIdr = config.eu_ets_price_usd * USD_TO_IDR;
+
+    // Estimator Helpers state
+    const [showEstimator, setShowEstimator] = useState(false);
+    const [estimatorSectorId, setEstimatorSectorId] = useState(applicableSectors[0]?.id ?? "steel");
+    const [estimatorVolume, setEstimatorVolume] = useState("");
+
     // Section 1
     const [annualEmissions, setAnnualEmissions] = useState("50000");
-    const [carbonPriceIdr, setCarbonPriceIdr] = useState("76862");
+    const [carbonPriceIdr, setCarbonPriceIdr] = useState(defaultIdxPriceIdr.toString());
     const [escalation, setEscalation] = useState(8);
     const [horizon, setHorizon] = useState("5");
+
+    // Tech presets for reduction
+    const techPresets = [
+        { id: "custom", name: language === "id" ? "Kustom (Gunakan Slider)" : "Custom (Use Slider)", value: 70 },
+        { id: "efficiency", name: language === "id" ? "Peningkatan Efisiensi Energi Dasar" : "Basic Energy Efficiency Upgrades", value: 15 },
+        { id: "fuel_switch", name: language === "id" ? "Peralihan Bahan Bakar (Batubara ke Gas)" : "Fuel Switch (Coal to Gas)", value: 30 },
+        { id: "biomass", name: language === "id" ? "Biomassa & Pemulihan Panas Limbah" : "Biomass & Waste Heat Recovery", value: 50 },
+        { id: "decarbonization", name: language === "id" ? "Dekarbonisasi Mendalam (EAF/Energi Bersih)" : "Deep Decarbonization (EAF/Clean Energy)", value: 75 },
+    ];
+    const [selectedTechPreset, setSelectedTechPreset] = useState("custom");
 
     // Section 2
     const [capexAmount, setCapexAmount] = useState("5000000000");
@@ -150,6 +173,24 @@ export default function StrategyPage() {
     const [isExporting, setIsExporting] = useState(false);
     const [error, setError] = useState("");
     const chartsRef = useRef<FormalReportChartsRef>(null);
+
+    const handleApplyEstimation = () => {
+        const sector = applicableSectors.find(s => s.id === estimatorSectorId);
+        const volume = Number(estimatorVolume);
+        if (sector && volume > 0) {
+            const estimatedVal = Math.round(volume * sector.emission_factor_tco2_per_ton);
+            setAnnualEmissions(estimatedVal.toString());
+            setShowEstimator(false);
+        }
+    };
+
+    const handleTechPresetChange = (presetId: string) => {
+        setSelectedTechPreset(presetId);
+        const preset = techPresets.find(p => p.id === presetId);
+        if (preset && preset.id !== "custom") {
+            setEmissionReduction(preset.value);
+        }
+    };
 
     const handleCalculate = () => {
         setError("");
@@ -269,8 +310,76 @@ export default function StrategyPage() {
                 <div className="space-y-4 mb-8">
                     <Section title={language === "id" ? "📊 Konteks Emisi & Pasar" : "📊 Emission & Market Context"} defaultOpen>
                         <div className="grid gap-4 sm:grid-cols-2 pt-4">
-                            <NumInput id="annual-emissions" label={t("strategy.emissionsLabel")} value={annualEmissions} onChange={setAnnualEmissions} suffix="tCO2e" />
-                            <NumInput id="carbon-price" label={t("strategy.opexLabel")} value={carbonPriceIdr} onChange={setCarbonPriceIdr} suffix="IDR" />
+                            <div>
+                                <NumInput id="annual-emissions" label={t("strategy.emissionsLabel")} value={annualEmissions} onChange={setAnnualEmissions} suffix="tCO2e" />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowEstimator(!showEstimator)}
+                                    className="mt-2 text-xs text-[#0CF2A0] hover:underline flex items-center gap-1 cursor-pointer"
+                                >
+                                    {language === "id" ? "🔍 Estimasi dari volume produksi" : "🔍 Estimate from production volume"}
+                                </button>
+                                {showEstimator && (
+                                    <div className="mt-3 p-3 rounded-lg border border-white/5 bg-[#2a2a2a]/60 space-y-3">
+                                        <p className="text-[11px] text-slate-400 font-medium">
+                                            {language === "id" ? "Pilih sektor industri Anda dan masukkan volume produksi tahunan (ton) untuk menghitung emisi:" : "Select your industry sector and enter annual production volume (tons) to compute emissions:"}
+                                        </p>
+                                        <div className="space-y-2">
+                                            <label htmlFor="est-sector" className="block text-[10px] text-slate-400 font-medium">{language === "id" ? "Sektor" : "Sector"}</label>
+                                            <select
+                                                id="est-sector"
+                                                value={estimatorSectorId}
+                                                onChange={(e) => setEstimatorSectorId(e.target.value)}
+                                                className="w-full rounded border border-white/5 bg-[#1a1a1a] px-2 py-1.5 text-xs text-white focus:outline-none"
+                                            >
+                                                {applicableSectors.map((s) => (
+                                                    <option key={s.id} value={s.id}>
+                                                        {s.name} ({s.emission_factor_tco2_per_ton} tCO2/t)
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label htmlFor="est-volume" className="block text-[10px] text-slate-400 font-medium">{language === "id" ? "Volume Produksi (ton)" : "Production Volume (tons)"}</label>
+                                            <input
+                                                id="est-volume"
+                                                type="number"
+                                                value={estimatorVolume}
+                                                onChange={(e) => setEstimatorVolume(e.target.value)}
+                                                className="w-full rounded border border-white/5 bg-[#1a1a1a] px-2 py-1.5 text-xs text-white placeholder:text-slate-600 focus:outline-none"
+                                                placeholder="e.g. 5000"
+                                            />
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={handleApplyEstimation}
+                                            className="w-full rounded bg-[#0CF2A0] hover:bg-[#0CF2A0]/90 text-xs font-bold text-[#111111] py-1.5 cursor-pointer"
+                                        >
+                                            {language === "id" ? "Terapkan Estimasi" : "Apply Estimate"}
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div>
+                                <NumInput id="carbon-price" label={t("strategy.opexLabel")} value={carbonPriceIdr} onChange={setCarbonPriceIdr} suffix="IDR" />
+                                <div className="mt-2 flex flex-col gap-1.5">
+                                    <button
+                                        type="button"
+                                        onClick={() => setCarbonPriceIdr(defaultIdxPriceIdr.toFixed(0))}
+                                        className="text-[10px] text-slate-400 hover:text-white flex items-center gap-1 text-left cursor-pointer"
+                                    >
+                                        📍 {language === "id" ? "Gunakan harga IDXCarbon terkini:" : "Use latest IDXCarbon price:"} <span className="text-[#0CF2A0] font-mono">Rp {defaultIdxPriceIdr.toLocaleString("id-ID")}</span>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setCarbonPriceIdr(defaultEuPriceIdr.toFixed(0))}
+                                        className="text-[10px] text-slate-400 hover:text-white flex items-center gap-1 text-left cursor-pointer"
+                                    >
+                                        📍 {language === "id" ? "Gunakan harga EU ETS setara Rupiah:" : "Use equivalent EU ETS price:"} <span className="text-[#0CF2A0] font-mono">Rp {defaultEuPriceIdr.toLocaleString("id-ID")}</span>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                         <SliderInput id="escalation" label={t("strategy.escalationLabel")} value={escalation} onChange={setEscalation} max={20} />
                         <SelectInput id="horizon" label={t("strategy.horizonLabel")} value={horizon} options={[1, 3, 5, 10]} onChange={setHorizon} />
@@ -281,7 +390,31 @@ export default function StrategyPage() {
                             <NumInput id="capex-amount" label={t("strategy.capexLabel")} value={capexAmount} onChange={setCapexAmount} suffix="IDR" />
                             <NumInput id="interest-rate" label={language === "id" ? "Suku Bunga (%)" : "Interest Rate (%)"} value={interestRate} onChange={setInterestRate} suffix="%" min="0" />
                         </div>
-                        <SliderInput id="emission-reduction" label={t("strategy.reductionLabel")} value={emissionReduction} onChange={setEmissionReduction} />
+                        <div className="space-y-3">
+                            <label htmlFor="tech-preset" className="block text-xs font-medium text-slate-300">
+                                {language === "id" ? "Pilih Preset Teknologi Hijau (Untuk Mengisi Pengurangan Emisi)" : "Select Green Tech Preset (To Auto-fill Emission Reduction)"}
+                            </label>
+                            <select
+                                id="tech-preset"
+                                value={selectedTechPreset}
+                                onChange={(e) => handleTechPresetChange(e.target.value)}
+                                className="w-full rounded-lg border border-white/5 bg-[#2a2a2a] px-4 py-2.5 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#0CF2A0]/50"
+                            >
+                                {techPresets.map((p) => (
+                                    <option key={p.id} value={p.id}>
+                                        {p.name} {p.id !== "custom" ? `(${p.value}%)` : ""}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        {selectedTechPreset === "custom" ? (
+                            <SliderInput id="emission-reduction" label={t("strategy.reductionLabel")} value={emissionReduction} onChange={setEmissionReduction} />
+                        ) : (
+                            <div className="flex justify-between items-center text-xs font-medium text-slate-300 py-2.5 px-4 rounded-lg bg-[#2a2a2a]/40 border border-white/5">
+                                <span>{t("strategy.reductionLabel")}</span>
+                                <span className="text-[#0CF2A0] font-mono font-bold">{emissionReduction}% ({language === "id" ? "Ditetapkan oleh Preset" : "Preset Applied"})</span>
+                            </div>
+                        )}
                         <SliderInput id="down-payment" label={language === "id" ? "Uang Muka" : "Down Payment"} value={downPayment} onChange={setDownPayment} />
                         <div className="grid gap-4 sm:grid-cols-2">
                             <SelectInput id="loan-term" label={language === "id" ? "Jangka Waktu Pinjaman (tahun)" : "Loan Term (years)"} value={loanTerm} options={[3, 5, 7, 10]} onChange={setLoanTerm} />
