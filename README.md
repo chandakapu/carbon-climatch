@@ -22,11 +22,24 @@ A specialized tool for Indonesian exporters to the European Union.
 - **Financial Impact Estimation**: Calculates potential liabilities under the EU CBAM based on sector-specific emission factors (e.g., Cement, Iron & Steel, Aluminum, Fertilizers, Electricity, Hydrogen).
 - **Carbon Credit Deductions**: Factors in carbon prices already paid in Indonesia to provide accurate net-cost projections.
 
-### 2.4 AI-Driven Strategic Insights
-Powered by the `gemini-3.1-flash-lite` model, the AI Analyst module translates complex data into actionable executive summaries.
-- **Automated Dashboard Summaries**: Synthesis of current market conditions.
-- **Regulatory Explainers**: Translation of complex policy updates into plain-language financial impacts.
-- **Strategy Optimization**: Comparative analysis of CAPEX versus OPEX carbon compliance strategies.
+### 2.4 Strategy Optimization Model
+An interactive modeling matrix comparing:
+- **Strategy A (OPEX)**: Purchasing carbon credits exclusively.
+- **Strategy B (CAPEX)**: Funding permanent green technology upgrades.
+- **Strategy C (Mixed)**: A blended optimization path calculating tax shield depreciations and optimal allocations.
+
+### 2.5 Carbon Action Hub & Financial ledger
+The execution layer for compliance decisions:
+- **Off-setting Projects**: Retiring high-quality credits from domestic (Rimba Raya, Lahendong, IDX-C1) and international registries.
+- **Green Technology Deployment**: Integrating Rooftop Solar PV, EV logistics fleets, and Biomass Boiler conversions.
+- **Green Financing Integration**: Structuring corporate green loan amortizations (Mandiri, BRI, BCA) to offset CAPEX down payments.
+- **Dual PDF Reporting Engine**: 
+  - **Export Compliance Covenant**: An official legal certificate aligned with Presidential Decree No. 98/2021 and UU HPP.
+  - **Carbon Action Ledger**: An internal corporate accounting statement detailing cash flows and transaction logs.
+
+### 2.6 YOLO Compliance Optimization
+- **AI-Guided Batch Transactions**: Integrates a dynamic Gemini optimizer to analyze the remaining emission gaps and instantly propose the lowest-cost configuration of green tech and offsets.
+- **One-Click PDF Audit Upload**: Allows users to download a mock audit PDF and re-upload it. The system automatically reads emission parameters, configures baseline assumptions, and routes the CFO directly to the Action Hub.
 
 ## 3. Technical Architecture
 
