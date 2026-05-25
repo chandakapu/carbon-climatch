@@ -44,6 +44,26 @@ export const translations = {
       alertResetSent: "Password reset request sent to email.",
       alertAccountDisabled: "Account creation is disabled in the prototype version.",
     },
+    hero: {
+      platformBadge: "Carbon Intelligence Platform",
+      titlePrefix: "Navigate Indonesia's ",
+      titles: [
+        "Carbon Compliance",
+        "CBAM Exposure",
+        "IDXCarbon Pricing",
+        "Regulatory Risk",
+        "Climate Strategy",
+      ],
+      description: "Real-time carbon market intelligence for Indonesian CFOs. Track IDXCarbon prices, benchmark against global markets, quantify CBAM liability, and get AI-powered regulatory analysis — all in one platform.",
+      getAiAnalysis: "Get AI Analysis",
+      viewMarketData: "View Market Data",
+      pills: {
+        livePrices: "IDXCarbon Live Prices",
+        calculator: "CBAM Liability Calculator",
+        timeline: "Regulatory Timeline",
+        aiAnalysis: "Gemini AI Analysis"
+      }
+    },
     dashboard: {
       idxCarbonLatest: "IDXCarbon (latest)",
       avgTrend3M: "3M Avg Trend",
@@ -118,7 +138,7 @@ export const translations = {
       horizonDesc: "Timeframe for the strategy model",
       emissionsLabel: "Base Year Emissions (tCO₂e/year)",
       emissionsDesc: "Current annual corporate greenhouse gas emissions footprint",
-      capexLabel: "CAPEX Investment (IDR)",
+      capexLabel: "Investasi CAPEX (IDR)",
       capexDesc: "One-time cost for cleaner technology / energy efficiency upgrades",
       opexLabel: "OPEX / Credit Price (IDR/tCO₂e)",
       opexDesc: "Current cost of purchasing domestic offset carbon credits",
@@ -239,6 +259,26 @@ export const translations = {
       alertEnterCredentials: "Silakan masukkan email dan kata sandi.",
       alertResetSent: "Permintaan atur ulang kata sandi telah dikirim ke email.",
       alertAccountDisabled: "Pembuatan akun dinonaktifkan dalam versi prototipe.",
+    },
+    hero: {
+      platformBadge: "Platform Kecerdasan Karbon",
+      titlePrefix: "Navigasi ",
+      titles: [
+        "Kepatuhan Karbon",
+        "Paparan CBAM",
+        "Harga IDXCarbon",
+        "Risiko Regulasi",
+        "Strategi Iklim",
+      ],
+      description: "Intelijen pasar karbon real-time untuk CFO Indonesia. Lacak harga IDXCarbon, bandingkan dengan pasar global, hitung liabilitas CBAM, dan dapatkan analisis regulasi berbasis AI — semuanya dalam satu platform.",
+      getAiAnalysis: "Dapatkan Analisis AI",
+      viewMarketData: "Lihat Data Pasar",
+      pills: {
+        livePrices: "Harga Langsung IDXCarbon",
+        calculator: "Kalkulator Liabilitas CBAM",
+        timeline: "Linimasa Regulasi",
+        aiAnalysis: "Analisis AI Gemini"
+      }
     },
     dashboard: {
       idxCarbonLatest: "IDXCarbon (terbaru)",

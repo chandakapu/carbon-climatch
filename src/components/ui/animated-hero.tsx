@@ -3,19 +3,21 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { MoveRight, Sparkles } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/components/layout/LanguageContext";
 
 function Hero() {
+  const { language, t } = useLanguage();
   const [titleNumber, setTitleNumber] = useState(0);
+
   const titles = useMemo(
     () => [
-      "Carbon Compliance",
-      "CBAM Exposure",
-      "IDXCarbon Pricing",
-      "Regulatory Risk",
-      "Climate Strategy",
+      t("hero.titles.0"),
+      t("hero.titles.1"),
+      t("hero.titles.2"),
+      t("hero.titles.3"),
+      t("hero.titles.4"),
     ],
-    []
+    [t]
   );
 
   useEffect(() => {
@@ -40,41 +42,71 @@ function Hero() {
           <div>
             <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-400 uppercase tracking-widest">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              Carbon Intelligence Platform
+              {t("hero.platformBadge")}
             </div>
           </div>
           <div className="flex gap-4 flex-col items-center">
             <h1 className="text-4xl md:text-6xl max-w-3xl tracking-tighter text-center font-extrabold leading-tight text-white">
-              <span>Navigate Indonesia&apos;s </span>
-              <span className="relative flex w-full justify-center overflow-hidden text-center h-[52px] md:h-[72px] text-emerald-400">
-                {titles.map((title, index) => (
-                  <motion.span
-                    key={index}
-                    className="absolute font-extrabold"
-                    initial={{ opacity: 0, y: "-100" }}
-                    transition={{ type: "spring", stiffness: 50 }}
-                    animate={
-                      titleNumber === index
-                        ? {
-                            y: 0,
-                            opacity: 1,
-                          }
-                        : {
-                            y: titleNumber > index ? -150 : 150,
-                            opacity: 0,
-                          }
-                    }
-                  >
-                    {title}
-                  </motion.span>
-                ))}
-              </span>
+              {language === "id" ? (
+                <>
+                  <span>Navigasi </span>
+                  <span className="relative flex w-full justify-center overflow-hidden text-center h-[52px] md:h-[72px] text-emerald-400">
+                    {titles.map((title, index) => (
+                      <motion.span
+                        key={index}
+                        className="absolute font-extrabold"
+                        initial={{ opacity: 0, y: "-100" }}
+                        transition={{ type: "spring", stiffness: 50 }}
+                        animate={
+                          titleNumber === index
+                            ? {
+                                y: 0,
+                                opacity: 1,
+                              }
+                            : {
+                                y: titleNumber > index ? -150 : 150,
+                                opacity: 0,
+                              }
+                        }
+                      >
+                        {title}
+                      </motion.span>
+                    ))}
+                  </span>
+                  <span className="block mt-1">Indonesia</span>
+                </>
+              ) : (
+                <>
+                  <span>Navigate Indonesia&apos;s </span>
+                  <span className="relative flex w-full justify-center overflow-hidden text-center h-[52px] md:h-[72px] text-emerald-400">
+                    {titles.map((title, index) => (
+                      <motion.span
+                        key={index}
+                        className="absolute font-extrabold"
+                        initial={{ opacity: 0, y: "-100" }}
+                        transition={{ type: "spring", stiffness: 50 }}
+                        animate={
+                          titleNumber === index
+                            ? {
+                                y: 0,
+                                opacity: 1,
+                              }
+                            : {
+                                y: titleNumber > index ? -150 : 150,
+                                opacity: 0,
+                              }
+                        }
+                      >
+                        {title}
+                      </motion.span>
+                    ))}
+                  </span>
+                </>
+              )}
             </h1>
 
             <p className="text-slate-400 text-base md:text-lg leading-relaxed max-w-2xl text-center text-pretty">
-              Real-time carbon market intelligence for Indonesian CFOs. Track IDXCarbon prices,
-              benchmark against global markets, quantify CBAM liability, and get AI-powered
-              regulatory analysis — all in one platform.
+              {t("hero.description")}
             </p>
           </div>
 
@@ -84,13 +116,13 @@ function Hero() {
               className="inline-flex items-center gap-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 transition-all duration-200 px-6 py-3 text-sm font-bold text-black shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 cursor-pointer"
             >
               <Sparkles className="h-4 w-4" />
-              Get AI Analysis
+              {t("hero.getAiAnalysis")}
             </a>
             <a
               href="#market"
               className="inline-flex items-center gap-2 rounded-lg border border-white/10 hover:border-white/20 bg-white/5 hover:bg-white/10 transition-all duration-200 px-6 py-3 text-sm font-semibold text-white cursor-pointer"
             >
-              View Market Data
+              {t("hero.viewMarketData")}
               <MoveRight className="h-4 w-4" />
             </a>
           </div>
@@ -98,10 +130,10 @@ function Hero() {
           {/* Feature pills */}
           <div className="mt-6 flex flex-wrap justify-center gap-2">
             {[
-              { icon: "📊", label: "IDXCarbon Live Prices" },
-              { icon: "🌍", label: "CBAM Liability Calculator" },
-              { icon: "⚖️", label: "Regulatory Timeline" },
-              { icon: "🤖", label: "Gemini AI Analysis" },
+              { icon: "📊", label: t("hero.pills.livePrices") },
+              { icon: "🌍", label: t("hero.pills.calculator") },
+              { icon: "⚖️", label: t("hero.pills.timeline") },
+              { icon: "🤖", label: t("hero.pills.aiAnalysis") },
             ].map((f) => (
               <span
                 key={f.label}
