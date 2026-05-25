@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import MarkdownRenderer from "../ui/MarkdownRenderer";
+import { useLanguage } from "@/components/layout/LanguageContext";
 
 interface AIAnalystPanelProps {
     requestType: "dashboard_summary" | "cbam_result" | "regulation_explainer" | "strategy_optimizer";
@@ -12,12 +13,15 @@ interface AIAnalystPanelProps {
 export default function AIAnalystPanel({
     requestType,
     data,
-    triggerLabel = "Get AI Analysis",
+    triggerLabel,
     onAnalysisComplete
 }: AIAnalystPanelProps) {
     const [analysis, setAnalysis] = useState<string>("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string>("");
+    const { language, t } = useLanguage();
+
+    const currentTriggerLabel = triggerLabel || t("dashboard.runAnalysisBtn");
 
     const handleAnalyze = async () => {
         setLoading(true);
@@ -27,7 +31,7 @@ export default function AIAnalystPanel({
             const response = await fetch("/api/analyze", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ type: requestType, data }),
+                body: JSON.stringify({ type: requestType, data, language }),
             });
 
             if (!response.ok) throw new Error("Analysis failed");
@@ -38,7 +42,7 @@ export default function AIAnalystPanel({
                 onAnalysisComplete(result.analysis);
             }
         } catch {
-            setError("Could not generate analysis. Check your connection and try again.");
+            setError(t("dashboard.errorGeneratingAnalysis"));
         } finally {
             setLoading(false);
         }
@@ -48,7 +52,7 @@ export default function AIAnalystPanel({
         <div className="bg-slate-800 border border-slate-600 rounded-xl p-6">
             <div className="flex items-center gap-2 mb-4">
                 <span className="text-green-400 text-lg">🤖</span>
-                <h3 className="text-white font-medium">AI Carbon Analyst</h3>
+                <h3 className="text-white font-medium">{t("dashboard.aiPanelTitle")}</h3>
                 <span className="text-xs text-slate-400 bg-slate-700 px-2 py-0.5 rounded-full">
                     Powered by Gemini
                 </span>
@@ -57,16 +61,16 @@ export default function AIAnalystPanel({
             {!analysis && !loading && (
                 <button
                     onClick={handleAnalyze}
-                    className="bg-green-600 hover:bg-green-500 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors"
+                    className="bg-green-600 hover:bg-green-500 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors cursor-pointer"
                 >
-                    {triggerLabel}
+                    {currentTriggerLabel}
                 </button>
             )}
 
             {loading && (
                 <div className="flex items-center gap-2 text-slate-400 text-sm">
                     <div className="w-4 h-4 border-2 border-green-400 border-t-transparent rounded-full animate-spin" />
-                    Analyzing regulatory data...
+                    {language === "id" ? "Menganalisis data regulasi..." : "Analyzing regulatory data..."}
                 </div>
             )}
 
@@ -79,9 +83,9 @@ export default function AIAnalystPanel({
                     <MarkdownRenderer content={analysis} />
                     <button
                         onClick={handleAnalyze}
-                        className="mt-3 text-xs text-slate-400 hover:text-slate-300 underline"
+                        className="mt-3 text-xs text-slate-400 hover:text-slate-300 underline cursor-pointer"
                     >
-                        Regenerate
+                        {language === "id" ? "Hasilkan Ulang" : "Regenerate"}
                     </button>
                 </div>
             )}

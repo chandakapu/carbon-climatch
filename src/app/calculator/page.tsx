@@ -6,22 +6,25 @@ import { getCBAMConfig, getIDXCarbonMonthly } from "@/lib/data";
 import type { CBAMPortfolioItem, CBAMPortfolioResult } from "@/types";
 import MarkdownRenderer from "@/components/ui/MarkdownRenderer";
 import CBAMPortfolioCharts from "@/components/dashboard/CBAMPortfolioCharts";
+import { useLanguage } from "@/components/layout/LanguageContext";
 
 const USD_TO_IDR = 16000;
 
-function formatUsd(value: number): string {
-  return value.toLocaleString("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0,
-  });
-}
-
-function formatIdr(value: number): string {
-  return `IDR ${value.toLocaleString("id-ID", { maximumFractionDigits: 0 })}`;
-}
-
 export default function CalculatorPage() {
+  const { language, t } = useLanguage();
+
+  function formatUsd(value: number): string {
+    return value.toLocaleString(language === "id" ? "id-ID" : "en-US", {
+      style: "currency",
+      currency: "USD",
+      maximumFractionDigits: 0,
+    });
+  }
+
+  function formatIdr(value: number): string {
+    return `IDR ${value.toLocaleString("id-ID", { maximumFractionDigits: 0 })}`;
+  }
+
   const { applicableSectors, defaultEuPriceUsd, defaultIdxPriceUsd, latestIdx } = useMemo(() => {
     const config = getCBAMConfig();
     const applicableSectors = config.sectors.filter((s) => s.cbam_applicable);
@@ -66,7 +69,7 @@ export default function CalculatorPage() {
   const handleRemoveItem = (id: string) => {
     // Keep at least one item
     if (portfolioItems.length === 1) {
-      setValidationError("Your portfolio must contain at least one product line.");
+      setValidationError(t("calculator.validationAtLeastOne"));
       return;
     }
     setPortfolioItems(portfolioItems.filter((item) => item.id !== id));
@@ -105,6 +108,7 @@ export default function CalculatorPage() {
             eu_ets_price_usd: euPriceUsd,
             indonesia_carbon_price_usd: indoPriceUsd,
           },
+          language,
         }),
       });
 
@@ -114,7 +118,7 @@ export default function CalculatorPage() {
       setAnalysis(text);
     } catch {
       setAnalysisError(
-        "Could not generate AI analysis. Check your connection and try again."
+        t("dashboard.errorGeneratingAnalysis")
       );
     } finally {
       setAnalysisLoading(false);
@@ -133,23 +137,23 @@ export default function CalculatorPage() {
     const indoPriceNum = Number(indonesiaPrice);
 
     if (Number.isNaN(euPriceNum) || euPriceNum < 0) {
-      setValidationError("Please enter a valid EU ETS Price.");
+      setValidationError(t("calculator.validationEuPrice"));
       return;
     }
 
     if (Number.isNaN(indoPriceNum) || indoPriceNum < 0) {
-      setValidationError("Please enter a valid Indonesia Carbon Price.");
+      setValidationError(t("calculator.validationIndoPrice"));
       return;
     }
 
     // Validate sectors and volumes
     for (const item of portfolioItems) {
       if (!item.sectorId) {
-        setValidationError("Ensure all product lines have a selected sector.");
+        setValidationError(t("calculator.validationSelectSector"));
         return;
       }
       if (Number.isNaN(item.export_volume_tons) || item.export_volume_tons <= 0) {
-        setValidationError("Enter a positive export volume for all product lines.");
+        setValidationError(t("calculator.validationPositiveVolume"));
         // Focus the first invalid input for keyboard accessibility
         const el = document.getElementById(`vol-${item.id}`);
         el?.focus();
@@ -175,11 +179,10 @@ export default function CalculatorPage() {
         {/* Header */}
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-white mb-2 text-balance">
-            CBAM Portfolio Exposure Calculator
+            {t("calculator.title")}
           </h1>
           <p className="text-slate-400 text-sm leading-relaxed text-pretty max-w-3xl">
-            Model the aggregate EU Carbon Border Adjustment Mechanism exposure for your company&apos;s export portfolio. 
-            Specify export volumes across multiple manufacturing sectors, customize pricing offsets, and evaluate visual distributions.
+            {t("calculator.subtitle")}
           </p>
         </div>
 
@@ -189,12 +192,12 @@ export default function CalculatorPage() {
           {/* Global Assumptions */}
           <div className="lg:col-span-1 rounded-xl border border-white/5 bg-slate-900/60 p-6 space-y-4 h-fit">
             <h2 className="text-sm font-semibold text-white uppercase tracking-wider mb-2 border-b border-white/5 pb-2">
-              Carbon Pricing Parameters
+              {t("calculator.globalParameters")}
             </h2>
 
             <div>
               <label htmlFor="eu-price" className="block text-xs font-medium text-slate-300 mb-1.5">
-                EU ETS Carbon Price (USD/tCO₂e)
+                {t("calculator.euEtsPriceLabel")}
               </label>
               <input
                 id="eu-price"
@@ -207,13 +210,13 @@ export default function CalculatorPage() {
                 className="w-full rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
               />
               <span id="eu-price-desc" className="text-[10px] text-slate-500 mt-1 block">
-                Official EU ETS benchmark reference.
+                {language === "id" ? "Referensi tolok ukur resmi EU ETS." : "Official EU ETS benchmark reference."}
               </span>
             </div>
 
             <div>
               <label htmlFor="indo-price" className="block text-xs font-medium text-slate-300 mb-1.5">
-                Indonesia Domestic Price Offset (USD/tCO₂e)
+                {t("calculator.indoPriceLabel")}
               </label>
               <input
                 id="indo-price"
@@ -226,16 +229,17 @@ export default function CalculatorPage() {
                 className="w-full rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
               />
               <span id="indo-price-desc" className="text-[10px] text-slate-500 mt-1 block">
-                IDXCarbon benchmark: ~${defaultIdxPriceUsd.toFixed(2)}/tCO₂e
+                {t("calculator.idxReferenceLabel")}: ~${defaultIdxPriceUsd.toFixed(2)}/tCO₂e
                 {latestIdx && ` (Rp ${latestIdx.avg_price_idr.toLocaleString("id-ID")}/t)`}
               </span>
             </div>
 
             <div className="rounded-lg bg-slate-800/40 p-3 text-[11px] text-slate-400 space-y-1">
-              <p className="font-semibold text-white">Domestic Deduction Offset</p>
+              <p className="font-semibold text-white">{t("calculator.carbonCreditDeduction")}</p>
               <p>
-                CBAM regulations permit the deduction of domestic carbon prices paid in the exporting country. 
-                Indonesia&apos;s NEK ETS or carbon tax paid will offset your total EU liability.
+                {language === "id"
+                  ? "Regulasi CBAM mengizinkan pengurangan harga karbon domestik yang dibayarkan di negara pengekspor. Pajak karbon atau ETS NEK Indonesia yang dibayar akan mengurangi total liabilitas UE Anda."
+                  : "CBAM regulations permit the deduction of domestic carbon prices paid in the exporting country. Indonesia's NEK ETS or carbon tax paid will offset your total EU liability."}
               </p>
             </div>
           </div>
@@ -244,19 +248,19 @@ export default function CalculatorPage() {
           <div className="lg:col-span-2 rounded-xl border border-white/5 bg-slate-900/60 p-6 space-y-6">
             <div className="flex items-center justify-between border-b border-white/5 pb-2">
               <h2 className="text-sm font-semibold text-white uppercase tracking-wider">
-                Export Product Portfolio
+                {t("calculator.productLines")}
               </h2>
               <button
                 type="button"
                 onClick={handleAddItem}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-400 hover:bg-emerald-500/20 transition-all"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-400 hover:bg-emerald-500/20 transition-all cursor-pointer"
               >
-                <span>+</span> Add Product Line
+                {t("calculator.addProductLine")}
               </button>
             </div>
 
             <div className="space-y-4">
-              {portfolioItems.map((item, index) => (
+              {portfolioItems.map((item) => (
                 <div 
                   key={item.id} 
                   className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end p-4 rounded-lg bg-slate-800/40 border border-white/5"
@@ -264,7 +268,7 @@ export default function CalculatorPage() {
                   {/* Sector Selection */}
                   <div className="sm:col-span-6">
                     <label htmlFor={`sec-${item.id}`} className="block text-[11px] font-medium text-slate-400 mb-1">
-                      Sector Product Category
+                      {t("calculator.sectorLabel")}
                     </label>
                     <select
                       id={`sec-${item.id}`}
@@ -283,7 +287,7 @@ export default function CalculatorPage() {
                   {/* Volume Input */}
                   <div className="sm:col-span-4">
                     <label htmlFor={`vol-${item.id}`} className="block text-[11px] font-medium text-slate-400 mb-1">
-                      Annual Export Volume (tons)
+                      {t("calculator.exportVolumeLabel")}
                     </label>
                     <input
                       id={`vol-${item.id}`}
@@ -303,9 +307,9 @@ export default function CalculatorPage() {
                       type="button"
                       onClick={() => handleRemoveItem(item.id)}
                       disabled={portfolioItems.length === 1}
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-1 rounded-lg border border-red-500/20 hover:border-red-500/40 bg-red-500/10 hover:bg-red-500/20 px-3 py-2 text-xs font-semibold text-red-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-1 rounded-lg border border-red-500/20 hover:border-red-500/40 bg-red-500/10 hover:bg-red-500/20 px-3 py-2 text-xs font-semibold text-red-400 disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
                     >
-                      Delete
+                      {language === "id" ? "Hapus" : "Delete"}
                     </button>
                   </div>
                 </div>
@@ -321,9 +325,9 @@ export default function CalculatorPage() {
             <button
               type="button"
               onClick={handleCalculate}
-              className="w-full rounded-lg bg-emerald-500 hover:bg-emerald-400 transition-colors py-3 text-sm font-bold text-black shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/35"
+              className="w-full rounded-lg bg-emerald-500 hover:bg-emerald-400 transition-colors py-3 text-sm font-bold text-black shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/35 cursor-pointer"
             >
-              Run Portfolio Exposure Calculation
+              {t("calculator.runCalculation")}
             </button>
           </div>
         </div>
@@ -337,27 +341,27 @@ export default function CalculatorPage() {
               
               <div className="rounded-xl border border-white/5 bg-slate-900/60 p-4">
                 <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">
-                  Export Volume
+                  {t("calculator.totalExportVolume")}
                 </p>
                 <p className="text-lg font-bold text-white">
-                  {result.total_export_volume_tons.toLocaleString("en-US", { maximumFractionDigits: 0 })}
-                  <span className="text-xs font-normal text-slate-400 ml-1">tons</span>
+                  {result.total_export_volume_tons.toLocaleString(language === "id" ? "id-ID" : "en-US", { maximumFractionDigits: 0 })}
+                  <span className="text-xs font-normal text-slate-400 ml-1">{t("common.tons")}</span>
                 </p>
               </div>
 
               <div className="rounded-xl border border-white/5 bg-slate-900/60 p-4">
                 <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">
-                  Embedded Emissions
+                  {t("calculator.totalEmissions")}
                 </p>
                 <p className="text-lg font-bold text-white">
-                  {result.total_emissions_tco2.toLocaleString("en-US", { maximumFractionDigits: 0 })}
-                  <span className="text-xs font-normal text-slate-400 ml-1">tCO₂e</span>
+                  {result.total_emissions_tco2.toLocaleString(language === "id" ? "id-ID" : "en-US", { maximumFractionDigits: 0 })}
+                  <span className="text-xs font-normal text-slate-400 ml-1">{t("common.tco2e")}</span>
                 </p>
               </div>
 
               <div className="rounded-xl border border-white/5 bg-slate-900/60 p-4">
                 <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">
-                  Gross CBAM Liability
+                  {t("calculator.grossCbamLiability")}
                 </p>
                 <p className="text-lg font-bold text-amber-400">
                   {formatUsd(result.total_cbam_liability_usd)}
@@ -369,7 +373,7 @@ export default function CalculatorPage() {
 
               <div className="rounded-xl border border-white/5 bg-slate-900/60 p-4">
                 <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">
-                  Domestic Offset Credit
+                  {t("calculator.carbonCreditDeduction")}
                 </p>
                 <p className="text-lg font-bold text-emerald-400">
                   {formatUsd(result.total_indonesia_carbon_credit_usd)}
@@ -381,7 +385,7 @@ export default function CalculatorPage() {
 
               <div className="rounded-xl border border-red-500/20 bg-red-950/20 p-4 col-span-2 md:col-span-1">
                 <p className="text-[10px] text-red-400 uppercase tracking-wider mb-1">
-                  Net CBAM Exposure
+                  {t("calculator.netCbamLiability")}
                 </p>
                 <p className="text-lg font-bold text-red-400 font-sans">
                   {formatUsd(result.total_net_liability_usd)}
@@ -399,13 +403,13 @@ export default function CalculatorPage() {
             <div className="rounded-xl border border-white/5 bg-slate-900/60 p-6 space-y-4">
               <div className="flex items-center gap-2 border-b border-white/5 pb-2">
                 <span className="text-emerald-400 text-lg">🤖</span>
-                <h3 className="text-white font-semibold text-sm">AI Analyst Portfolio Exposure Summary</h3>
+                <h3 className="text-white font-semibold text-sm">{t("calculator.aiPanelTitle")}</h3>
               </div>
 
               {analysisLoading && (
                 <div className="flex items-center gap-3 text-slate-400 text-sm py-4">
                   <div className="w-5 h-5 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin" />
-                  Analyzing portfolio risk metrics and calculating mitigation strategy offsets...
+                  {t("calculator.aiGenerating")}
                 </div>
               )}
 

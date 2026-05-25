@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useLanguage } from "@/components/layout/LanguageContext";
 
 export default function Navbar() {
   const pathname = usePathname();
+  const { language, setLanguage, t } = useLanguage();
 
   // Hide the navigation bar on the login/landing page
   if (pathname === "/") {
@@ -29,23 +31,51 @@ export default function Navbar() {
 
         {/* Nav links */}
         <div className="hidden md:flex items-center gap-6 text-sm">
-          <Link href="/dashboard" className="text-slate-400 hover:text-white transition-colors">Dashboard</Link>
-          <Link href="/calculator" className="text-slate-400 hover:text-white transition-colors">CBAM Calculator</Link>
-          <Link href="/strategy" className="text-slate-400 hover:text-white transition-colors">Strategy Optimizer</Link>
-          <Link href="/timeline" className="text-slate-400 hover:text-white transition-colors">Regulatory Timeline</Link>
+          <Link href="/dashboard" className="text-slate-400 hover:text-white transition-colors">{t("nav.dashboard")}</Link>
+          <Link href="/calculator" className="text-slate-400 hover:text-white transition-colors">{t("nav.calculator")}</Link>
+          <Link href="/strategy" className="text-slate-400 hover:text-white transition-colors">{t("nav.strategy")}</Link>
+          <Link href="/timeline" className="text-slate-400 hover:text-white transition-colors">{t("nav.timeline")}</Link>
         </div>
 
-        {/* CTA */}
-        <Link
-          href="/dashboard#ai-analysis"
-          className="hidden md:flex items-center gap-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 transition-colors px-4 py-2 text-sm font-semibold text-black"
-        >
-          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-          </svg>
-          Get AI Analysis
-        </Link>
+        {/* Language switcher & CTA */}
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-1 rounded-lg bg-slate-950 border border-white/5 p-0.5">
+            <button
+              type="button"
+              onClick={() => setLanguage("en")}
+              className={`px-2 py-1 text-xs font-semibold rounded-md transition-all cursor-pointer ${
+                language === "en"
+                  ? "bg-emerald-500 text-black shadow-md"
+                  : "text-slate-400 hover:text-white"
+              }`}
+            >
+              EN
+            </button>
+            <button
+              type="button"
+              onClick={() => setLanguage("id")}
+              className={`px-2 py-1 text-xs font-semibold rounded-md transition-all cursor-pointer ${
+                language === "id"
+                  ? "bg-emerald-500 text-black shadow-md"
+                  : "text-slate-400 hover:text-white"
+              }`}
+            >
+              ID
+            </button>
+          </div>
+
+          <Link
+            href="/dashboard#ai-analysis"
+            className="hidden md:flex items-center gap-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 transition-colors px-4 py-2 text-sm font-semibold text-black"
+          >
+            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+            </svg>
+            {t("nav.getAiAnalysis")}
+          </Link>
+        </div>
       </nav>
     </header>
   );
 }
+

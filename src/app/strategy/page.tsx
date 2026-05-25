@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useRef, useId } from "react";
+import { useState, useRef, useId, useMemo } from "react";
 import { calculateAllStrategies } from "@/lib/strategyCalculations";
 import type { StrategyInputs, StrategyResults } from "@/types";
 import AIAnalystPanel from "@/components/ai/AIAnalystPanel";
 import FormalReportCharts from "@/components/strategy/FormalReportCharts";
 import type { FormalReportChartsRef } from "@/components/strategy/FormalReportCharts";
 import { generateFormalReport } from "@/lib/pdfExport";
+import { useLanguage } from "@/components/layout/LanguageContext";
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
     LineChart, Line, ReferenceLine,
@@ -15,13 +16,6 @@ import {
 } from "recharts";
 
 const USD_TO_IDR = 16000;
-
-function formatIdr(v: number) {
-    return `IDR ${v.toLocaleString("id-ID", { maximumFractionDigits: 0 })}`;
-}
-function formatUsdSmall(v: number) {
-    return `~USD ${(v / USD_TO_IDR).toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
-}
 
 /* ── Collapsible Section ─────────────────────────────────────── */
 function Section({ title, defaultOpen, children }: { title: string; defaultOpen?: boolean; children: React.ReactNode }) {
@@ -32,7 +26,7 @@ function Section({ title, defaultOpen, children }: { title: string; defaultOpen?
             <button type="button" onClick={() => setOpen(!open)}
                 aria-expanded={open}
                 aria-controls={contentId}
-                className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-slate-800/40 transition-colors">
+                className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-slate-800/40 transition-colors cursor-pointer">
                 <span className="text-sm font-semibold text-white">{title}</span>
                 <svg className={`h-4 w-4 text-slate-400 transition-transform ${open ? "rotate-180" : ""}`}
                     viewBox="0 0 20 20" fill="currentColor">
@@ -115,21 +109,30 @@ const COLORS = { credit: "#10b981", capex: "#3b82f6", maint: "#64748b", shield: 
 const DONUT_COLORS = ["#10b981", "#3b82f6", "#f59e0b"];
 const LINE_COLORS = { A: "#ef4444", B: "#3b82f6", C: "#a855f7" };
 
-/* ── Custom Tooltip for BarChart ─────────────────────────────── */
-function BarTooltipContent({ active, payload, label }: { active?: boolean; payload?: Array<{ name: string; value: number; color: string }>; label?: string }) {
-    if (!active || !payload?.length) return null;
-    return (
-        <div className="rounded-lg bg-slate-800 border border-slate-600 p-3 text-xs shadow-xl">
-            <p className="text-white font-medium mb-1">Year {label}</p>
-            {payload.map((p, i) => (
-                <p key={i} style={{ color: p.color }}>{p.name}: {formatIdr(p.value)}</p>
-            ))}
-        </div>
-    );
-}
-
 /* ══════════════════════════════════════════════════════════════ */
 export default function StrategyPage() {
+    const { language, t } = useLanguage();
+
+    function formatIdr(v: number) {
+        return `IDR ${v.toLocaleString("id-ID", { maximumFractionDigits: 0 })}`;
+    }
+    function formatUsdSmall(v: number) {
+        return `~USD ${(v / USD_TO_IDR).toLocaleString(language === "id" ? "id-ID" : "en-US", { maximumFractionDigits: 0 })}`;
+    }
+
+    /* ── Custom Tooltip for BarChart ─────────────────────────────── */
+    function BarTooltipContent({ active, payload, label }: { active?: boolean; payload?: Array<{ name: string; value: number; color: string }>; label?: string }) {
+        if (!active || !payload?.length) return null;
+        return (
+            <div className="rounded-lg bg-slate-800 border border-slate-600 p-3 text-xs shadow-xl">
+                <p className="text-white font-medium mb-1">{language === "id" ? "Tahun" : "Year"} {label}</p>
+                {payload.map((p, i) => (
+                    <p key={i} style={{ color: p.color }}>{p.name}: {formatIdr(p.value)}</p>
+                ))}
+            </div>
+        );
+    }
+
     // Section 1
     const [annualEmissions, setAnnualEmissions] = useState("50000");
     const [carbonPriceIdr, setCarbonPriceIdr] = useState("76862");
@@ -162,17 +165,17 @@ export default function StrategyPage() {
         setError("");
         const e = Number(annualEmissions), p = Number(carbonPriceIdr), c = Number(capexAmount);
         if (!e || e <= 0) { 
-            setError("Enter a positive annual emissions value."); 
+            setError(language === "id" ? "Masukkan nilai emisi tahunan bernilai positif." : "Enter a positive annual emissions value."); 
             document.getElementById("annual-emissions")?.focus();
             return; 
         }
         if (!p || p <= 0) { 
-            setError("Enter a valid carbon price."); 
+            setError(language === "id" ? "Masukkan harga karbon yang valid." : "Enter a valid carbon price."); 
             document.getElementById("carbon-price")?.focus();
             return; 
         }
         if (!c || c <= 0) { 
-            setError("Enter a valid CAPEX amount."); 
+            setError(language === "id" ? "Masukkan nominal CAPEX yang valid." : "Enter a valid CAPEX amount."); 
             document.getElementById("capex-amount")?.focus();
             return; 
         }
@@ -221,9 +224,9 @@ export default function StrategyPage() {
 
     const lineData = results ? results.strategy_a.cumulative.map((_, i) => ({
         year: i + 1,
-        "Strategy A": results.strategy_a.cumulative[i],
-        "Strategy B": results.strategy_b.cumulative[i],
-        "Strategy C": results.strategy_c.cumulative[i],
+        [language === "id" ? "Strategi A" : "Strategy A"]: results.strategy_a.cumulative[i],
+        [language === "id" ? "Strategi B" : "Strategy B"]: results.strategy_b.cumulative[i],
+        [language === "id" ? "Strategi C" : "Strategy C"]: results.strategy_c.cumulative[i],
     })) : [];
 
     const donutData = results ? (() => {
@@ -231,16 +234,16 @@ export default function StrategyPage() {
         const capTotal = results.strategy_c.yearly.reduce((s, y) => s + y.capex_repayment + y.maintenance, 0);
         const taxTotal = results.strategy_c.yearly.reduce((s, y) => s + y.tax_shield, 0);
         return [
-            { name: "Carbon Credits", value: cTotal },
-            { name: "CAPEX Investment", value: capTotal },
-            { name: "Tax Savings", value: taxTotal },
+            { name: language === "id" ? "Kredit Karbon" : "Carbon Credits", value: cTotal },
+            { name: language === "id" ? "Investasi CAPEX" : "CAPEX Investment", value: capTotal },
+            { name: language === "id" ? "Penghematan Pajak" : "Tax Savings", value: taxTotal },
         ];
     })() : [];
 
     const strategies = results ? [
-        { key: "A", label: "Strategy A — OPEX", color: "text-emerald-400", border: "border-emerald-500/30", result: results.strategy_a },
-        { key: "B", label: "Strategy B — CAPEX", color: "text-blue-400", border: "border-blue-500/30", result: results.strategy_b },
-        { key: "C", label: "Strategy C — Mixed", color: "text-purple-400", border: "border-purple-500/30", result: results.strategy_c },
+        { key: "A", label: language === "id" ? "Strategi A — OPEX" : "Strategy A — OPEX", color: "text-emerald-400", border: "border-emerald-500/30", result: results.strategy_a },
+        { key: "B", label: language === "id" ? "Strategi B — CAPEX" : "Strategy B — CAPEX", color: "text-blue-400", border: "border-blue-500/30", result: results.strategy_b },
+        { key: "C", label: language === "id" ? "Strategi C — Campuran" : "Strategy C — Mixed", color: "text-purple-400", border: "border-purple-500/30", result: results.strategy_c },
     ] : [];
 
     return (
@@ -248,75 +251,74 @@ export default function StrategyPage() {
             <main className="mx-auto max-w-5xl px-6 py-12">
                 {/* Header */}
                 <div className="mb-10">
-                    <h1 className="text-3xl font-bold tracking-tight text-white mb-2 text-balance">Carbon Strategy Optimizer</h1>
+                    <h1 className="text-3xl font-bold tracking-tight text-white mb-2 text-balance">{t("strategy.title")}</h1>
                     <p className="text-slate-400 text-sm leading-relaxed max-w-2xl text-pretty">
-                        Compare OPEX (buy credits), CAPEX (green investment), and Mixed strategies
-                        across your planning horizon to find the optimal carbon compliance path.
+                        {t("strategy.subtitle")}
                     </p>
                 </div>
 
                 {/* Input Sections */}
                 <div className="space-y-4 mb-8">
-                    <Section title="📊 Emission & Market Context" defaultOpen>
+                    <Section title={language === "id" ? "📊 Konteks Emisi & Pasar" : "📊 Emission & Market Context"} defaultOpen>
                         <div className="grid gap-4 sm:grid-cols-2 pt-4">
-                            <NumInput id="annual-emissions" label="Annual Emissions (tCO2e/year)" value={annualEmissions} onChange={setAnnualEmissions} suffix="tCO2e" />
-                            <NumInput id="carbon-price" label="Carbon Price (IDR/tCO2e)" value={carbonPriceIdr} onChange={setCarbonPriceIdr} suffix="IDR" />
+                            <NumInput id="annual-emissions" label={t("strategy.emissionsLabel")} value={annualEmissions} onChange={setAnnualEmissions} suffix="tCO2e" />
+                            <NumInput id="carbon-price" label={t("strategy.opexLabel")} value={carbonPriceIdr} onChange={setCarbonPriceIdr} suffix="IDR" />
                         </div>
-                        <SliderInput id="escalation" label="Carbon Price Escalation" value={escalation} onChange={setEscalation} max={20} />
-                        <SelectInput id="horizon" label="Planning Horizon (years)" value={horizon} options={[1, 3, 5, 10]} onChange={setHorizon} />
+                        <SliderInput id="escalation" label={t("strategy.escalationLabel")} value={escalation} onChange={setEscalation} max={20} />
+                        <SelectInput id="horizon" label={t("strategy.horizonLabel")} value={horizon} options={[1, 3, 5, 10]} onChange={setHorizon} />
                     </Section>
 
-                    <Section title="🏭 CAPEX Investment Details" defaultOpen>
+                    <Section title={language === "id" ? "🏭 Rincian Investasi CAPEX" : "🏭 CAPEX Investment Details"} defaultOpen>
                         <div className="grid gap-4 sm:grid-cols-2 pt-4">
-                            <NumInput id="capex-amount" label="CAPEX Amount (IDR)" value={capexAmount} onChange={setCapexAmount} suffix="IDR" />
-                            <NumInput id="interest-rate" label="Interest Rate (%)" value={interestRate} onChange={setInterestRate} suffix="%" min="0" />
+                            <NumInput id="capex-amount" label={t("strategy.capexLabel")} value={capexAmount} onChange={setCapexAmount} suffix="IDR" />
+                            <NumInput id="interest-rate" label={language === "id" ? "Suku Bunga (%)" : "Interest Rate (%)"} value={interestRate} onChange={setInterestRate} suffix="%" min="0" />
                         </div>
-                        <SliderInput id="emission-reduction" label="Emission Reduction from CAPEX" value={emissionReduction} onChange={setEmissionReduction} />
-                        <SliderInput id="down-payment" label="Down Payment" value={downPayment} onChange={setDownPayment} />
+                        <SliderInput id="emission-reduction" label={t("strategy.reductionLabel")} value={emissionReduction} onChange={setEmissionReduction} />
+                        <SliderInput id="down-payment" label={language === "id" ? "Uang Muka" : "Down Payment"} value={downPayment} onChange={setDownPayment} />
                         <div className="grid gap-4 sm:grid-cols-2">
-                            <SelectInput id="loan-term" label="Loan Term (years)" value={loanTerm} options={[3, 5, 7, 10]} onChange={setLoanTerm} />
-                            <NumInput id="maintenance" label="Annual Maintenance (% of CAPEX)" value={maintenancePct} onChange={setMaintenancePct} suffix="%" min="0" />
+                            <SelectInput id="loan-term" label={language === "id" ? "Jangka Waktu Pinjaman (tahun)" : "Loan Term (years)"} value={loanTerm} options={[3, 5, 7, 10]} onChange={setLoanTerm} />
+                            <NumInput id="maintenance" label={language === "id" ? "Pemeliharaan Tahunan (% dari CAPEX)" : "Annual Maintenance (% of CAPEX)"} value={maintenancePct} onChange={setMaintenancePct} suffix="%" min="0" />
                         </div>
                         <div className="grid gap-4 sm:grid-cols-2">
-                            <SelectInput id="dep-method" label="Depreciation Method" value={depMethod} options={["Straight-line", "Declining Balance"]} onChange={v => setDepMethod(v as "Straight-line" | "Declining Balance")} />
-                            <SelectInput id="dep-life" label="Depreciation Life (years)" value={depLife} options={[5, 8, 10, 15]} onChange={setDepLife} />
+                            <SelectInput id="dep-method" label={language === "id" ? "Metode Penyusutan" : "Depreciation Method"} value={depMethod} options={["Straight-line", "Declining Balance"]} onChange={v => setDepMethod(v as "Straight-line" | "Declining Balance")} />
+                            <SelectInput id="dep-life" label={language === "id" ? "Masa Penyusutan (tahun)" : "Depreciation Life (years)"} value={depLife} options={[5, 8, 10, 15]} onChange={setDepLife} />
                         </div>
                     </Section>
 
-                    <Section title="🔀 Mixed Strategy & Tax" defaultOpen>
+                    <Section title={language === "id" ? "🔀 Strategi Campuran & Pajak" : "🔀 Mixed Strategy & Tax"} defaultOpen>
                         <div className="pt-4">
-                            <SliderInput id="mixed-alloc" label="CAPEX Allocation in Mixed Strategy" value={mixedAllocation} onChange={setMixedAllocation} />
+                            <SliderInput id="mixed-alloc" label={language === "id" ? "Alokasi CAPEX dalam Strategi Campuran" : "CAPEX Allocation in Mixed Strategy"} value={mixedAllocation} onChange={setMixedAllocation} />
                         </div>
-                        <NumInput id="tax-rate" label="Corporate Tax Rate (%)" value={taxRate} onChange={setTaxRate} suffix="%" min="0" />
+                        <NumInput id="tax-rate" label={language === "id" ? "Tarif Pajak Perusahaan (%)" : "Corporate Tax Rate (%)"} value={taxRate} onChange={setTaxRate} suffix="%" min="0" />
                     </Section>
                 </div>
 
                 {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
 
                 <button type="button" onClick={handleCalculate}
-                    className="w-full rounded-lg bg-emerald-500 hover:bg-emerald-400 transition-colors px-4 py-3.5 text-sm font-bold text-black mb-10">
-                    Calculate Strategies
+                    className="w-full rounded-lg bg-emerald-500 hover:bg-emerald-400 transition-colors px-4 py-3.5 text-sm font-bold text-black mb-10 cursor-pointer">
+                    {t("strategy.runOptimization")}
                 </button>
 
                 {/* ── Results Dashboard ───────────────────────────────── */}
                 {results && (
                     <div className="space-y-8 animate-in fade-in">
                         <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-xl font-bold text-white text-balance">Analysis Results</h2>
+                            <h2 className="text-xl font-bold text-white text-balance">{language === "id" ? "Hasil Analisis" : "Analysis Results"}</h2>
                             <button
                                 onClick={handleExportPdf}
                                 disabled={isExporting}
-                                className="flex items-center gap-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 px-4 py-2 text-xs font-semibold text-white transition-all disabled:opacity-50"
+                                className="flex items-center gap-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 px-4 py-2 text-xs font-semibold text-white transition-all disabled:opacity-50 cursor-pointer"
                             >
                                 {isExporting ? (
                                     <>
                                         <div className="w-3 h-3 border-2 border-slate-400 border-t-transparent rounded-full animate-spin" />
-                                        Exporting...
+                                        {language === "id" ? "Mengekspor..." : "Exporting..."}
                                     </>
                                 ) : (
                                     <>
                                         <span>📄</span>
-                                        Export PDF Report
+                                        {language === "id" ? "Ekspor Laporan PDF" : "Export PDF Report"}
                                     </>
                                 )}
                             </button>
@@ -327,62 +329,79 @@ export default function StrategyPage() {
                                 <div key={s.key} className={`rounded-xl border ${s.border} bg-slate-900/80 p-5 relative`}>
                                     {results.recommended === s.key && (
                                         <span className="absolute top-3 right-3 text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-500/30">
-                                            Recommended
+                                            {language === "id" ? "Direkomendasikan" : "Recommended"}
                                         </span>
                                     )}
                                     <p className={`text-xs font-semibold uppercase tracking-wider ${s.color} mb-3`}>{s.label}</p>
                                     <p className="text-xl font-bold text-white">{formatIdr(s.result.total_cost)}</p>
                                     <p className="text-xs text-slate-400 mt-1">{formatUsdSmall(s.result.total_cost)}</p>
-                                    <p className="text-xs text-slate-500 mt-2">{Number(horizon)}-year total cost</p>
+                                    <p className="text-xs text-slate-500 mt-2">
+                                        {language === "id" 
+                                            ? `Total biaya ${Number(horizon)} tahun`
+                                            : `${Number(horizon)}-year total cost`}
+                                    </p>
                                 </div>
                             ))}
                         </div>
 
                         {/* 2. Stacked Bar Chart */}
                         <div className="rounded-xl border border-white/10 bg-slate-900/60 p-6">
-                            <h2 className="text-lg font-semibold text-white mb-1 text-balance">Annual Cost Breakdown</h2>
-                            <p className="text-xs text-slate-400 mb-4 text-pretty">Stacked components per strategy per year</p>
+                            <h2 className="text-lg font-semibold text-white mb-1 text-balance">{language === "id" ? "Rincian Biaya Tahunan" : "Annual Cost Breakdown"}</h2>
+                            <p className="text-xs text-slate-400 mb-4 text-pretty">
+                                {language === "id" ? "Komponen bertumpuk per strategi per tahun" : "Stacked components per strategy per year"}
+                            </p>
                             <ResponsiveContainer width="100%" height={360}>
                                 <BarChart data={barData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
                                     <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                                    <XAxis dataKey="year" tick={{ fill: "#94a3b8", fontSize: 12 }} label={{ value: "Year", position: "insideBottom", offset: -2, fill: "#64748b", fontSize: 11 }} />
+                                    <XAxis dataKey="year" tick={{ fill: "#94a3b8", fontSize: 12 }} label={{ value: language === "id" ? "Tahun" : "Year", position: "insideBottom", offset: -2, fill: "#64748b", fontSize: 11 }} />
                                     <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} tickFormatter={v => `${(v / 1e9).toFixed(1)}B`} />
                                     <Tooltip content={<BarTooltipContent />} />
                                     <Legend wrapperStyle={{ fontSize: 11, color: "#94a3b8" }} />
-                                    <Bar dataKey="A_credits" name="A: Credits" fill={COLORS.credit} stackId="a" />
-                                    <Bar dataKey="B_credits" name="B: Credits" fill={COLORS.credit} stackId="b" opacity={0.6} />
-                                    <Bar dataKey="B_capex" name="B: Repayment" fill={COLORS.capex} stackId="b" />
-                                    <Bar dataKey="B_maint" name="B: Maintenance" fill={COLORS.maint} stackId="b" />
-                                    <Bar dataKey="B_shield" name="B: Tax Shield" fill={COLORS.shield} stackId="b" />
-                                    <Bar dataKey="C_credits" name="C: Credits" fill={COLORS.credit} stackId="c" opacity={0.4} />
-                                    <Bar dataKey="C_capex" name="C: Repayment" fill={COLORS.capex} stackId="c" opacity={0.6} />
-                                    <Bar dataKey="C_maint" name="C: Maintenance" fill={COLORS.maint} stackId="c" opacity={0.6} />
-                                    <Bar dataKey="C_shield" name="C: Tax Shield" fill={COLORS.shield} stackId="c" opacity={0.6} />
+                                    <Bar dataKey="A_credits" name={language === "id" ? "A: Kredit" : "A: Credits"} fill={COLORS.credit} stackId="a" />
+                                    <Bar dataKey="B_credits" name={language === "id" ? "B: Kredit" : "B: Credits"} fill={COLORS.credit} stackId="b" opacity={0.6} />
+                                    <Bar dataKey="B_capex" name={language === "id" ? "B: Pelunasan" : "B: Repayment"} fill={COLORS.capex} stackId="b" />
+                                    <Bar dataKey="B_maint" name={language === "id" ? "B: Pemeliharaan" : "B: Maintenance"} fill={COLORS.maint} stackId="b" />
+                                    <Bar dataKey="B_shield" name={language === "id" ? "B: Perlindungan Pajak" : "B: Tax Shield"} fill={COLORS.shield} stackId="b" />
+                                    <Bar dataKey="C_credits" name={language === "id" ? "C: Kredit" : "C: Credits"} fill={COLORS.credit} stackId="c" opacity={0.4} />
+                                    <Bar dataKey="C_capex" name={language === "id" ? "C: Pelunasan" : "C: Repayment"} fill={COLORS.capex} stackId="c" opacity={0.6} />
+                                    <Bar dataKey="C_maint" name={language === "id" ? "C: Pemeliharaan" : "C: Maintenance"} fill={COLORS.maint} stackId="c" opacity={0.6} />
+                                    <Bar dataKey="C_shield" name={language === "id" ? "C: Perlindungan Pajak" : "C: Tax Shield"} fill={COLORS.shield} stackId="c" opacity={0.6} />
                                 </BarChart>
                             </ResponsiveContainer>
                         </div>
 
                         {/* 3. Break-even Line Chart */}
                         <div className="rounded-xl border border-white/10 bg-slate-900/60 p-6">
-                            <h2 className="text-lg font-semibold text-white mb-1 text-balance">Cumulative Cost & Break-even</h2>
+                            <h2 className="text-lg font-semibold text-white mb-1 text-balance">{language === "id" ? "Biaya Kumulatif & Balik Modal" : "Cumulative Cost & Break-even"}</h2>
                             <p className="text-xs text-slate-400 mb-4">
                                 {results.break_even_year
-                                    ? `CAPEX breaks even vs OPEX at Year ${results.break_even_year}`
-                                    : "CAPEX does not break even within the planning horizon"}
+                                    ? (language === "id" 
+                                        ? `CAPEX balik modal vs OPEX pada Tahun ${results.break_even_year}` 
+                                        : `CAPEX breaks even vs OPEX at Year ${results.break_even_year}`)
+                                    : (language === "id"
+                                        ? "CAPEX tidak mencapai balik modal dalam cakrawala perencanaan"
+                                        : "CAPEX does not break even within the planning horizon")}
                             </p>
                             <ResponsiveContainer width="100%" height={320}>
                                 <LineChart data={lineData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
                                     <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                                    <XAxis dataKey="year" tick={{ fill: "#94a3b8", fontSize: 12 }} label={{ value: "Year", position: "insideBottom", offset: -2, fill: "#64748b", fontSize: 11 }} />
+                                    <XAxis dataKey="year" tick={{ fill: "#94a3b8", fontSize: 12 }} label={{ value: language === "id" ? "Tahun" : "Year", position: "insideBottom", offset: -2, fill: "#64748b", fontSize: 11 }} />
                                     <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} tickFormatter={v => `${(v / 1e9).toFixed(1)}B`} />
                                     <Tooltip formatter={(v) => formatIdr(Number(v))} contentStyle={{ backgroundColor: "#1e293b", border: "1px solid #334155", borderRadius: 8, fontSize: 12 }} labelStyle={{ color: "#fff" }} />
                                     <Legend wrapperStyle={{ fontSize: 11 }} />
-                                    <Line type="monotone" dataKey="Strategy A" stroke={LINE_COLORS.A} strokeWidth={2} dot={{ r: 3 }} />
-                                    <Line type="monotone" dataKey="Strategy B" stroke={LINE_COLORS.B} strokeWidth={2} dot={{ r: 3 }} />
-                                    <Line type="monotone" dataKey="Strategy C" stroke={LINE_COLORS.C} strokeWidth={2} dot={{ r: 3 }} />
+                                    <Line type="monotone" dataKey={language === "id" ? "Strategi A" : "Strategy A"} stroke={LINE_COLORS.A} strokeWidth={2} dot={{ r: 3 }} />
+                                    <Line type="monotone" dataKey={language === "id" ? "Strategi B" : "Strategy B"} stroke={LINE_COLORS.B} strokeWidth={2} dot={{ r: 3 }} />
+                                    <Line type="monotone" dataKey={language === "id" ? "Strategi C" : "Strategy C"} stroke={LINE_COLORS.C} strokeWidth={2} dot={{ r: 3 }} />
                                     {results.break_even_year && (
                                         <ReferenceLine x={results.break_even_year} stroke="#f59e0b" strokeDasharray="6 4" strokeWidth={2}
-                                            label={{ value: `Break-even (Yr ${results.break_even_year})`, position: "top", fill: "#f59e0b", fontSize: 11 }} />
+                                            label={{ 
+                                                value: language === "id" 
+                                                    ? `Balik Modal (Th ${results.break_even_year})` 
+                                                    : `Break-even (Yr ${results.break_even_year})`, 
+                                                position: "top", 
+                                                fill: "#f59e0b", 
+                                                fontSize: 11 
+                                            }} />
                                     )}
                                 </LineChart>
                             </ResponsiveContainer>
@@ -390,8 +409,14 @@ export default function StrategyPage() {
 
                         {/* 4. Budget Allocation Donut */}
                         <div className="rounded-xl border border-white/10 bg-slate-900/60 p-6">
-                            <h2 className="text-lg font-semibold text-white mb-1 text-balance">Mixed Strategy — Budget Allocation</h2>
-                            <p className="text-xs text-slate-400 mb-4 text-pretty">How costs are distributed in the blended approach</p>
+                            <h2 className="text-lg font-semibold text-white mb-1 text-balance">
+                                {language === "id" ? "Strategi Campuran — Alokasi Anggaran" : "Mixed Strategy — Budget Allocation"}
+                            </h2>
+                            <p className="text-xs text-slate-400 mb-4 text-pretty">
+                                {language === "id" 
+                                    ? "Bagaimana biaya didistribusikan dalam pendekatan campuran" 
+                                    : "How costs are distributed in the blended approach"}
+                            </p>
                             <div className="flex flex-col sm:flex-row items-center gap-6">
                                 <ResponsiveContainer width={260} height={260}>
                                     <PieChart>
@@ -420,7 +445,7 @@ export default function StrategyPage() {
                         {/* 5. AI Analysis */}
                         <AIAnalystPanel
                             requestType="strategy_optimizer"
-                            triggerLabel="Get AI Strategy Analysis"
+                            triggerLabel={language === "id" ? "Hasilkan Analisis Strategi AI" : "Get AI Strategy Analysis"}
                             data={{
                                 strategy_a_total: results.strategy_a.total_cost,
                                 strategy_b_total: results.strategy_b.total_cost,
@@ -442,8 +467,9 @@ export default function StrategyPage() {
 
                         {/* Disclaimer */}
                         <p className="text-center text-xs text-slate-500 border-t border-slate-800 pt-6">
-                            This calculator uses simplified financial models for planning purposes.
-                            Consult a financial advisor for investment decisions.
+                            {language === "id"
+                                ? "Kalkulator ini menggunakan model keuangan yang disederhanakan untuk tujuan perencanaan. Konsultasikan dengan penasihat keuangan untuk keputusan investasi."
+                                : "This calculator uses simplified financial models for planning purposes. Consult a financial advisor for investment decisions."}
                         </p>
                     </div>
                 )}

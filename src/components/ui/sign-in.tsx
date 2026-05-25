@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
+import { useLanguage } from '@/components/layout/LanguageContext';
 
 // --- HELPER COMPONENTS (ICONS) ---
 
@@ -74,6 +75,7 @@ export const SignInPage: React.FC<SignInPageProps> = ({
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { language, setLanguage, t } = useLanguage();
 
   const handleSubmit = () => {
     if (onSignIn) {
@@ -82,7 +84,33 @@ export const SignInPage: React.FC<SignInPageProps> = ({
   };
 
   return (
-    <div className="h-[100dvh] flex flex-col md:flex-row font-sans w-[100dvw] bg-[#0b1120]">
+    <div className="h-[100dvh] flex flex-col md:flex-row font-sans w-[100dvw] bg-[#0b1120] relative">
+      {/* Floating Language Switcher in Top Right */}
+      <div className="absolute top-6 right-6 z-50 flex items-center gap-1 rounded-lg bg-slate-950/60 border border-white/5 p-0.5 backdrop-blur-md">
+        <button
+          type="button"
+          onClick={() => setLanguage("en")}
+          className={`px-2 py-1 text-xs font-semibold rounded-md transition-all cursor-pointer ${
+            language === "en"
+              ? "bg-emerald-500 text-black shadow-md"
+              : "text-slate-400 hover:text-white"
+          }`}
+        >
+          EN
+        </button>
+        <button
+          type="button"
+          onClick={() => setLanguage("id")}
+          className={`px-2 py-1 text-xs font-semibold rounded-md transition-all cursor-pointer ${
+            language === "id"
+              ? "bg-emerald-500 text-black shadow-md"
+              : "text-slate-400 hover:text-white"
+          }`}
+        >
+          ID
+        </button>
+      </div>
+
       {/* Left column: sign-in form */}
       <section className="flex-1 flex items-center justify-center p-8">
         <div className="w-full max-w-md">
@@ -92,27 +120,27 @@ export const SignInPage: React.FC<SignInPageProps> = ({
 
             <div className="space-y-5">
               <div className="animate-element animate-delay-300">
-                <label className="text-sm font-medium text-slate-400 block mb-1.5">Email Address</label>
+                <label className="text-sm font-medium text-slate-400 block mb-1.5">{t("landing.emailLabel")}</label>
                 <GlassInputWrapper>
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email address"
+                    placeholder={t("landing.emailPlaceholder")}
                     className="w-full bg-transparent text-sm p-4 rounded-2xl text-white focus:outline-none"
                   />
                 </GlassInputWrapper>
               </div>
 
               <div className="animate-element animate-delay-400">
-                <label className="text-sm font-medium text-slate-400 block mb-1.5">Password</label>
+                <label className="text-sm font-medium text-slate-400 block mb-1.5">{t("landing.passwordLabel")}</label>
                 <GlassInputWrapper>
                   <div className="relative">
                     <input
                       type={showPassword ? 'text' : 'password'}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Enter your password"
+                      placeholder={t("landing.passwordPlaceholder")}
                       className="w-full bg-transparent text-sm p-4 pr-12 rounded-2xl text-white focus:outline-none"
                     />
                     <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-3 flex items-center">
@@ -125,9 +153,9 @@ export const SignInPage: React.FC<SignInPageProps> = ({
               <div className="animate-element animate-delay-500 flex items-center justify-between text-sm">
                 <label className="flex items-center gap-3 cursor-pointer">
                   <input type="checkbox" name="rememberMe" className="h-4 w-4 rounded border-slate-700 bg-white/5 accent-emerald-500 text-emerald-500 focus:ring-0 focus:ring-offset-0" />
-                  <span className="text-slate-300">Keep me signed in</span>
+                  <span className="text-slate-300">{t("landing.keepSignedIn")}</span>
                 </label>
-                <a href="#" onClick={(e) => { e.preventDefault(); onResetPassword?.(); }} className="hover:underline text-emerald-400 transition-colors">Reset password</a>
+                <a href="#" onClick={(e) => { e.preventDefault(); onResetPassword?.(); }} className="hover:underline text-emerald-400 transition-colors">{t("landing.resetPassword")}</a>
               </div>
 
               <button
@@ -135,22 +163,22 @@ export const SignInPage: React.FC<SignInPageProps> = ({
                 onClick={handleSubmit}
                 className="animate-element animate-delay-600 w-full rounded-2xl bg-emerald-500 py-4 font-semibold text-black hover:bg-emerald-400 transition-colors cursor-pointer text-center"
               >
-                Sign In
+                {t("landing.signInBtn")}
               </button>
             </div>
 
             <div className="animate-element animate-delay-700 relative flex items-center justify-center py-2">
               <span className="w-full border-t border-slate-800"></span>
-              <span className="px-4 text-sm text-slate-500 bg-[#0b1120] absolute">Or continue with</span>
+              <span className="px-4 text-sm text-slate-500 bg-[#0b1120] absolute">{t("landing.orContinueWith")}</span>
             </div>
 
             <button onClick={onGoogleSignIn} className="animate-element animate-delay-800 w-full flex items-center justify-center gap-3 border border-slate-800 rounded-2xl py-4 bg-white/5 text-slate-300 hover:bg-white/10 transition-colors cursor-pointer">
               <GoogleIcon />
-              Continue with Google
+              {t("landing.continueWithGoogle")}
             </button>
 
             <p className="animate-element animate-delay-900 text-center text-sm text-slate-400">
-              New to our platform? <a href="#" onClick={(e) => { e.preventDefault(); onCreateAccount?.(); }} className="text-emerald-400 hover:underline transition-colors">Create Account</a>
+              {t("landing.newToPlatform")} <a href="#" onClick={(e) => { e.preventDefault(); onCreateAccount?.(); }} className="text-emerald-400 hover:underline transition-colors">{t("landing.createAccount")}</a>
             </p>
           </div>
         </div>
@@ -178,3 +206,4 @@ export const SignInPage: React.FC<SignInPageProps> = ({
     </div>
   );
 };
+

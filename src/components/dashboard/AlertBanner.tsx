@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { RegulatoryEvent } from "@/types";
+import { useLanguage } from "@/components/layout/LanguageContext";
 
 interface AlertBannerProps {
   events: RegulatoryEvent[];
@@ -9,6 +10,7 @@ interface AlertBannerProps {
 
 export default function AlertBanner({ events }: AlertBannerProps) {
   const [dismissed, setDismissed] = useState<string[]>([]);
+  const { language, t } = useLanguage();
 
   const visible = events.filter((e) => !dismissed.includes(e.id));
 
@@ -27,9 +29,9 @@ export default function AlertBanner({ events }: AlertBannerProps) {
   }
 
   function urgencyBadge(days: number): { label: string; cls: string } {
-    if (days <= 30) return { label: "CRITICAL", cls: "bg-red-500 text-white" };
-    if (days <= 90) return { label: "WARNING", cls: "bg-amber-500 text-black" };
-    return { label: "UPCOMING", cls: "bg-emerald-600 text-white" };
+    if (days <= 30) return { label: language === "id" ? "KRITIS" : "CRITICAL", cls: "bg-red-500 text-white" };
+    if (days <= 90) return { label: language === "id" ? "PERINGATAN" : "WARNING", cls: "bg-amber-500 text-black" };
+    return { label: language === "id" ? "MENDATANG" : "UPCOMING", cls: "bg-emerald-600 text-white" };
   }
 
   function typeBadge(type: "domestic" | "international"): string {
@@ -44,11 +46,19 @@ export default function AlertBanner({ events }: AlertBannerProps) {
         const days = daysUntil(event.date);
         const urgency = urgencyColor(days);
         const badge = urgencyBadge(days);
-        const date = new Date(event.date).toLocaleDateString("en-GB", {
+        const date = new Date(event.date).toLocaleDateString(language === "id" ? "id-ID" : "en-GB", {
           day: "numeric",
           month: "short",
           year: "numeric",
         });
+
+        const eventTitle = t(`timelineEvents.${event.id}.title`) !== `timelineEvents.${event.id}.title`
+          ? t(`timelineEvents.${event.id}.title`)
+          : event.title;
+
+        const eventDesc = t(`timelineEvents.${event.id}.description`) !== `timelineEvents.${event.id}.description`
+          ? t(`timelineEvents.${event.id}.description`)
+          : event.description;
 
         return (
           <div
@@ -79,14 +89,14 @@ export default function AlertBanner({ events }: AlertBannerProps) {
                   {badge.label}
                 </span>
                 <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${typeBadge(event.type)}`}>
-                  {event.type === "international" ? "International" : "Domestic"}
+                  {event.type === "international" ? t("common.international") : t("common.domestic")}
                 </span>
                 <span className="text-xs opacity-60 font-mono">
-                  {date} · {days > 0 ? `${days} days away` : "Today"}
+                  {date} · {days > 0 ? `${days} ${t("common.daysAway")}` : t("common.today")}
                 </span>
               </div>
-              <p className="font-semibold text-sm leading-snug">{event.title}</p>
-              <p className="text-xs opacity-70 mt-0.5 line-clamp-2">{event.description}</p>
+              <p className="font-semibold text-sm leading-snug">{eventTitle}</p>
+              <p className="text-xs opacity-70 mt-0.5 line-clamp-2">{eventDesc}</p>
               {event.affected_sectors.length > 0 && (
                 <div className="flex flex-wrap gap-1 mt-2">
                   {event.affected_sectors.map((s) => (
@@ -117,3 +127,4 @@ export default function AlertBanner({ events }: AlertBannerProps) {
     </div>
   );
 }
+

@@ -7,16 +7,22 @@ export interface AnalysisRequest {
     type: "dashboard_summary" | "cbam_result" | "regulation_explainer" | "strategy_optimizer";
     data: Record<string, unknown>;
     context?: string;
+    language?: string;
 }
 
 export async function generateAnalysis(request: AnalysisRequest): Promise<string> {
+    const langInstructions = request.language === "id"
+        ? "Always write your response in fluent, professional Indonesian language (Bahasa Indonesia). Use standard Indonesian corporate finance terms (e.g., use 'liabilitas' for liability, 'pajak karbon' for carbon tax, 'dekarbonisasi' for decarbonization)."
+        : "Always write your response in plain, professional English.";
+
     const systemContext = `
 You are a carbon finance analyst assistant for carbon-climatch, a platform that helps 
 Indonesian CFOs understand their carbon regulatory exposure. Your role is to translate 
 complex regulatory and financial data into clear, actionable insights.
 
+${langInstructions}
+
 Always:
-- Use plain, professional English
 - Quantify impacts in both USD and IDR where relevant
 - Be specific about which regulation applies (NEK ETS, CBAM, carbon tax)
 - Keep responses to 3-5 sentences maximum
