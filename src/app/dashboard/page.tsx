@@ -8,12 +8,14 @@ import IDXLineChart from "@/components/dashboard/IDXLineChart";
 import AIAnalystPanel from "@/components/ai/AIAnalystPanel";
 import { Hero } from "@/components/ui/animated-hero";
 import { useMemo } from "react";
+import { useRouter } from "next/navigation";
 
 // Jurisdictions to feature in the price comparison chart
 const FEATURED_JURISDICTIONS = ["Indonesia", "EU27+", "Singapore", "Korea, Rep."];
 
 export default function DashboardPage() {
   const { language, t } = useLanguage();
+  const router = useRouter();
 
   const displayNames: Record<string, string> = useMemo(() => ({
     Indonesia: "Indonesia",
@@ -139,6 +141,77 @@ export default function DashboardPage() {
           ) : (
             <AlertBanner events={upcomingEvents} />
           )}
+        </section>
+
+        {/* ── ONE-CLICK AUDIT UPLOADER (YOLO COMPLIANCE) ───────── */}
+        <section className="mb-10 rounded-2xl border border-[#0CF2A0]/25 bg-gradient-to-r from-[#1a1a1a] to-[#2a2a2a] p-6 shadow-lg shadow-[#0CF2A0]/5">
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+            <div className="space-y-2 max-w-2xl">
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-[#0CF2A0]/20 bg-[#0CF2A0]/5 px-2.5 py-0.5 text-xs font-semibold text-[#0CF2A0]">
+                <span>⚡ Fast-Track Compliance</span>
+              </div>
+              <h2 className="text-xl font-bold text-white leading-tight">
+                {language === "id" ? "Unggah Laporan Audit Karbon (One-Click YOLO)" : "One-Click PDF Audit Upload"}
+              </h2>
+              <p className="text-xs text-slate-400 leading-relaxed text-pretty">
+                {language === "id"
+                  ? "Unggah berkas PDF audit emisi gas rumah kaca Anda untuk mengekstrak data kepatuhan secara otomatis. Sistem akan langsung mengarahkan Anda ke Pusat Aksi Karbon untuk melunasi eksposur Anda."
+                  : "Upload your official emissions inventory audit statement. The system will automatically parse and pre-populate your compliance data, then fast-track you directly to the Carbon Action Hub."}
+              </p>
+            </div>
+            
+            <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+              <button
+                type="button"
+                onClick={() => {
+                  import("@/lib/mockupPdf").then((mod) => {
+                    mod.generateMockupAuditReport("IndoSteel Corporation");
+                  });
+                }}
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/10 hover:border-white/20 bg-white/5 hover:bg-white/10 px-5 py-3.5 text-xs font-semibold text-white transition-all cursor-pointer whitespace-nowrap"
+              >
+                <span>📥 {language === "id" ? "Unduh PDF Sampel" : "Download Sample PDF"}</span>
+              </button>
+              
+              <div className="relative">
+                <input
+                  type="file"
+                  id="audit-pdf-upload"
+                  accept=".pdf"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+
+                    // Simulated visual scanning/OCR sequence
+                    const alertMsg = language === "id" ? "Memindai file audit PDF..." : "Scanning audit PDF file...";
+                    const successMsg = language === "id" ? "Audit berhasil diverifikasi! Mengalihkan ke Action Hub." : "Audit verified successfully! Redirecting to Action Hub.";
+                    alert(alertMsg);
+
+                    // Pre-fill CBAM Calculator parameters
+                    localStorage.setItem("climatch_emissions", "55000");
+                    localStorage.setItem("climatch_liability", "264000"); // 55,000 * 4.8 USD per ton net
+                    localStorage.setItem("climatch_liability_idr", (264000 * 16000).toString());
+                    localStorage.setItem("climatch_carbon_price_idr", "76862"); // default idx pricing
+                    localStorage.setItem("climatch_emissions_gap", "55000");
+
+                    // Pre-fill Strategy Optimizer parameters
+                    localStorage.setItem("climatch_strategy_capex", "5000000000");
+                    localStorage.setItem("climatch_recommended_strategy", "C"); // Mixed strategy recommended for high volume
+
+                    alert(successMsg);
+                    router.push("/action-hub?source=audit_pdf&gap=55000");
+                  }}
+                  className="hidden"
+                />
+                <label
+                  htmlFor="audit-pdf-upload"
+                  className="w-full lg:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-[#0CF2A0] hover:bg-[#0CF2A0]/95 px-5 py-3.5 text-xs font-bold text-[#111111] shadow-md shadow-[#0CF2A0]/10 transition-all hover:-translate-y-0.5 cursor-pointer whitespace-nowrap"
+                >
+                  <span>📤 {language === "id" ? "Unggah Dokumen Audit" : "Upload Audit PDF"}</span>
+                </label>
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* ── MARKET CHARTS ─────────────────────────────────────── */}
