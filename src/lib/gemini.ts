@@ -93,6 +93,30 @@ In 4 sentences: state which strategy is cheapest over the horizon, when CAPEX br
 what risk the carbon price escalation assumption carries, and one specific action to take 
 in the next 90 days.
     `.trim();
+    } else if (request.type as string === "yolo_optimizer") {
+        const d = request.data;
+        userPrompt = `
+You are the YOLO Carbon Optimizer. Your objective is to return a strict JSON payload that represents the absolute lowest-cost combination of offsets and green technologies to completely cover a carbon exposure gap.
+Remaining Gap to cover: ${d.remainingGap} tCO2e.
+Available Carbon Offsets (prices in IDR/tCO2e):
+${JSON.stringify(d.creditProjects, null, 2)}
+Available Green Tech (reductions per unit, cost per unit in IDR):
+${JSON.stringify(d.greenTechs, null, 2)}
+
+Instructions:
+1. Make a combination of green technologies and carbon offsets that reduces the remaining gap to 0.
+2. Order them so that we get the best ROI (lowest total cost). Green tech offsets baseline emissions permanently but has higher CAPEX. Carbon credits are OPEX.
+3. You must respond ONLY with a raw JSON block. Do not include markdown wraps or backticks, just raw JSON.
+4. The JSON must match the following structure:
+{
+  "credits": [
+    { "id": "project-id", "quantity": 1234 }
+  ],
+  "tech": [
+    { "id": "tech-id", "capacity": 10 }
+  ]
+}
+`.trim();
     }
 
     const result = await model.generateContent(`${systemContext}\n\n${userPrompt}`);

@@ -421,6 +421,107 @@ export default function ActionHubPage() {
     );
   };
 
+  const [yoloLoading, setYoloLoading] = useState(false);
+
+  const handleYoloOptimize = async () => {
+    if (remainingGap <= 0) return;
+    setYoloLoading(true);
+    try {
+      const response = await fetch("/api/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "yolo_optimizer",
+          data: {
+            remainingGap,
+            creditProjects: creditProjects.map(p => ({ id: p.id, name: p.name, priceIdr: p.priceIdr })),
+            greenTechs: greenTechs.map(t => ({ id: t.id, name: t.name, costPerUnitIdr: t.costPerUnitIdr, emissionsPerUnit: t.emissionsPerUnit, energySavingsPerUnit: t.energySavingsPerUnit }))
+          },
+          language
+        })
+      });
+
+      if (!response.ok) throw new Error("Optimization call failed");
+      const result = await response.json();
+      
+      // Clean up markdown block wraps if Gemini accidentally outputted it
+      let cleanText = result.analysis || "";
+      if (cleanText.includes("```json")) {
+        cleanText = cleanText.split("```json")[1].split("```")[0];
+      } else if (cleanText.includes("```")) {
+        cleanText = cleanText.split("```")[1].split("```")[0];
+      }
+      
+      const plan = JSON.parse(cleanText.trim());
+
+      let newOffsets = 0;
+      let newReductions = 0;
+      let newCostSpent = 0;
+      const newActiveTech: string[] = [];
+      const newTx: typeof transactions = [];
+
+      if (Array.isArray(plan.credits)) {
+        for (const item of plan.credits) {
+          const proj = creditProjects.find(p => p.id === item.id);
+          if (proj) {
+            const qty = Number(item.quantity) || 0;
+            if (qty > 0) {
+              const cost = qty * proj.priceIdr;
+              const fee = cost * 0.002;
+              const total = cost + fee;
+              newOffsets += qty;
+              newCostSpent += total;
+              newTx.push({
+                id: `yolo-offset-${Date.now()}-${Math.random()}`,
+                type: language === "id" ? "Beli Kredit (YOLO)" : "Buy Credits (YOLO)",
+                details: `${proj.name} (${qty.toLocaleString()} tCO2e)`,
+                costIdr: total
+              });
+            }
+          }
+        }
+      }
+
+      if (Array.isArray(plan.tech)) {
+        for (const item of plan.tech) {
+          const tech = greenTechs.find(t => t.id === item.id);
+          if (tech) {
+            const cap = Number(item.capacity) || 0;
+            if (cap > 0) {
+              const totalCapex = cap * tech.costPerUnitIdr;
+              const carbonSaved = cap * tech.emissionsPerUnit;
+              newReductions += carbonSaved;
+              newCostSpent += totalCapex;
+              newActiveTech.push(`${tech.name} (${cap.toLocaleString()} ${tech.unitLabel})`);
+              newTx.push({
+                id: `yolo-tech-${Date.now()}-${Math.random()}`,
+                type: language === "id" ? "Pasang Teknologi (YOLO)" : "Install Tech (YOLO)",
+                details: `${tech.name} (${cap.toLocaleString()} ${tech.unitLabel})`,
+                costIdr: totalCapex
+              });
+            }
+          }
+        }
+      }
+
+      setOffsetsSecured(prev => prev + newOffsets);
+      setTechReductions(prev => prev + newReductions);
+      setTotalCostSpent(prev => prev + newCostSpent);
+      if (newActiveTech.length > 0) {
+        setActiveTech(prev => [...prev, ...newActiveTech]);
+      }
+      if (newTx.length > 0) {
+        setTransactions(prev => [...newTx, ...prev]);
+      }
+
+    } catch (e) {
+      console.error(e);
+      alert(language === "id" ? "Gagal memproses rekomendasi AI YOLO." : "Failed to run YOLO AI optimization.");
+    } finally {
+      setYoloLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#111111] text-white font-sans">
       <main className="mx-auto max-w-7xl px-6 py-12">
@@ -771,7 +872,7 @@ export default function ActionHubPage() {
                 </div>
               </div>
 
-              {/* Status Alert Banner */}
+               {/* Status Alert Banner */}
               {remainingGap === 0 ? (
                 <div className="rounded-xl bg-[#0CF2A0]/10 border border-[#0CF2A0]/30 p-4 text-center space-y-2 animate-in zoom-in duration-300">
                   <span className="text-2xl">🏆</span>
@@ -786,11 +887,21 @@ export default function ActionHubPage() {
                   </p>
                 </div>
               ) : (
-                <div className="rounded-xl bg-amber-500/5 border border-amber-500/20 p-3.5 text-center text-[10px] text-amber-400 leading-normal">
-                  ⚠️ {language === "id" 
-                    ? `Kurangi emisi karbon Anda sebanyak ${remainingGap.toLocaleString()} tCO₂e lagi untuk mengajukan sertifikasi.` 
-                    : `Reduce your carbon gap by another ${remainingGap.toLocaleString()} tCO₂e to unlock your neutrality certification.`
-                  }
+                <div className="space-y-3">
+                  <div className="rounded-xl bg-amber-500/5 border border-amber-500/20 p-3.5 text-center text-[10px] text-amber-400 leading-normal">
+                    ⚠️ {language === "id" 
+                      ? `Kurangi emisi karbon Anda sebanyak ${remainingGap.toLocaleString()} tCO₂e lagi untuk mengajukan sertifikasi.` 
+                      : `Reduce your carbon gap by another ${remainingGap.toLocaleString()} tCO₂e to unlock your neutrality certification.`
+                    }
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleYoloOptimize}
+                    disabled={yoloLoading}
+                    className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-500 to-[#0CF2A0] hover:opacity-95 disabled:opacity-50 text-xs font-bold text-[#111111] py-3 transition-all cursor-pointer shadow-md shadow-emerald-500/10 animate-pulse hover:animate-none"
+                  >
+                    <span>{yoloLoading ? (language === "id" ? "Mengoptimalkan..." : "AI Optimizing...") : "⚡ YOLO Auto-Optimize"}</span>
+                  </button>
                 </div>
               )}
 
