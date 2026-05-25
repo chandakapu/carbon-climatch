@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { calculateCBAMPortfolio } from "@/lib/calculations";
 import { getCBAMConfig, getIDXCarbonMonthly } from "@/lib/data";
 import type { CBAMPortfolioItem, CBAMPortfolioResult } from "@/types";
@@ -167,6 +168,11 @@ export default function CalculatorPage() {
       euPriceNum,
       indoPriceNum
     );
+
+    // Save to localStorage for Action Hub integration
+    localStorage.setItem("climatch_emissions", portfolioResult.total_emissions_tco2.toString());
+    localStorage.setItem("climatch_liability", portfolioResult.total_net_liability_usd.toString());
+    localStorage.setItem("climatch_liability_idr", (portfolioResult.total_net_liability_usd * USD_TO_IDR).toString());
 
     setResult(portfolioResult);
     fetchAnalysis(portfolioResult, euPriceNum, indoPriceNum);
@@ -398,6 +404,31 @@ export default function CalculatorPage() {
 
             {/* Visual Analytics */}
             <CBAMPortfolioCharts portfolioResult={result} />
+
+            {/* End-to-End Integration Action Card */}
+            <div className="rounded-xl border border-[#0CF2A0]/30 bg-gradient-to-r from-[#1a1a1a] to-[#2a2a2a] p-6 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-lg shadow-[#0CF2A0]/5">
+              <div className="space-y-1.5 max-w-2xl">
+                <span className="text-[10px] font-bold uppercase tracking-widest bg-[#0CF2A0]/15 text-[#0CF2A0] px-2 py-0.5 rounded-full border border-[#0CF2A0]/20">
+                  {language === "id" ? "Rekomendasi Aksi Korporasi" : "Corporate Compliance Action"}
+                </span>
+                <h3 className="text-lg font-bold text-white leading-tight">
+                  {language === "id" ? "Beralih Dari Kalkulasi Ke Aksi Nyata" : "Take Action on Your Carbon Exposure"}
+                </h3>
+                <p className="text-xs text-slate-400 leading-relaxed text-pretty">
+                  {language === "id" 
+                    ? `Anda memiliki sisa kesenjangan karbon sebesar ${result.total_emissions_tco2.toLocaleString()} tCO₂e dengan estimasi liabilitas bersih sebesar ${formatUsd(result.total_net_liability_usd)} (${formatIdr(result.total_net_liability_usd * USD_TO_IDR)}). Segera netralkan eksposur Anda dengan membeli kredit karbon atau mendanai efisiensi energi.`
+                    : `You have a remaining carbon gap of ${result.total_emissions_tco2.toLocaleString()} tCO₂e with a net liability of ${formatUsd(result.total_net_liability_usd)} (${formatIdr(result.total_net_liability_usd * USD_TO_IDR)}). Instantly offset this liability by purchasing carbon credits or financing energy efficiency projects.`
+                  }
+                </p>
+              </div>
+              <Link 
+                href={`/action-hub?source=calculator&gap=${result.total_emissions_tco2}&liability=${result.total_net_liability_usd}`}
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#0CF2A0] hover:bg-[#0CF2A0]/95 px-5 py-3 text-xs font-bold text-[#111111] shadow-md shadow-[#0CF2A0]/10 transition-all hover:-translate-y-0.5 cursor-pointer whitespace-nowrap"
+              >
+                <span>{language === "id" ? "Pusat Aksi Karbon" : "Go to Action Hub"}</span>
+                <span className="text-sm">→</span>
+              </Link>
+            </div>
 
             {/* AI Advisor Panel */}
             <div className="rounded-xl border border-white/5 bg-[#1a1a1a] p-6 space-y-4">

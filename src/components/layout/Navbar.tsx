@@ -89,6 +89,14 @@ export default function Navbar() {
                 {t("nav.strategy")}
               </Link>
               <Link
+                href="/action-hub"
+                className={`transition-colors ${
+                  pathname === "/action-hub" ? "text-[#0CF2A0] font-semibold" : "text-slate-400 hover:text-white"
+                }`}
+              >
+                {t("nav.actionHub")}
+              </Link>
+              <Link
                 href="/timeline"
                 className={`transition-colors ${
                   pathname === "/timeline" ? "text-[#0CF2A0] font-semibold" : "text-slate-400 hover:text-white"
@@ -218,6 +226,13 @@ export default function Navbar() {
                   className={`text-sm py-1.5 ${pathname === "/strategy" ? "text-[#0CF2A0]" : "text-slate-300"}`}
                 >
                   {t("nav.strategy")}
+                </Link>
+                <Link
+                  href="/action-hub"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`text-sm py-1.5 ${pathname === "/action-hub" ? "text-[#0CF2A0]" : "text-slate-300"}`}
+                >
+                  {t("nav.actionHub")}
                 </Link>
                 <Link
                   href="/timeline"

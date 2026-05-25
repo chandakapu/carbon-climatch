@@ -6,6 +6,7 @@ export const translations = {
       strategy: "Strategy Optimizer",
       timeline: "Regulatory Timeline",
       getAiAnalysis: "Get AI Analysis",
+      actionHub: "Carbon Action Hub",
     },
     common: {
       loading: "Loading...",
@@ -213,6 +214,66 @@ export const translations = {
         title: "Indonesia NEK ETS Phase 3 begins",
         description: "ETS moves toward economy-wide coverage and absolute emission caps aligned with the Second NDC target."
       }
+    },
+    actionHub: {
+      title: "Carbon Action Hub",
+      subtitle: "Move from estimation to action. Procure carbon credits, request clean technology installations, and apply for green financing to achieve net-zero compliance.",
+      tabs: {
+        credits: "Carbon Credits",
+        tech: "Green Technology",
+        finance: "Green Financing"
+      },
+      scorecard: {
+        title: "Net-Zero Compliance Scorecard",
+        subtitle: "Corporate Emission Balance",
+        initialExposure: "Initial Carbon Gap",
+        offsetsSecured: "Offsets Secured",
+        techReductions: "Tech Reductions",
+        remainingExposure: "Remaining Carbon Gap",
+        remainingLiability: "Remaining Carbon Liability",
+        targetMet: "Target Met: Carbon Neutral!",
+        downloadCert: "Download Compliance Certificate",
+        noSessionData: "No previous calculation session found. Using default profile data."
+      },
+      creditsTab: {
+        description: "Procure local carbon credits registered on the National Registry (SRN-PPI) to offset residual emissions and reduce CBAM liabilities.",
+        buyBtn: "Buy Carbon Credits",
+        projectType: "Project Type",
+        registry: "Registry",
+        vintage: "Vintage",
+        price: "Price",
+        modalTitle: "Buy Carbon Credits",
+        quantityLabel: "Quantity (tCO2e)",
+        estCost: "Estimated Offset Cost",
+        fees: "IDX Brokerage Fee (0.2%)",
+        total: "Total IDR Cost",
+        executeBtn: "Execute Purchase & Offset",
+      },
+      techTab: {
+        description: "Invest in energy efficiency and low-carbon assets to permanently lower baseline emissions, reducing long-term tax exposure.",
+        installBtn: "Request Quote",
+        payback: "Simulated Payback",
+        reduction: "Emission Reduction",
+        modalTitle: "Request Decarbonization Quote",
+        capacityLabel: "Proposed System Size (kW/Units)",
+        estSavings: "Est. Annual Carbon Savings",
+        estPayback: "Est. Payback Period",
+        executeBtn: "Approve Installation",
+      },
+      financeTab: {
+        description: "Finance carbon mitigation project CAPEX with specialized sustainability loans from Indonesian banks.",
+        applyBtn: "Simulate Green Loan",
+        term: "Loan Term",
+        rate: "Interest Rate",
+        modalTitle: "Simulate Green Financing Loan",
+        loanAmount: "Principal Loan Amount (IDR)",
+        interestLabel: "Interest Rate (%)",
+        termLabel: "Term (Years)",
+        downPaymentLabel: "Down Payment (%)",
+        monthlyPmt: "Monthly Payment (Est.)",
+        taxShield: "Est. Total Tax Shield",
+        executeBtn: "Activate Financing Contract",
+      }
     }
   },
   id: {
@@ -222,6 +283,7 @@ export const translations = {
       strategy: "Pengoptimal Strategi",
       timeline: "Linimasa Regulasi",
       getAiAnalysis: "Dapatkan Analisis AI",
+      actionHub: "Pusat Aksi Karbon",
     },
     common: {
       loading: "Memuat...",
@@ -428,6 +490,66 @@ export const translations = {
       "nek-phase3": {
         title: "Fase 3 ETS NEK Indonesia dimulai",
         description: "ETS bergerak menuju cakupan seluruh ekonomi dan batas emisi absolut yang selaras dengan target NDC Kedua."
+      }
+    },
+    actionHub: {
+      title: "Pusat Aksi Karbon",
+      subtitle: "Beralih dari estimasi ke aksi nyata. Dapatkan kredit karbon, ajukan pemasangan teknologi bersih, dan simulasi pembiayaan hijau untuk mencapai kepatuhan emisi nol bersih.",
+      tabs: {
+        credits: "Kredit Karbon",
+        tech: "Teknologi Hijau",
+        finance: "Pembiayaan Hijau"
+      },
+      scorecard: {
+        title: "Lembar Skor Kepatuhan Karbon",
+        subtitle: "Neraca Emisi Perusahaan",
+        initialExposure: "Kesenjangan Awal",
+        offsetsSecured: "Kredit Karbon Terbeli",
+        techReductions: "Pengurangan Teknologi",
+        remainingExposure: "Sisa Kesenjangan Karbon",
+        remainingLiability: "Sisa Kesenjangan Karbon",
+        targetMet: "Target Tercapai: Netral Karbon!",
+        downloadCert: "Unduh Sertifikat Kepatuhan",
+        noSessionData: "Tidak ada sesi kalkulasi sebelumnya. Menggunakan profil standar."
+      },
+      creditsTab: {
+        description: "Beli kredit karbon lokal yang terdaftar di SRN-PPI untuk mengimbangi emisi residual dan mengurangi liabilitas CBAM Anda.",
+        buyBtn: "Beli Kredit Karbon",
+        projectType: "Jenis Proyek",
+        registry: "Registri",
+        vintage: "Vintage",
+        price: "Harga",
+        modalTitle: "Beli Kredit Karbon",
+        quantityLabel: "Jumlah (tCO2e)",
+        estCost: "Estimasi Biaya Kredit",
+        fees: "Biaya Broker IDX (0,2%)",
+        total: "Total Biaya (IDR)",
+        executeBtn: "Eksekusi Pembelian & Offset",
+      },
+      techTab: {
+        description: "Berinvestasi dalam efisiensi energi dan aset rendah karbon untuk secara permanen mengurangi emisi dasar Anda.",
+        installBtn: "Ajukan Penawaran",
+        payback: "Simulasi Payback",
+        reduction: "Pengurangan Emisi",
+        modalTitle: "Ajukan Penawaran Dekarbonisasi",
+        capacityLabel: "Kapasitas Sistem (kW/Unit)",
+        estSavings: "Est. Penghematan Karbon Tahunan",
+        estPayback: "Est. Periode Payback",
+        executeBtn: "Setujui Pemasangan",
+      },
+      financeTab: {
+        description: "Simulasikan pembiayaan CAPEX proyek mitigasi emisi Anda dengan pinjaman keberlanjutan khusus dari perbankan Indonesia.",
+        applyBtn: "Simulasi Pinjaman Hijau",
+        term: "Jangka Waktu",
+        rate: "Suku Bunga",
+        modalTitle: "Simulasi Pinjaman Pembiayaan Hijau",
+        loanAmount: "Jumlah Pokok Pinjaman (IDR)",
+        interestLabel: "Suku Bunga (%)",
+        termLabel: "Jangka Waktu (Tahun)",
+        downPaymentLabel: "Uang Muka (%)",
+        monthlyPmt: "Angsuran Bulanan (Est.)",
+        taxShield: "Est. Total Perlindungan Pajak",
+        executeBtn: "Aktifkan Kontrak Pembiayaan",
       }
     }
   },

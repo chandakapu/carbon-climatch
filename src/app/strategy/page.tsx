@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useId } from "react";
+import Link from "next/link";
 import { calculateAllStrategies } from "@/lib/strategyCalculations";
 import type { StrategyInputs, StrategyResults } from "@/types";
 import AIAnalystPanel from "@/components/ai/AIAnalystPanel";
@@ -178,8 +179,26 @@ export default function StrategyPage() {
             depreciation_method: depMethod, depreciation_life_years: Number(depLife),
             mixed_capex_allocation_pct: mixedAllocation, corporate_tax_rate_pct: Number(taxRate),
         };
+        const strategyResults = calculateAllStrategies(inputs);
+
+        // Save to localStorage for Action Hub integration
+        localStorage.setItem("climatch_emissions", e.toString());
+        localStorage.setItem("climatch_strategy_capex", c.toString());
+        localStorage.setItem("climatch_recommended_strategy", strategyResults.recommended);
+        
+        let initialGap = e;
+        if (strategyResults.recommended === "B") {
+            initialGap = e * (1 - emissionReduction / 100);
+        } else if (strategyResults.recommended === "C") {
+            initialGap = e * (1 - (mixedAllocation / 100) * (emissionReduction / 100));
+        }
+        localStorage.setItem("climatch_emissions_gap", initialGap.toString());
+        const initialLiabilityUsd = (initialGap * p) / USD_TO_IDR;
+        localStorage.setItem("climatch_liability", initialLiabilityUsd.toString());
+        localStorage.setItem("climatch_liability_idr", (initialGap * p).toString());
+
         setLastInputs(inputs);
-        setResults(calculateAllStrategies(inputs));
+        setResults(strategyResults);
     };
 
     const handleExportPdf = async () => {
@@ -439,6 +458,31 @@ export default function StrategyPage() {
                                     ))}
                                 </div>
                             </div>
+                        </div>
+
+                        {/* End-to-End Integration Action Card */}
+                        <div className="rounded-xl border border-[#0CF2A0]/30 bg-gradient-to-r from-[#1a1a1a] to-[#2a2a2a] p-6 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-lg shadow-[#0CF2A0]/5">
+                            <div className="space-y-1.5 max-w-2xl">
+                                <span className="text-[10px] font-bold uppercase tracking-widest bg-[#0CF2A0]/15 text-[#0CF2A0] px-2 py-0.5 rounded-full border border-[#0CF2A0]/20">
+                                    {language === "id" ? "Implementasi Strategi Keuangan" : "Financial Strategy Execution"}
+                                </span>
+                                <h3 className="text-lg font-bold text-white leading-tight">
+                                    {language === "id" ? "Eksekusi Strategi Kepatuhan Karbon Anda" : "Execute Your Compliance Strategy"}
+                                </h3>
+                                <p className="text-xs text-slate-400 leading-relaxed text-pretty">
+                                    {language === "id"
+                                        ? `Berdasarkan optimasi, rekomendasi terbaik Anda adalah Strategi ${results.recommended}. Ajukan pembiayaan hijau untuk CAPEX ${formatIdr(Number(capexAmount))} (${formatUsdSmall(Number(capexAmount))}) atau beli offset karbon domestik secara langsung di Pusat Aksi Karbon.`
+                                        : `Based on the optimizer, your best path is Strategy ${results.recommended}. Fund the required CAPEX of ${formatIdr(Number(capexAmount))} (${formatUsdSmall(Number(capexAmount))}) using green loans or purchase domestic offsets in the Action Hub.`
+                                    }
+                                </p>
+                            </div>
+                            <Link 
+                                href={`/action-hub?source=strategy&recommended=${results.recommended}&capex=${capexAmount}&gap=${annualEmissions}`}
+                                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#0CF2A0] hover:bg-[#0CF2A0]/95 px-5 py-3 text-xs font-bold text-[#111111] shadow-md shadow-[#0CF2A0]/10 transition-all hover:-translate-y-0.5 cursor-pointer whitespace-nowrap"
+                            >
+                                <span>{language === "id" ? "Pusat Aksi Karbon" : "Go to Action Hub"}</span>
+                                <span className="text-sm">→</span>
+                            </Link>
                         </div>
 
                         {/* 5. AI Analysis */}
