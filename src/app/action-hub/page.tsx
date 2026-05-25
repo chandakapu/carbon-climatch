@@ -795,6 +795,43 @@ export default function ActionHubPage() {
               </button>
             </div>
 
+            {/* Strategy Optimizer Recommendation Context Card */}
+            {(recommendedStrat === "B" || recommendedStrat === "C") && (initialEmissions > initialGap) && (
+              <div className="rounded-xl border border-blue-500/20 bg-blue-950/10 p-5 space-y-3.5 animate-fadeIn">
+                <span className="text-[9px] font-bold uppercase tracking-widest bg-blue-500/15 text-blue-400 px-2 py-0.5 rounded-full border border-blue-500/20">
+                  {language === "id" ? "Rencana Strategis Diimpor" : "Strategic Plan Imported"}
+                </span>
+                <div className="space-y-1">
+                  <h4 className="text-xs font-bold text-white">
+                    {language === "id" 
+                      ? `Strategi ${recommendedStrat} — Investasi CAPEX Terencana`
+                      : `Strategy ${recommendedStrat} — Planned CAPEX Investment`
+                    }
+                  </h4>
+                  <p className="text-[11px] text-slate-400 leading-normal">
+                    {language === "id"
+                      ? `Kalkulator memuat pengurangan emisi terencana sebesar ${(((initialEmissions - initialGap) / initialEmissions) * 100).toFixed(0)}% dari investasi CAPEX senilai ${formatIdr(strategyCapex)}.`
+                      : `The calculator reflects a planned emissions reduction of ${(((initialEmissions - initialGap) / initialEmissions) * 100).toFixed(0)}% stemming from your ${formatIdr(strategyCapex)} CAPEX technology upgrade.`
+                    }
+                  </p>
+                </div>
+                <div className="text-[11px] text-slate-300 border-t border-white/5 pt-2.5 space-y-1.5 font-medium">
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">{language === "id" ? "Emisi Awal:" : "Baseline Emissions:"}</span>
+                    <span className="font-semibold text-white">{initialEmissions.toLocaleString()} tCO₂e</span>
+                  </div>
+                  <div className="flex justify-between text-blue-400">
+                    <span className="text-slate-500">{language === "id" ? "Reduksi CAPEX:" : "CAPEX Reduction:"}</span>
+                    <span className="font-semibold">- {(initialEmissions - initialGap).toLocaleString()} tCO₂e</span>
+                  </div>
+                  <div className="flex justify-between text-amber-400">
+                    <span className="text-slate-500">{language === "id" ? "Kesenjangan Bersih:" : "Net Remaining Gap:"}</span>
+                    <span className="font-semibold">{initialGap.toLocaleString()} tCO₂e</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Active Assets Info Box */}
             <div className="rounded-xl border border-white/5 bg-[#1a1a1a] p-5 space-y-4">
               <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 border-b border-white/5 pb-2">
