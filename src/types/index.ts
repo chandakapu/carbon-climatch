@@ -93,6 +93,7 @@ export interface StrategyResults {
     strategy_c: StrategyResult; // Mixed
     break_even_year: number | null;
     recommended: "A" | "B" | "C";
+    optimal_mixed_allocation_pct: number;
 }
 
 // ── Multi-Sector CBAM Calculator Types ────────────────────────────

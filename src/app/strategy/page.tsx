@@ -300,6 +300,9 @@ export default function StrategyPage() {
         };
         const strategyResults = calculateAllStrategies(inputs);
 
+        // Update local state with optimized percentage
+        setMixedAllocation(strategyResults.optimal_mixed_allocation_pct);
+
         // Save to localStorage for Action Hub integration
         localStorage.setItem("climatch_emissions", e.toString());
         localStorage.setItem("climatch_strategy_capex", c.toString());
@@ -309,14 +312,19 @@ export default function StrategyPage() {
         if (strategyResults.recommended === "B") {
             initialGap = e * (1 - emissionReduction / 100);
         } else if (strategyResults.recommended === "C") {
-            initialGap = e * (1 - (mixedAllocation / 100) * (emissionReduction / 100));
+            initialGap = e * (1 - (strategyResults.optimal_mixed_allocation_pct / 100) * (emissionReduction / 100));
         }
         localStorage.setItem("climatch_emissions_gap", initialGap.toString());
         const initialLiabilityUsd = (initialGap * p) / USD_TO_IDR;
         localStorage.setItem("climatch_liability", initialLiabilityUsd.toString());
         localStorage.setItem("climatch_liability_idr", (initialGap * p).toString());
 
-        setLastInputs(inputs);
+        const optimizedInputs = {
+            ...inputs,
+            mixed_capex_allocation_pct: strategyResults.optimal_mixed_allocation_pct
+        };
+
+        setLastInputs(optimizedInputs);
         setResults(strategyResults);
     };
 
@@ -546,11 +554,10 @@ export default function StrategyPage() {
                         </div>
                     </Section>
 
-                    <Section title={language === "id" ? "🔀 Strategi Campuran & Pajak" : "🔀 Mixed Strategy & Tax"} defaultOpen>
+                    <Section title={language === "id" ? "⚙️ Pengaturan Pajak Lanjutan" : "⚙️ Advanced Tax Settings"} defaultOpen={false}>
                         <div className="pt-4">
-                            <SliderInput id="mixed-alloc" label={language === "id" ? "Alokasi CAPEX dalam Strategi Campuran" : "CAPEX Allocation in Mixed Strategy"} value={mixedAllocation} onChange={setMixedAllocation} />
+                            <NumInput id="tax-rate" label={language === "id" ? "Tarif Pajak Perusahaan (%)" : "Corporate Tax Rate (%)"} value={taxRate} onChange={setTaxRate} suffix="%" min="0" />
                         </div>
-                        <NumInput id="tax-rate" label={language === "id" ? "Tarif Pajak Perusahaan (%)" : "Corporate Tax Rate (%)"} value={taxRate} onChange={setTaxRate} suffix="%" min="0" />
                     </Section>
                 </div>
 

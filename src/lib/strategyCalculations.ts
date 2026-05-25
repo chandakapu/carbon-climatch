@@ -233,7 +233,26 @@ export function calculateMixed(inputs: StrategyInputs): StrategyResult {
 export function calculateAllStrategies(inputs: StrategyInputs): StrategyResults {
     const strategy_a = calculateOPEX(inputs);
     const strategy_b = calculateCAPEX(inputs, strategy_a.cumulative);
-    const strategy_c = calculateMixed(inputs);
+
+    // Find the optimal mixed allocation percentage
+    let minCost = Infinity;
+    let optimalAllocation = 50;
+    let optimalStrategyC = calculateMixed(inputs);
+
+    for (let pct = 0; pct <= 100; pct += 5) {
+        const testInputs = { ...inputs, mixed_capex_allocation_pct: pct };
+        const testStrategyC = calculateMixed(testInputs);
+        if (testStrategyC.total_cost < minCost) {
+            minCost = testStrategyC.total_cost;
+            optimalAllocation = pct;
+            optimalStrategyC = testStrategyC;
+        }
+    }
+
+    const strategy_c = {
+        ...optimalStrategyC,
+        name: `Strategy C — Mixed (Optimized at ${optimalAllocation}% CAPEX)`
+    };
 
     // Determine break-even year from strategy_b result
     const break_even_year = (strategy_b as StrategyResult & { break_even_year?: number | null }).break_even_year ?? null;
@@ -247,5 +266,12 @@ export function calculateAllStrategies(inputs: StrategyInputs): StrategyResults 
     totals.sort((a, b) => a.cost - b.cost);
     const recommended = totals[0].key;
 
-    return { strategy_a, strategy_b, strategy_c, break_even_year, recommended };
+    return { 
+        strategy_a, 
+        strategy_b, 
+        strategy_c, 
+        break_even_year, 
+        recommended,
+        optimal_mixed_allocation_pct: optimalAllocation
+    };
 }
