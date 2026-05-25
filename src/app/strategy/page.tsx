@@ -48,7 +48,8 @@ function NumInput({
     onChange, 
     suffix,
     required = true,
-    min = "0.0001"
+    min = "0.0001",
+    disabled = false
 }: { 
     id: string; 
     label: string; 
@@ -57,6 +58,7 @@ function NumInput({
     suffix?: string;
     required?: boolean;
     min?: string;
+    disabled?: boolean;
 }) {
     return (
         <div>
@@ -70,8 +72,9 @@ function NumInput({
                     step="any" 
                     value={value} 
                     onChange={e => onChange(e.target.value)}
+                    disabled={disabled}
                     aria-describedby={`${id}-error`}
-                    className="w-full rounded-lg border border-white/5 bg-[#2a2a2a] px-4 py-2.5 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#0CF2A0]/50" 
+                    className="w-full rounded-lg border border-white/5 bg-[#2a2a2a] px-4 py-2.5 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#0CF2A0]/50 disabled:opacity-50 disabled:cursor-not-allowed" 
                 />
                 {suffix && <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500">{suffix}</span>}
             </div>
@@ -94,12 +97,31 @@ function SliderInput({ id, label, value, onChange, min = 0, max = 100 }: { id: s
     );
 }
 
-function SelectInput({ id, label, value, options, onChange }: { id: string; label: string; value: string | number; options: (string | number)[]; onChange: (v: string) => void }) {
+function SelectInput({ 
+    id, 
+    label, 
+    value, 
+    options, 
+    onChange,
+    disabled = false
+}: { 
+    id: string; 
+    label: string; 
+    value: string | number; 
+    options: (string | number)[]; 
+    onChange: (v: string) => void;
+    disabled?: boolean;
+}) {
     return (
         <div>
             <label htmlFor={id} className="block text-xs font-medium text-slate-300 mb-1.5">{label}</label>
-            <select id={id} value={value} onChange={e => onChange(e.target.value)}
-                className="w-full rounded-lg border border-white/5 bg-[#2a2a2a] px-4 py-2.5 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#0CF2A0]/50">
+            <select 
+                id={id} 
+                value={value} 
+                onChange={e => onChange(e.target.value)}
+                disabled={disabled}
+                className="w-full rounded-lg border border-white/5 bg-[#2a2a2a] px-4 py-2.5 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#0CF2A0]/50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
                 {options.map(o => <option key={o} value={o}>{o}</option>)}
             </select>
         </div>
@@ -152,13 +174,48 @@ export default function StrategyPage() {
     ];
     const [selectedEscalationPreset, setSelectedEscalationPreset] = useState("custom");
 
-    // Tech presets for reduction
+    // Tech presets for reduction & financial assumptions
     const techPresets = [
-        { id: "custom", name: language === "id" ? "Kustom (Gunakan Slider)" : "Custom (Use Slider)", value: 70 },
-        { id: "efficiency", name: language === "id" ? "Peningkatan Efisiensi Energi Dasar" : "Basic Energy Efficiency Upgrades", value: 15 },
-        { id: "fuel_switch", name: language === "id" ? "Peralihan Bahan Bakar (Batubara ke Gas)" : "Fuel Switch (Coal to Gas)", value: 30 },
-        { id: "biomass", name: language === "id" ? "Biomassa & Pemulihan Panas Limbah" : "Biomass & Waste Heat Recovery", value: 50 },
-        { id: "decarbonization", name: language === "id" ? "Dekarbonisasi Mendalam (EAF/Energi Bersih)" : "Deep Decarbonization (EAF/Clean Energy)", value: 75 },
+        { 
+            id: "custom", 
+            name: language === "id" ? "Kustom (Gunakan Slider)" : "Custom (Use Slider)", 
+            value: 70,
+            maintenance: 2,
+            depMethod: "Straight-line" as const,
+            depLife: 10
+        },
+        { 
+            id: "efficiency", 
+            name: language === "id" ? "Peningkatan Efisiensi Energi Dasar" : "Basic Energy Efficiency Upgrades", 
+            value: 15,
+            maintenance: 1.5,
+            depMethod: "Straight-line" as const,
+            depLife: 5
+        },
+        { 
+            id: "fuel_switch", 
+            name: language === "id" ? "Peralihan Bahan Bakar (Batubara ke Gas)" : "Fuel Switch (Coal to Gas)", 
+            value: 30,
+            maintenance: 2.5,
+            depMethod: "Declining Balance" as const,
+            depLife: 8
+        },
+        { 
+            id: "biomass", 
+            name: language === "id" ? "Biomassa & Pemulihan Panas Limbah" : "Biomass & Waste Heat Recovery", 
+            value: 50,
+            maintenance: 3,
+            depMethod: "Straight-line" as const,
+            depLife: 10
+        },
+        { 
+            id: "decarbonization", 
+            name: language === "id" ? "Dekarbonisasi Mendalam (EAF/Energi Bersih)" : "Deep Decarbonization (EAF/Clean Energy)", 
+            value: 75,
+            maintenance: 4,
+            depMethod: "Declining Balance" as const,
+            depLife: 15
+        },
     ];
     const [selectedTechPreset, setSelectedTechPreset] = useState("custom");
 
@@ -199,6 +256,9 @@ export default function StrategyPage() {
         const preset = techPresets.find(p => p.id === presetId);
         if (preset && preset.id !== "custom") {
             setEmissionReduction(preset.value);
+            setMaintenancePct(preset.maintenance.toString());
+            setDepMethod(preset.depMethod);
+            setDepLife(preset.depLife.toString());
         }
     };
 
@@ -478,11 +538,11 @@ export default function StrategyPage() {
                         <SliderInput id="down-payment" label={language === "id" ? "Uang Muka" : "Down Payment"} value={downPayment} onChange={setDownPayment} />
                         <div className="grid gap-4 sm:grid-cols-2">
                             <SelectInput id="loan-term" label={language === "id" ? "Jangka Waktu Pinjaman (tahun)" : "Loan Term (years)"} value={loanTerm} options={[3, 5, 7, 10]} onChange={setLoanTerm} />
-                            <NumInput id="maintenance" label={language === "id" ? "Pemeliharaan Tahunan (% dari CAPEX)" : "Annual Maintenance (% of CAPEX)"} value={maintenancePct} onChange={setMaintenancePct} suffix="%" min="0" />
+                            <NumInput id="maintenance" label={language === "id" ? "Pemeliharaan Tahunan (% dari CAPEX)" : "Annual Maintenance (% of CAPEX)"} value={maintenancePct} onChange={setMaintenancePct} suffix="%" min="0" disabled={selectedTechPreset !== "custom"} />
                         </div>
                         <div className="grid gap-4 sm:grid-cols-2">
-                            <SelectInput id="dep-method" label={language === "id" ? "Metode Penyusutan" : "Depreciation Method"} value={depMethod} options={["Straight-line", "Declining Balance"]} onChange={v => setDepMethod(v as "Straight-line" | "Declining Balance")} />
-                            <SelectInput id="dep-life" label={language === "id" ? "Masa Penyusutan (tahun)" : "Depreciation Life (years)"} value={depLife} options={[5, 8, 10, 15]} onChange={setDepLife} />
+                            <SelectInput id="dep-method" label={language === "id" ? "Metode Penyusutan" : "Depreciation Method"} value={depMethod} options={["Straight-line", "Declining Balance"]} onChange={v => setDepMethod(v as "Straight-line" | "Declining Balance")} disabled={selectedTechPreset !== "custom"} />
+                            <SelectInput id="dep-life" label={language === "id" ? "Masa Penyusutan (tahun)" : "Depreciation Life (years)"} value={depLife} options={[5, 8, 10, 15]} onChange={setDepLife} disabled={selectedTechPreset !== "custom"} />
                         </div>
                     </Section>
 
