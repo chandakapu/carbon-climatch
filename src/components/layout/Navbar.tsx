@@ -12,8 +12,8 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-white/5 bg-[#0b1120]/90 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+    <header className="sticky top-0 z-50 border-b border-white/5 bg-[#0b1120]/90 backdrop-blur-xl">
+      <nav aria-label="Primary Navigation" className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         {/* Logo */}
         <Link href="/dashboard" className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500/15 border border-emerald-500/30">
@@ -45,7 +45,7 @@ export default function Navbar() {
           </svg>
           Get AI Analysis
         </Link>
-      </div>
-    </nav>
+      </nav>
+    </header>
   );
 }

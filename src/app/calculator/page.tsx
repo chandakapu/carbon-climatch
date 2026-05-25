@@ -203,9 +203,10 @@ export default function CalculatorPage() {
                 min="0"
                 value={euEtsPrice}
                 onChange={(e) => setEuEtsPrice(e.target.value)}
+                aria-describedby="eu-price-desc"
                 className="w-full rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
               />
-              <span className="text-[10px] text-slate-500 mt-1 block">
+              <span id="eu-price-desc" className="text-[10px] text-slate-500 mt-1 block">
                 Official EU ETS benchmark reference.
               </span>
             </div>
@@ -221,9 +222,10 @@ export default function CalculatorPage() {
                 min="0"
                 value={indonesiaPrice}
                 onChange={(e) => setIndonesiaPrice(e.target.value)}
+                aria-describedby="indo-price-desc"
                 className="w-full rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
               />
-              <span className="text-[10px] text-slate-500 mt-1 block">
+              <span id="indo-price-desc" className="text-[10px] text-slate-500 mt-1 block">
                 IDXCarbon benchmark: ~${defaultIdxPriceUsd.toFixed(2)}/tCO₂e
                 {latestIdx && ` (Rp ${latestIdx.avg_price_idr.toLocaleString("id-ID")}/t)`}
               </span>

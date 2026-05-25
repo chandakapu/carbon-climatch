@@ -44,7 +44,13 @@ const GlassInputWrapper = ({ children }: { children: React.ReactNode }) => (
 
 const TestimonialCard = ({ testimonial, delay }: { testimonial: Testimonial, delay: string }) => (
   <div className={`animate-testimonial ${delay} flex items-start gap-3 rounded-3xl bg-slate-900/80 backdrop-blur-xl border border-white/5 p-5 w-72 text-left`}>
-    <img src={testimonial.avatarSrc} className="h-10 w-10 object-cover rounded-2xl border border-white/10" alt="avatar" />
+    <img 
+      src={testimonial.avatarSrc} 
+      className="h-10 w-10 object-cover rounded-2xl border border-white/10" 
+      alt={`Avatar of ${testimonial.name}`} 
+      loading="lazy"
+      fetchPriority="low"
+    />
     <div className="text-sm leading-snug">
       <p className="flex items-center gap-1 font-medium text-white">{testimonial.name}</p>
       <p className="text-slate-400 text-xs">{testimonial.handle}</p>
@@ -153,7 +159,12 @@ export const SignInPage: React.FC<SignInPageProps> = ({
       {/* Right column: hero image + testimonials */}
       {heroImageSrc && (
         <section className="hidden md:block flex-1 relative p-4 bg-slate-950">
-          <div className="animate-slide-right animate-delay-300 absolute inset-4 rounded-3xl bg-cover bg-center opacity-40 filter grayscale hover:grayscale-0 transition-all duration-700" style={{ backgroundImage: `url(${heroImageSrc})` }}></div>
+          <img 
+            src={heroImageSrc} 
+            alt="Industrial background showcasing solar/wind energy installations" 
+            fetchPriority="high"
+            className="animate-slide-right animate-delay-300 absolute inset-4 rounded-3xl bg-cover bg-center opacity-40 filter grayscale hover:grayscale-0 transition-all duration-700 w-[calc(100%-2rem)] h-[calc(100%-2rem)] object-cover"
+          />
           <div className="absolute inset-4 rounded-3xl bg-gradient-to-t from-[#0b1120] via-transparent to-transparent opacity-80 pointer-events-none" />
           {testimonials.length > 0 && (
             <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-4 px-8 w-full justify-center">
