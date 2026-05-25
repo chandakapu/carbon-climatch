@@ -18,7 +18,7 @@ interface PriceBarChartProps {
 }
 
 const COLORS: Record<string, string> = {
-  Indonesia: "#10b981",   // emerald — home market
+  Indonesia: "#0CF2A0",   // neon green — home market
   "EU27+": "#3b82f6",     // blue — EU ETS (CBAM reference)
   Singapore: "#a78bfa",   // violet
   "Korea, Rep.": "#f59e0b", // amber
@@ -36,10 +36,10 @@ function CustomTooltip({ active, payload }: any) {
   if (!active || !payload?.length) return null;
   const d = payload[0].payload as { jurisdiction: string; price_usd: number; instrument_name: string };
   return (
-    <div className="rounded-xl border border-white/10 bg-slate-900/95 backdrop-blur px-4 py-3 shadow-2xl text-sm">
+    <div className="rounded-xl border border-white/10 bg-[#1a1a1a]/95 backdrop-blur px-4 py-3 shadow-2xl text-sm">
       <p className="font-semibold text-white">{DISPLAY_NAMES[d.jurisdiction] ?? d.jurisdiction}</p>
       <p className="text-slate-400 text-xs mt-0.5">{d.instrument_name}</p>
-      <p className="text-emerald-400 font-bold mt-1 text-base">
+      <p className="text-[#0CF2A0] font-bold mt-1 text-base">
         ${d.price_usd.toFixed(2)} <span className="text-xs font-normal text-slate-400">/ tCO₂e</span>
       </p>
     </div>

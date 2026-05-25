@@ -73,7 +73,7 @@ export const TracingBeam = ({
                 ? "none"
                 : "rgba(0, 0, 0, 0.24) 0px 3px 8px",
           }}
-          className="ml-[27px] h-4 w-4 rounded-full border border-slate-700 bg-slate-900 shadow-sm flex items-center justify-center"
+          className="ml-[27px] h-4 w-4 rounded-full border border-white/5 bg-[#1a1a1a] shadow-sm flex items-center justify-center"
         >
           <motion.div
             transition={{
@@ -81,8 +81,8 @@ export const TracingBeam = ({
               delay: 0.5,
             }}
             animate={{
-              backgroundColor: scrollYProgress.get() > 0 ? "rgb(16 185 129)" : "rgb(245 158 11)", // emerald-500 or amber-500
-              borderColor: scrollYProgress.get() > 0 ? "rgb(5 150 105)" : "rgb(217 119 6)", // emerald-600 or amber-600
+              backgroundColor: scrollYProgress.get() > 0 ? "rgb(12 242 160)" : "rgb(245 158 11)", // #0CF2A0 or amber-500
+              borderColor: scrollYProgress.get() > 0 ? "rgb(12 242 160)" : "rgb(217 119 6)",
             }}
             className="h-2 w-2 rounded-full border border-slate-700 bg-white animate-pulse"
           />
@@ -97,7 +97,7 @@ export const TracingBeam = ({
           <motion.path
             d={`M 1 0V -36 l 18 24 V ${svgHeight * 0.8} l -18 24V ${svgHeight}`}
             fill="none"
-            stroke="#1e2d42" /* Slate-800 border */
+            stroke="rgba(255,255,255,0.05)"
             strokeOpacity="0.5"
             transition={{
               duration: 10,
@@ -122,8 +122,8 @@ export const TracingBeam = ({
               y1={y1}
               y2={y2}
             >
-              <stop stopColor="#10b981" stopOpacity="0"></stop>
-              <stop stopColor="#10b981"></stop>
+              <stop stopColor="#0CF2A0" stopOpacity="0"></stop>
+              <stop stopColor="#0CF2A0"></stop>
               <stop offset="0.325" stopColor="#f59e0b"></stop>
               <stop offset="1" stopColor="#ef4444" stopOpacity="0"></stop>
             </motion.linearGradient>

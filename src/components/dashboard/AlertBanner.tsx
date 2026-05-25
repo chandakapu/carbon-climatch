@@ -25,13 +25,13 @@ export default function AlertBanner({ events }: AlertBannerProps) {
   function urgencyColor(days: number): string {
     if (days <= 30) return "border-red-500 bg-red-500/10 text-red-300";
     if (days <= 90) return "border-amber-500 bg-amber-500/10 text-amber-300";
-    return "border-emerald-500 bg-emerald-500/10 text-emerald-300";
+    return "border-[#0CF2A0]/30 bg-[#0CF2A0]/10 text-[#0CF2A0]";
   }
 
   function urgencyBadge(days: number): { label: string; cls: string } {
     if (days <= 30) return { label: language === "id" ? "KRITIS" : "CRITICAL", cls: "bg-red-500 text-white" };
     if (days <= 90) return { label: language === "id" ? "PERINGATAN" : "WARNING", cls: "bg-amber-500 text-black" };
-    return { label: language === "id" ? "MENDATANG" : "UPCOMING", cls: "bg-emerald-600 text-white" };
+    return { label: language === "id" ? "MENDATANG" : "UPCOMING", cls: "bg-[#0CF2A0] text-black font-semibold" };
   }
 
   function typeBadge(type: "domestic" | "international"): string {

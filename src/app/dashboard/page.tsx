@@ -54,7 +54,7 @@ export default function DashboardPage() {
   const indoPrice = latestPrices["Indonesia"];
 
   return (
-    <div className="min-h-screen bg-[#0b1120] text-white font-sans">
+    <div className="min-h-screen bg-[#111111] text-white font-sans">
       <main className="mx-auto max-w-7xl px-6 pb-24">
 
         {/* ── HERO ──────────────────────────────────────────────── */}
@@ -65,7 +65,7 @@ export default function DashboardPage() {
         {/* ── KPI CARDS ─────────────────────────────────────────── */}
         <section className="mb-10 grid grid-cols-2 gap-4 md:grid-cols-4">
           {/* IDXCarbon Latest */}
-          <div className="rounded-xl border border-white/5 bg-slate-900/60 p-5">
+          <div className="rounded-xl border border-white/5 bg-[#1a1a1a] p-5">
             <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">{t("dashboard.idxCarbonLatest")}</p>
             <p className="text-2xl font-bold text-white">
               ${idxPriceUSD}
@@ -74,14 +74,14 @@ export default function DashboardPage() {
               Rp {latestIDX?.avg_price_idr.toLocaleString("id-ID") ?? "—"}
             </p>
             {idxChange !== null && (
-              <p className={`text-xs mt-2 font-semibold ${Number(idxChange) >= 0 ? "text-emerald-400" : "text-red-400"}`}>
+              <p className={`text-xs mt-2 font-semibold ${Number(idxChange) >= 0 ? "text-[#0CF2A0]" : "text-red-400"}`}>
                 {Number(idxChange) >= 0 ? "▲" : "▼"} {Math.abs(Number(idxChange))}% {t("dashboard.avgTrend3M")}
               </p>
             )}
           </div>
 
           {/* EU ETS Price */}
-          <div className="rounded-xl border border-white/5 bg-slate-900/60 p-5">
+          <div className="rounded-xl border border-white/5 bg-[#1a1a1a] p-5">
             <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">{t("dashboard.euEtsPrice")}</p>
             <p className="text-2xl font-bold text-blue-400">
               ${euPrice?.price_usd.toFixed(2) ?? "—"}
@@ -91,20 +91,20 @@ export default function DashboardPage() {
           </div>
 
           {/* Indonesia Carbon Price */}
-          <div className="rounded-xl border border-white/5 bg-slate-900/60 p-5">
+          <div className="rounded-xl border border-white/5 bg-[#1a1a1a] p-5">
             <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">{t("dashboard.indonesiaEts")}</p>
-            <p className="text-2xl font-bold text-emerald-400">
+            <p className="text-2xl font-bold text-[#0CF2A0]">
               ${indoPrice?.price_usd.toFixed(2) ?? "—"}
             </p>
             <p className="text-xs text-slate-400 mt-0.5">per tCO₂e · {indoPrice?.year ?? ""}</p>
             <p className="text-xs text-slate-400 italic mt-1.5">
               {t("dashboard.taxFloorLabel")}
             </p>
-            <p className="text-xs mt-2 text-emerald-400 font-semibold">{t("dashboard.phase2Label")}</p>
+            <p className="text-xs mt-2 text-[#0CF2A0] font-semibold">{t("dashboard.phase2Label")}</p>
           </div>
 
           {/* CBAM Gap */}
-          <div className="rounded-xl border border-white/5 bg-slate-900/60 p-5">
+          <div className="rounded-xl border border-white/5 bg-[#1a1a1a] p-5">
             <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">{t("dashboard.cbamGap")}</p>
             <p className="text-2xl font-bold text-red-400">
               {euPrice && indoPrice
@@ -127,13 +127,13 @@ export default function DashboardPage() {
             </div>
             <a
               href="/timeline"
-              className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors font-medium cursor-pointer"
+              className="text-xs text-[#0CF2A0] hover:text-opacity-80 transition-colors font-medium cursor-pointer"
             >
               {t("dashboard.fullTimeline")}
             </a>
           </div>
           {upcomingEvents.length === 0 ? (
-            <div className="rounded-xl border border-white/5 bg-slate-900/40 py-10 text-center">
+            <div className="rounded-xl border border-white/5 bg-[#1a1a1a]/40 py-10 text-center">
               <p className="text-slate-500 text-sm">{t("dashboard.noEvents")}</p>
             </div>
           ) : (
@@ -152,7 +152,7 @@ export default function DashboardPage() {
 
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             {/* Price Comparison Bar Chart */}
-            <div className="rounded-2xl border border-white/5 bg-slate-900/60 p-6">
+            <div className="rounded-2xl border border-white/5 bg-[#1a1a1a] p-6">
               <div className="mb-5">
                 <h3 className="font-semibold text-white text-sm text-balance">{t("dashboard.priceComparison")}</h3>
                 <p className="text-xs text-slate-500 mt-0.5">{language === "id" ? "USD / tCO₂e — tahun terbaru yang tersedia" : "USD / tCO₂e — latest available year"}</p>
@@ -162,7 +162,7 @@ export default function DashboardPage() {
               <div className="flex flex-wrap gap-x-4 gap-y-1 mb-4">
                 {priceChartData.map((d) => {
                   const colorMap: Record<string, string> = {
-                    Indonesia: "bg-emerald-500",
+                    Indonesia: "bg-[#0CF2A0]",
                     "EU27+": "bg-blue-500",
                     Singapore: "bg-violet-400",
                     "Korea, Rep.": "bg-amber-500",
@@ -183,7 +183,7 @@ export default function DashboardPage() {
             </div>
 
             {/* IDXCarbon Monthly Line Chart */}
-            <div className="rounded-2xl border border-white/5 bg-slate-900/60 p-6">
+            <div className="rounded-2xl border border-white/5 bg-[#1a1a1a] p-6">
               <div className="mb-5">
                 <h3 className="font-semibold text-white text-sm text-balance">{t("dashboard.idxTrend")}</h3>
                 <p className="text-xs text-slate-500 mt-0.5">{t("dashboard.idxTrendDesc")}</p>
@@ -193,7 +193,7 @@ export default function DashboardPage() {
               <div className="flex items-center gap-4 mb-4">
                 <div>
                   <p className="text-xs text-slate-500">{language === "id" ? "Harga Rerata (USD)" : "Avg. Price (USD)"}</p>
-                  <p className="text-sm font-bold text-emerald-400">
+                  <p className="text-sm font-bold text-[#0CF2A0]">
                     ${(idxMonthly.reduce((s, d) => s + d.avg_price_idr, 0) / idxMonthly.length / 16000).toFixed(2)}
                   </p>
                 </div>
@@ -231,7 +231,7 @@ export default function DashboardPage() {
       </main>
 
       {/* ── FOOTER ─────────────────────────────────────────────── */}
-      <footer className="border-t border-white/5 bg-[#080e1a] py-8 mt-10">
+      <footer className="border-t border-white/5 bg-[#0c0c0c] py-8 mt-10">
         <div className="mx-auto max-w-7xl px-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <p>
             © 2026 Carbon Climatch · {language === "id" ? "Intelijen karbon untuk perusahaan Indonesia" : "Carbon intelligence for Indonesian enterprises"}

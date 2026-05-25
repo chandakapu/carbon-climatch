@@ -29,18 +29,18 @@ function CustomTooltip({ active, payload, label }: any) {
   if (!active || !payload?.length) return null;
   const d = payload[0].payload as IDXCarbonMonthly & { price_usd: number };
   return (
-    <div className="rounded-xl border border-white/10 bg-slate-900/95 backdrop-blur px-4 py-3 shadow-2xl text-sm min-w-[180px]">
+    <div className="rounded-xl border border-white/10 bg-[#1a1a1a]/95 backdrop-blur px-4 py-3 shadow-2xl text-sm min-w-[180px]">
       <p className="font-semibold text-white mb-2">{formatMonth(label)}</p>
       <div className="space-y-1">
         <div className="flex justify-between gap-6">
           <span className="text-slate-400 text-xs">Price (IDR)</span>
-          <span className="text-emerald-400 font-mono font-bold text-xs">
+          <span className="text-[#0CF2A0] font-mono font-bold text-xs">
             Rp {d.avg_price_idr.toLocaleString("id-ID")}
           </span>
         </div>
         <div className="flex justify-between gap-6">
           <span className="text-slate-400 text-xs">Price (USD)</span>
-          <span className="text-emerald-300 font-mono text-xs">
+          <span className="text-[#0CF2A0] font-mono text-xs">
             ~${d.price_usd.toFixed(2)}
           </span>
         </div>
@@ -73,8 +73,8 @@ export default function IDXLineChart({ data }: IDXLineChartProps) {
       <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 5 }}>
         <defs>
           <linearGradient id="idxGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
-            <stop offset="95%" stopColor="#10b981" stopOpacity={0.01} />
+            <stop offset="5%" stopColor="#0CF2A0" stopOpacity={0.3} />
+            <stop offset="95%" stopColor="#0CF2A0" stopOpacity={0.01} />
           </linearGradient>
         </defs>
         <CartesianGrid vertical={false} stroke="rgba(255,255,255,0.05)" />
@@ -93,14 +93,14 @@ export default function IDXLineChart({ data }: IDXLineChartProps) {
           width={54}
           domain={["auto", "auto"]}
         />
-        <Tooltip content={<CustomTooltip />} cursor={{ stroke: "rgba(16,185,129,0.3)", strokeWidth: 1, strokeDasharray: "4 2" }} />
+        <Tooltip content={<CustomTooltip />} cursor={{ stroke: "rgba(12,242,160,0.3)", strokeWidth: 1, strokeDasharray: "4 2" }} />
         <ReferenceLine
           y={avg}
-          stroke="rgba(16,185,129,0.4)"
+          stroke="rgba(12,242,160,0.4)"
           strokeDasharray="5 3"
           label={{
             value: `Avg $${avg.toFixed(2)}`,
-            fill: "#6ee7b7",
+            fill: "#0CF2A0",
             fontSize: 10,
             position: "insideTopRight",
           }}
@@ -108,11 +108,11 @@ export default function IDXLineChart({ data }: IDXLineChartProps) {
         <Area
           type="monotone"
           dataKey="price_usd"
-          stroke="#10b981"
+          stroke="#0CF2A0"
           strokeWidth={2.5}
           fill="url(#idxGradient)"
-          dot={{ r: 4, fill: "#10b981", strokeWidth: 0 }}
-          activeDot={{ r: 6, fill: "#34d399", stroke: "#064e3b", strokeWidth: 2 }}
+          dot={{ r: 4, fill: "#0CF2A0", strokeWidth: 0 }}
+          activeDot={{ r: 6, fill: "#0CF2A0", stroke: "#111111", strokeWidth: 2 }}
         />
       </AreaChart>
     </ResponsiveContainer>

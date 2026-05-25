@@ -21,7 +21,7 @@ interface CBAMPortfolioChartsProps {
 
 const COLORS = [
   "#3b82f6", // blue
-  "#10b981", // emerald
+  "#0CF2A0", // neon green
   "#a78bfa", // violet
   "#f59e0b", // amber
   "#ec4899", // pink
@@ -33,14 +33,14 @@ function BarTooltip({ active, payload }: any) {
   if (!active || !payload?.length) return null;
   const d = payload[0].payload;
   return (
-    <div className="rounded-xl border border-white/10 bg-slate-900/95 backdrop-blur px-4 py-3 shadow-2xl text-sm">
+    <div className="rounded-xl border border-white/5 bg-[#1a1a1a] backdrop-blur px-4 py-3 shadow-2xl text-sm">
       <p className="font-semibold text-white">{d.sector}</p>
       <p className="text-slate-400 text-xs mt-0.5">Export Volume: {d.export_volume_tons?.toLocaleString()} tons</p>
       <div className="mt-2 space-y-1">
         <p className="text-blue-400 font-medium">
           Gross Liability: ${d.cbam_liability_usd?.toLocaleString(undefined, { maximumFractionDigits: 0 })}
         </p>
-        <p className="text-emerald-400 font-medium">
+        <p className="text-[#0CF2A0] font-medium">
           Domestic Credit: ${d.indonesia_carbon_credit_usd?.toLocaleString(undefined, { maximumFractionDigits: 0 })}
         </p>
         <p className="text-red-400 font-bold border-t border-white/5 pt-1 mt-1">
@@ -57,9 +57,9 @@ function PieTooltip({ active, payload }: any) {
   const d = payload[0].payload;
   const pct = payload[0].value;
   return (
-    <div className="rounded-xl border border-white/10 bg-slate-900/95 backdrop-blur px-4 py-3 shadow-2xl text-sm">
+    <div className="rounded-xl border border-white/5 bg-[#1a1a1a] backdrop-blur px-4 py-3 shadow-2xl text-sm">
       <p className="font-semibold text-white">{d.sector}</p>
-      <p className="text-emerald-400 font-bold mt-1">
+      <p className="text-[#0CF2A0] font-bold mt-1">
         {d.total_emissions_tco2?.toLocaleString(undefined, { maximumFractionDigits: 0 })}{" "}
         <span className="text-xs font-normal text-slate-400">tCO₂e ({pct.toFixed(1)}%)</span>
       </p>
@@ -72,7 +72,7 @@ export default function CBAMPortfolioCharts({ portfolioResult }: CBAMPortfolioCh
 
   if (!items || items.length === 0) {
     return (
-      <div className="rounded-2xl border border-white/5 bg-slate-900/40 py-16 text-center">
+      <div className="rounded-2xl border border-white/5 bg-[#1a1a1a]/40 py-16 text-center">
         <p className="text-slate-500 text-sm">Add sectors and export volumes above to view visual breakdown.</p>
       </div>
     );
@@ -99,7 +99,7 @@ export default function CBAMPortfolioCharts({ portfolioResult }: CBAMPortfolioCh
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
       {/* Stacked Bar Chart: Financial Breakdown */}
-      <div className="rounded-2xl border border-white/5 bg-slate-900/60 p-6 flex flex-col justify-between">
+      <div className="rounded-2xl border border-white/5 bg-[#1a1a1a] p-6 flex flex-col justify-between">
         <div className="mb-5">
           <h3 className="font-semibold text-white text-sm text-balance">Financial Liability Breakdown</h3>
           <p className="text-xs text-slate-500 mt-0.5">
@@ -139,7 +139,7 @@ export default function CBAMPortfolioCharts({ portfolioResult }: CBAMPortfolioCh
               <Bar
                 dataKey="indonesia_carbon_credit_usd"
                 stackId="a"
-                fill="#10b981"
+                fill="#0CF2A0"
                 name="Indonesia Credit Offset"
                 radius={[0, 0, 0, 0]}
               />
@@ -156,7 +156,7 @@ export default function CBAMPortfolioCharts({ portfolioResult }: CBAMPortfolioCh
       </div>
 
       {/* Donut Chart: Emissions Contribution */}
-      <div className="rounded-2xl border border-white/5 bg-slate-900/60 p-6 flex flex-col justify-between">
+      <div className="rounded-2xl border border-white/5 bg-[#1a1a1a] p-6 flex flex-col justify-between">
         <div className="mb-5">
           <h3 className="font-semibold text-white text-sm text-balance">Emissions Contribution</h3>
           <p className="text-xs text-slate-500 mt-0.5">

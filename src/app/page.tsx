@@ -271,7 +271,7 @@ const ShinyText: React.FC<{ text: string; className?: string }> = ({ text, class
       style={{
         position: "absolute",
         inset: 0,
-        background: "linear-gradient(90deg, transparent, rgba(52, 211, 153, 0.4), transparent)",
+        background: "linear-gradient(90deg, transparent, rgba(12, 242, 160, 0.4), transparent)",
         animation: "shine 2.5s infinite linear",
         opacity: 0.7,
         pointerEvents: "none",
@@ -370,8 +370,8 @@ export default function LandingPage() {
         newDots.push({
           x,
           y,
-          // Emerald-500 matching the design palette
-          baseColor: `rgba(16, 185, 129, ${BASE_OPACITY_MAX})`,
+          // Light cyan/turquoise matching DESIGN.md dots
+          baseColor: `rgba(87, 220, 205, ${BASE_OPACITY_MAX})`,
           targetOpacity: baseOpacity,
           currentOpacity: baseOpacity,
           opacitySpeed: Math.random() * 0.004 + 0.001,
@@ -469,7 +469,7 @@ export default function LandingPage() {
         dot.currentRadius = dot.baseRadius + interactionFactor * RADIUS_BOOST;
 
         ctx.beginPath();
-        ctx.fillStyle = `rgba(16, 185, 129, ${finalOpacity.toFixed(3)})`;
+        ctx.fillStyle = `rgba(87, 220, 205, ${finalOpacity.toFixed(3)})`;
         ctx.arc(dot.x, dot.y, dot.currentRadius, 0, Math.PI * 2);
         ctx.fill();
       });
@@ -528,7 +528,7 @@ export default function LandingPage() {
   ];
 
   return (
-    <div className="relative bg-[#0b1120] text-slate-300 min-h-screen flex flex-col overflow-x-hidden">
+    <div className="relative bg-[#111111] text-slate-300 min-h-screen flex flex-col overflow-x-hidden">
       
       {/* ── INTERACTIVE HERO SECTION ──────────────────────────────── */}
       <section className="relative min-h-[90vh] flex items-center justify-center pt-20 pb-16 px-6">
@@ -537,7 +537,7 @@ export default function LandingPage() {
         <div 
           className="absolute inset-0 z-1 pointer-events-none" 
           style={{
-            background: "linear-gradient(to bottom, transparent 0%, #0b1120 95%), radial-gradient(ellipse at center, transparent 30%, #0b1120 95%)"
+            background: "linear-gradient(to bottom, transparent 0%, #111111 95%), radial-gradient(ellipse at center, transparent 30%, #111111 95%)"
           }}
         />
 
@@ -551,7 +551,7 @@ export default function LandingPage() {
           >
             <ShinyText 
               text={language === "id" ? "Pengumuman: Mendukung Regulasi Pajak Karbon Baru 2026" : "Announcing: PR 110/2025 Compliance Alignment"} 
-              className="bg-[#10b981]/10 border border-emerald-500/30 text-emerald-400 px-4 py-1.5 rounded-full text-xs font-semibold cursor-pointer hover:border-emerald-500/50 transition-colors" 
+              className="bg-[#0CF2A0]/10 border border-[#0CF2A0]/30 text-[#0CF2A0] px-4 py-1.5 rounded-full text-xs font-semibold cursor-pointer hover:border-[#0CF2A0]/50 transition-colors" 
             />
           </motion.div>
 
@@ -566,7 +566,7 @@ export default function LandingPage() {
             <span className="block sm:inline-block h-[1.25em] overflow-hidden align-bottom">
               <RotatingText
                 texts={titles}
-                mainClassName="text-emerald-400 mx-1.5"
+                mainClassName="text-[#0CF2A0] mx-1.5"
                 staggerFrom="last"
                 initial={{ y: "-100%", opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -600,7 +600,7 @@ export default function LandingPage() {
           >
             <button
               onClick={handleEnterDashboard}
-              className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 px-7 py-4 text-sm font-bold text-black shadow-lg shadow-emerald-500/20 transition-all cursor-pointer hover:-translate-y-0.5"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 rounded-xl bg-[#0CF2A0] hover:bg-opacity-95 px-7 py-4 text-sm font-bold text-[#111111] shadow-lg shadow-[#0CF2A0]/10 transition-all cursor-pointer hover:-translate-y-0.5"
             >
               <span>{language === "id" ? "Buka Dasbor Demo" : "Go to Demo Dashboard"}</span>
               <ArrowRight className="h-4 w-4" />
@@ -616,10 +616,10 @@ export default function LandingPage() {
       </section>
 
       {/* ── FEATURES SECTION ────────────────────────────────────── */}
-      <section id="features" className="py-24 bg-slate-950/40 border-t border-white/5 relative z-10">
+      <section id="features" className="py-24 bg-[#1a1a1a]/30 border-t border-white/5 relative z-10">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-            <span className="text-xs uppercase text-emerald-400 font-bold tracking-widest">
+            <span className="text-xs uppercase text-[#0CF2A0] font-bold tracking-widest">
               {language === "id" ? "Kemampuan Platform" : "Core Capabilities"}
             </span>
             <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
@@ -635,8 +635,8 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             
             {/* Feature 1: IDXCarbon Pricing */}
-            <div className="rounded-2xl border border-white/5 bg-slate-900/40 p-6 space-y-4 hover:border-emerald-500/20 transition-all duration-300">
-              <div className="h-10 w-10 flex items-center justify-center rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+            <div className="rounded-2xl border border-white/5 bg-[#1a1a1a] p-6 space-y-4 hover:border-[#0CF2A0]/20 transition-all duration-300">
+              <div className="h-10 w-10 flex items-center justify-center rounded-xl bg-[#0CF2A0]/10 border border-[#0CF2A0]/20 text-[#0CF2A0]">
                 <TrendingUp className="h-5 w-5" />
               </div>
               <h3 className="text-lg font-semibold text-white">
@@ -650,8 +650,8 @@ export default function LandingPage() {
             </div>
 
             {/* Feature 2: CBAM Calculator */}
-            <div className="rounded-2xl border border-white/5 bg-slate-900/40 p-6 space-y-4 hover:border-emerald-500/20 transition-all duration-300">
-              <div className="h-10 w-10 flex items-center justify-center rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+            <div className="rounded-2xl border border-white/5 bg-[#1a1a1a] p-6 space-y-4 hover:border-[#0CF2A0]/20 transition-all duration-300">
+              <div className="h-10 w-10 flex items-center justify-center rounded-xl bg-[#0CF2A0]/10 border border-[#0CF2A0]/20 text-[#0CF2A0]">
                 <Calculator className="h-5 w-5" />
               </div>
               <h3 className="text-lg font-semibold text-white">
@@ -665,8 +665,8 @@ export default function LandingPage() {
             </div>
 
             {/* Feature 3: Strategy Optimizer */}
-            <div className="rounded-2xl border border-white/5 bg-slate-900/40 p-6 space-y-4 hover:border-emerald-500/20 transition-all duration-300">
-              <div className="h-10 w-10 flex items-center justify-center rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+            <div className="rounded-2xl border border-white/5 bg-[#1a1a1a] p-6 space-y-4 hover:border-[#0CF2A0]/20 transition-all duration-300">
+              <div className="h-10 w-10 flex items-center justify-center rounded-xl bg-[#0CF2A0]/10 border border-[#0CF2A0]/20 text-[#0CF2A0]">
                 <Zap className="h-5 w-5" />
               </div>
               <h3 className="text-lg font-semibold text-white">
@@ -680,8 +680,8 @@ export default function LandingPage() {
             </div>
 
             {/* Feature 4: Gemini AI CFO Analyst */}
-            <div className="rounded-2xl border border-white/5 bg-slate-900/40 p-6 space-y-4 hover:border-emerald-500/20 transition-all duration-300">
-              <div className="h-10 w-10 flex items-center justify-center rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+            <div className="rounded-2xl border border-white/5 bg-[#1a1a1a] p-6 space-y-4 hover:border-[#0CF2A0]/20 transition-all duration-300">
+              <div className="h-10 w-10 flex items-center justify-center rounded-xl bg-[#0CF2A0]/10 border border-[#0CF2A0]/20 text-[#0CF2A0]">
                 <FileText className="h-5 w-5" />
               </div>
               <h3 className="text-lg font-semibold text-white">
@@ -702,7 +702,7 @@ export default function LandingPage() {
       <section id="testimonials" className="py-24 relative z-10">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-            <span className="text-xs uppercase text-emerald-400 font-bold tracking-widest">Testimonials</span>
+            <span className="text-xs uppercase text-[#0CF2A0] font-bold tracking-widest">Testimonials</span>
             <h2 className="text-3xl font-bold text-white tracking-tight">
               {language === "id" ? "Dipercaya oleh CFO Indonesia" : "Boardroom Endorsed"}
             </h2>
@@ -710,7 +710,7 @@ export default function LandingPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {carbonTestimonials.map((t, idx) => (
-              <div key={idx} className="rounded-2xl border border-white/5 bg-slate-900/60 p-6 space-y-4 backdrop-blur-sm">
+              <div key={idx} className="rounded-2xl border border-white/5 bg-[#1a1a1a]/80 p-6 space-y-4 backdrop-blur-sm">
                 <div className="flex items-center gap-3">
                   <img src={t.avatarSrc} className="h-10 w-10 object-cover rounded-full border border-white/10" alt={t.name} />
                   <div>
@@ -726,10 +726,10 @@ export default function LandingPage() {
       </section>
 
       {/* ── PRICING SECTION ──────────────────────────────────────── */}
-      <section id="pricing" className="py-24 bg-slate-950/40 border-t border-white/5 relative z-10">
+      <section id="pricing" className="py-24 bg-[#1a1a1a]/30 border-t border-white/5 relative z-10">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-            <span className="text-xs uppercase text-emerald-400 font-bold tracking-widest">
+            <span className="text-xs uppercase text-[#0CF2A0] font-bold tracking-widest">
               {language === "id" ? "Skema Layanan" : "Flexible Tiers"}
             </span>
             <h2 className="text-3xl font-bold text-white tracking-tight">
@@ -740,7 +740,7 @@ export default function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             
             {/* Free Sandbox */}
-            <div className="rounded-2xl border border-white/5 bg-slate-900/20 p-6 flex flex-col justify-between space-y-6">
+            <div className="rounded-2xl border border-white/5 bg-[#1a1a1a]/40 p-6 flex flex-col justify-between space-y-6">
               <div className="space-y-3">
                 <h3 className="text-lg font-bold text-white">Free Sandbox</h3>
                 <p className="text-xs text-slate-400">
@@ -750,11 +750,11 @@ export default function LandingPage() {
               </div>
               <ul className="text-xs text-slate-300 space-y-2 flex-grow">
                 <li className="flex items-center gap-2">
-                  <Check className="h-3.5 w-3.5 text-emerald-400 flex-shrink-0" />
+                  <Check className="h-3.5 w-3.5 text-[#0CF2A0] flex-shrink-0" />
                   <span>{language === "id" ? "Akses Dasbor IDXCarbon" : "Access to IDXCarbon prices"}</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className="h-3.5 w-3.5 text-emerald-400 flex-shrink-0" />
+                  <Check className="h-3.5 w-3.5 text-[#0CF2A0] flex-shrink-0" />
                   <span>{language === "id" ? "Simulasi Kalkulator CBAM Dasar" : "Basic CBAM calculations"}</span>
                 </li>
               </ul>
@@ -767,8 +767,8 @@ export default function LandingPage() {
             </div>
 
             {/* Enterprise Pro */}
-            <div className="rounded-2xl border border-emerald-500/20 bg-slate-900/60 p-6 flex flex-col justify-between space-y-6 relative">
-              <div className="absolute -top-3 right-6 rounded-full bg-emerald-500 px-3 py-1 text-[10px] font-bold text-black uppercase tracking-wider">
+            <div className="rounded-2xl border border-[#0CF2A0]/30 bg-[#1a1a1a] p-6 flex flex-col justify-between space-y-6 relative">
+              <div className="absolute -top-3 right-6 rounded-full bg-[#0CF2A0] px-3 py-1 text-[10px] font-bold text-[#111111] uppercase tracking-wider">
                 Popular
               </div>
               <div className="space-y-3">
@@ -776,34 +776,34 @@ export default function LandingPage() {
                 <p className="text-xs text-slate-400">
                   {language === "id" ? "Untuk korporasi eksportir aktif" : "For companies exporting to the EU and globally"}
                 </p>
-                <div className="text-2xl font-bold text-emerald-400 pt-2">
+                <div className="text-2xl font-bold text-[#0CF2A0] pt-2">
                   Rp 12 jt <span className="text-xs text-slate-400 font-normal">/ bln</span>
                 </div>
               </div>
               <ul className="text-xs text-slate-300 space-y-2 flex-grow">
                 <li className="flex items-center gap-2">
-                  <Check className="h-3.5 w-3.5 text-emerald-400 flex-shrink-0" />
+                  <Check className="h-3.5 w-3.5 text-[#0CF2A0] flex-shrink-0" />
                   <span>{language === "id" ? "Kalkulator CBAM Lengkap + Pasal 9" : "Full CBAM Portfolio assessment"}</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className="h-3.5 w-3.5 text-emerald-400 flex-shrink-0" />
+                  <Check className="h-3.5 w-3.5 text-[#0CF2A0] flex-shrink-0" />
                   <span>{language === "id" ? "Analisis AI Gemini CFO Tanpa Batas" : "Unlimited Gemini AI CFO Analyst"}</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className="h-3.5 w-3.5 text-emerald-400 flex-shrink-0" />
+                  <Check className="h-3.5 w-3.5 text-[#0CF2A0] flex-shrink-0" />
                   <span>{language === "id" ? "Pemodelan CAPEX + Ekspor Laporan PDF" : "CAPEX scenario modeling & PDF exports"}</span>
                 </li>
               </ul>
               <button
                 onClick={handleEnterDashboard}
-                className="w-full rounded-xl bg-emerald-500 py-2.5 text-xs font-bold text-black hover:bg-emerald-400 transition-colors cursor-pointer text-center shadow-md shadow-emerald-500/10"
+                className="w-full rounded-xl bg-[#0CF2A0] py-2.5 text-xs font-bold text-[#111111] hover:bg-opacity-90 transition-colors cursor-pointer text-center shadow-md shadow-[#0CF2A0]/10"
               >
                 {language === "id" ? "Langganan Sekarang" : "Subscribe Now"}
               </button>
             </div>
 
             {/* Custom Advisory */}
-            <div className="rounded-2xl border border-white/5 bg-slate-900/20 p-6 flex flex-col justify-between space-y-6">
+            <div className="rounded-2xl border border-white/5 bg-[#1a1a1a]/40 p-6 flex flex-col justify-between space-y-6">
               <div className="space-y-3">
                 <h3 className="text-lg font-bold text-white">Custom Advisory</h3>
                 <p className="text-xs text-slate-400">
@@ -813,11 +813,11 @@ export default function LandingPage() {
               </div>
               <ul className="text-xs text-slate-300 space-y-2 flex-grow">
                 <li className="flex items-center gap-2">
-                  <Check className="h-3.5 w-3.5 text-emerald-400 flex-shrink-0" />
+                  <Check className="h-3.5 w-3.5 text-[#0CF2A0] flex-shrink-0" />
                   <span>{language === "id" ? "Semua fitur Enterprise Pro" : "All Enterprise Pro features"}</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <Check className="h-3.5 w-3.5 text-emerald-400 flex-shrink-0" />
+                  <Check className="h-3.5 w-3.5 text-[#0CF2A0] flex-shrink-0" />
                   <span>{language === "id" ? "Integrasi API Sistem ERP Korporasi" : "Custom ERP integrations (SAP, Oracle)"}</span>
                 </li>
               </ul>
@@ -838,9 +838,9 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
           <p>© {new Date().getFullYear()} Carbon Climatch. All rights reserved.</p>
           <div className="flex gap-4">
-            <a href="#" className="hover:text-emerald-400 transition-colors">Privacy Policy</a>
-            <a href="#" className="hover:text-emerald-400 transition-colors">Terms of Service</a>
-            <a href="#" className="hover:text-emerald-400 transition-colors">Contact Support</a>
+            <a href="#" className="hover:text-[#0CF2A0] transition-colors">Privacy Policy</a>
+            <a href="#" className="hover:text-[#0CF2A0] transition-colors">Terms of Service</a>
+            <a href="#" className="hover:text-[#0CF2A0] transition-colors">Contact Support</a>
           </div>
         </div>
       </footer>

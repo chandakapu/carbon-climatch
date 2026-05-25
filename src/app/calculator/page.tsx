@@ -173,7 +173,7 @@ export default function CalculatorPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0b1120] text-white font-sans">
+    <div className="min-h-screen bg-[#111111] text-white font-sans">
       <main className="mx-auto max-w-6xl px-6 py-12 space-y-10">
         
         {/* Header */}
@@ -190,7 +190,7 @@ export default function CalculatorPage() {
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           
           {/* Global Assumptions */}
-          <div className="lg:col-span-1 rounded-xl border border-white/5 bg-slate-900/60 p-6 space-y-4 h-fit">
+          <div className="lg:col-span-1 rounded-xl border border-white/5 bg-[#1a1a1a] p-6 space-y-4 h-fit">
             <h2 className="text-sm font-semibold text-white uppercase tracking-wider mb-2 border-b border-white/5 pb-2">
               {t("calculator.globalParameters")}
             </h2>
@@ -207,7 +207,7 @@ export default function CalculatorPage() {
                 value={euEtsPrice}
                 onChange={(e) => setEuEtsPrice(e.target.value)}
                 aria-describedby="eu-price-desc"
-                className="w-full rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                className="w-full rounded-lg border border-white/5 bg-[#2a2a2a] px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#0CF2A0]/50"
               />
               <span id="eu-price-desc" className="text-[10px] text-slate-500 mt-1 block">
                 {language === "id" ? "Referensi tolok ukur resmi EU ETS." : "Official EU ETS benchmark reference."}
@@ -226,7 +226,7 @@ export default function CalculatorPage() {
                 value={indonesiaPrice}
                 onChange={(e) => setIndonesiaPrice(e.target.value)}
                 aria-describedby="indo-price-desc"
-                className="w-full rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                className="w-full rounded-lg border border-white/5 bg-[#2a2a2a] px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#0CF2A0]/50"
               />
               <span id="indo-price-desc" className="text-[10px] text-slate-500 mt-1 block">
                 {t("calculator.idxReferenceLabel")}: ~${defaultIdxPriceUsd.toFixed(2)}/tCO₂e
@@ -234,7 +234,7 @@ export default function CalculatorPage() {
               </span>
             </div>
 
-            <div className="rounded-lg bg-slate-800/40 p-3 text-[11px] text-slate-400 space-y-1">
+            <div className="rounded-lg bg-[#2a2a2a]/40 p-3 text-[11px] text-slate-400 space-y-1">
               <p className="font-semibold text-white">{t("calculator.carbonCreditDeduction")}</p>
               <p>
                 {language === "id"
@@ -245,7 +245,7 @@ export default function CalculatorPage() {
           </div>
 
           {/* Portfolio Table Editor */}
-          <div className="lg:col-span-2 rounded-xl border border-white/5 bg-slate-900/60 p-6 space-y-6">
+          <div className="lg:col-span-2 rounded-xl border border-white/5 bg-[#1a1a1a] p-6 space-y-6">
             <div className="flex items-center justify-between border-b border-white/5 pb-2">
               <h2 className="text-sm font-semibold text-white uppercase tracking-wider">
                 {t("calculator.productLines")}
@@ -253,7 +253,7 @@ export default function CalculatorPage() {
               <button
                 type="button"
                 onClick={handleAddItem}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-400 hover:bg-emerald-500/20 transition-all cursor-pointer"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-[#0CF2A0]/35 bg-[#0CF2A0]/10 px-3 py-1.5 text-xs font-semibold text-[#0CF2A0] hover:bg-[#0CF2A0]/20 transition-all cursor-pointer"
               >
                 {t("calculator.addProductLine")}
               </button>
@@ -263,7 +263,7 @@ export default function CalculatorPage() {
               {portfolioItems.map((item) => (
                 <div 
                   key={item.id} 
-                  className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end p-4 rounded-lg bg-slate-800/40 border border-white/5"
+                  className="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end p-4 rounded-lg bg-[#2a2a2a]/40 border border-white/5"
                 >
                   {/* Sector Selection */}
                   <div className="sm:col-span-6">
@@ -274,7 +274,7 @@ export default function CalculatorPage() {
                       id={`sec-${item.id}`}
                       value={item.sectorId}
                       onChange={(e) => handleUpdateItem(item.id, "sectorId", e.target.value)}
-                      className="w-full rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-white text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                      className="w-full rounded-lg border border-white/5 bg-[#2a2a2a] px-3 py-2 text-white text-xs focus:outline-none focus:ring-2 focus:ring-[#0CF2A0]/50"
                     >
                       {applicableSectors.map((sector) => (
                         <option key={sector.id} value={sector.id}>
@@ -297,7 +297,7 @@ export default function CalculatorPage() {
                       value={item.export_volume_tons || ""}
                       onChange={(e) => handleUpdateItem(item.id, "export_volume_tons", e.target.value)}
                       placeholder="e.g. 5000"
-                      className="w-full rounded-lg border border-slate-600 bg-slate-800 px-3 py-2 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                      className="w-full rounded-lg border border-white/5 bg-[#2a2a2a] px-3 py-2 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#0CF2A0]/50"
                     />
                   </div>
 
@@ -325,7 +325,7 @@ export default function CalculatorPage() {
             <button
               type="button"
               onClick={handleCalculate}
-              className="w-full rounded-lg bg-emerald-500 hover:bg-emerald-400 transition-colors py-3 text-sm font-bold text-black shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/35 cursor-pointer"
+              className="w-full rounded-lg bg-[#0CF2A0] hover:bg-[#0CF2A0]/90 transition-colors py-3 text-sm font-bold text-[#111111] shadow-lg shadow-[#0CF2A0]/25 hover:shadow-[#0CF2A0]/35 cursor-pointer"
             >
               {t("calculator.runCalculation")}
             </button>
@@ -339,7 +339,7 @@ export default function CalculatorPage() {
             {/* KPI Cards Grid */}
             <div className="grid gap-4 grid-cols-2 md:grid-cols-5">
               
-              <div className="rounded-xl border border-white/5 bg-slate-900/60 p-4">
+              <div className="rounded-xl border border-white/5 bg-[#1a1a1a] p-4">
                 <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">
                   {t("calculator.totalExportVolume")}
                 </p>
@@ -349,7 +349,7 @@ export default function CalculatorPage() {
                 </p>
               </div>
 
-              <div className="rounded-xl border border-white/5 bg-slate-900/60 p-4">
+              <div className="rounded-xl border border-white/5 bg-[#1a1a1a] p-4">
                 <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">
                   {t("calculator.totalEmissions")}
                 </p>
@@ -359,7 +359,7 @@ export default function CalculatorPage() {
                 </p>
               </div>
 
-              <div className="rounded-xl border border-white/5 bg-slate-900/60 p-4">
+              <div className="rounded-xl border border-white/5 bg-[#1a1a1a] p-4">
                 <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">
                   {t("calculator.grossCbamLiability")}
                 </p>
@@ -371,11 +371,11 @@ export default function CalculatorPage() {
                 </p>
               </div>
 
-              <div className="rounded-xl border border-white/5 bg-slate-900/60 p-4">
+              <div className="rounded-xl border border-white/5 bg-[#1a1a1a] p-4">
                 <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">
                   {t("calculator.carbonCreditDeduction")}
                 </p>
-                <p className="text-lg font-bold text-emerald-400">
+                <p className="text-lg font-bold text-[#0CF2A0]">
                   {formatUsd(result.total_indonesia_carbon_credit_usd)}
                 </p>
                 <p className="text-[10px] text-slate-500 mt-0.5">
@@ -400,15 +400,15 @@ export default function CalculatorPage() {
             <CBAMPortfolioCharts portfolioResult={result} />
 
             {/* AI Advisor Panel */}
-            <div className="rounded-xl border border-white/5 bg-slate-900/60 p-6 space-y-4">
+            <div className="rounded-xl border border-white/5 bg-[#1a1a1a] p-6 space-y-4">
               <div className="flex items-center gap-2 border-b border-white/5 pb-2">
-                <span className="text-emerald-400 text-lg">🤖</span>
+                <span className="text-[#0CF2A0] text-lg">🤖</span>
                 <h3 className="text-white font-semibold text-sm">{t("calculator.aiPanelTitle")}</h3>
               </div>
 
               {analysisLoading && (
                 <div className="flex items-center gap-3 text-slate-400 text-sm py-4">
-                  <div className="w-5 h-5 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin" />
+                  <div className="w-5 h-5 border-2 border-[#0CF2A0] border-t-transparent rounded-full animate-spin" />
                   {t("calculator.aiGenerating")}
                 </div>
               )}

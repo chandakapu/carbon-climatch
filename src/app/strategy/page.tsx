@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useId, useMemo } from "react";
+import { useState, useRef, useId } from "react";
 import { calculateAllStrategies } from "@/lib/strategyCalculations";
 import type { StrategyInputs, StrategyResults } from "@/types";
 import AIAnalystPanel from "@/components/ai/AIAnalystPanel";
@@ -22,11 +22,11 @@ function Section({ title, defaultOpen, children }: { title: string; defaultOpen?
     const [open, setOpen] = useState(defaultOpen ?? true);
     const contentId = useId();
     return (
-        <div className="rounded-xl border border-white/10 bg-slate-900/60 overflow-hidden">
+        <div className="rounded-xl border border-white/5 bg-[#1a1a1a] overflow-hidden">
             <button type="button" onClick={() => setOpen(!open)}
                 aria-expanded={open}
                 aria-controls={contentId}
-                className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-slate-800/40 transition-colors cursor-pointer">
+                className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-[#2a2a2a]/50 transition-colors cursor-pointer">
                 <span className="text-sm font-semibold text-white">{title}</span>
                 <svg className={`h-4 w-4 text-slate-400 transition-transform ${open ? "rotate-180" : ""}`}
                     viewBox="0 0 20 20" fill="currentColor">
@@ -69,7 +69,7 @@ function NumInput({
                     value={value} 
                     onChange={e => onChange(e.target.value)}
                     aria-describedby={`${id}-error`}
-                    className="w-full rounded-lg border border-slate-600 bg-slate-800 px-4 py-2.5 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50" 
+                    className="w-full rounded-lg border border-white/5 bg-[#2a2a2a] px-4 py-2.5 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#0CF2A0]/50" 
                 />
                 {suffix && <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500">{suffix}</span>}
             </div>
@@ -84,10 +84,10 @@ function SliderInput({ id, label, value, onChange, min = 0, max = 100 }: { id: s
     return (
         <div>
             <label htmlFor={id} className="flex justify-between text-xs font-medium text-slate-300 mb-1.5">
-                <span>{label}</span><span className="text-emerald-400 font-mono">{value}%</span>
+                <span>{label}</span><span className="text-[#0CF2A0] font-mono">{value}%</span>
             </label>
             <input id={id} type="range" min={min} max={max} value={value} onChange={e => onChange(Number(e.target.value))}
-                className="w-full accent-emerald-500 h-2 rounded-full bg-slate-700 cursor-pointer" />
+                className="w-full accent-[#0CF2A0] h-2 rounded-full bg-[#2a2a2a] cursor-pointer" />
         </div>
     );
 }
@@ -97,7 +97,7 @@ function SelectInput({ id, label, value, options, onChange }: { id: string; labe
         <div>
             <label htmlFor={id} className="block text-xs font-medium text-slate-300 mb-1.5">{label}</label>
             <select id={id} value={value} onChange={e => onChange(e.target.value)}
-                className="w-full rounded-lg border border-slate-600 bg-slate-800 px-4 py-2.5 text-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50">
+                className="w-full rounded-lg border border-white/5 bg-[#2a2a2a] px-4 py-2.5 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#0CF2A0]/50">
                 {options.map(o => <option key={o} value={o}>{o}</option>)}
             </select>
         </div>
@@ -105,8 +105,8 @@ function SelectInput({ id, label, value, options, onChange }: { id: string; labe
 }
 
 /* ── Chart Colors ────────────────────────────────────────────── */
-const COLORS = { credit: "#10b981", capex: "#3b82f6", maint: "#64748b", shield: "#f59e0b" };
-const DONUT_COLORS = ["#10b981", "#3b82f6", "#f59e0b"];
+const COLORS = { credit: "#0CF2A0", capex: "#3b82f6", maint: "#64748b", shield: "#f59e0b" };
+const DONUT_COLORS = ["#0CF2A0", "#3b82f6", "#f59e0b"];
 const LINE_COLORS = { A: "#ef4444", B: "#3b82f6", C: "#a855f7" };
 
 /* ══════════════════════════════════════════════════════════════ */
@@ -120,18 +120,7 @@ export default function StrategyPage() {
         return `~USD ${(v / USD_TO_IDR).toLocaleString(language === "id" ? "id-ID" : "en-US", { maximumFractionDigits: 0 })}`;
     }
 
-    /* ── Custom Tooltip for BarChart ─────────────────────────────── */
-    function BarTooltipContent({ active, payload, label }: { active?: boolean; payload?: Array<{ name: string; value: number; color: string }>; label?: string }) {
-        if (!active || !payload?.length) return null;
-        return (
-            <div className="rounded-lg bg-slate-800 border border-slate-600 p-3 text-xs shadow-xl">
-                <p className="text-white font-medium mb-1">{language === "id" ? "Tahun" : "Year"} {label}</p>
-                {payload.map((p, i) => (
-                    <p key={i} style={{ color: p.color }}>{p.name}: {formatIdr(p.value)}</p>
-                ))}
-            </div>
-        );
-    }
+
 
     // Section 1
     const [annualEmissions, setAnnualEmissions] = useState("50000");
@@ -241,13 +230,13 @@ export default function StrategyPage() {
     })() : [];
 
     const strategies = results ? [
-        { key: "A", label: language === "id" ? "Strategi A — OPEX" : "Strategy A — OPEX", color: "text-emerald-400", border: "border-emerald-500/30", result: results.strategy_a },
+        { key: "A", label: language === "id" ? "Strategi A — OPEX" : "Strategy A — OPEX", color: "text-[#0CF2A0]", border: "border-[#0CF2A0]/30", result: results.strategy_a },
         { key: "B", label: language === "id" ? "Strategi B — CAPEX" : "Strategy B — CAPEX", color: "text-blue-400", border: "border-blue-500/30", result: results.strategy_b },
         { key: "C", label: language === "id" ? "Strategi C — Campuran" : "Strategy C — Mixed", color: "text-purple-400", border: "border-purple-500/30", result: results.strategy_c },
     ] : [];
 
     return (
-        <div className="min-h-screen bg-[#0b1120] text-white font-sans">
+        <div className="min-h-screen bg-[#111111] text-white font-sans">
             <main className="mx-auto max-w-5xl px-6 py-12">
                 {/* Header */}
                 <div className="mb-10">
@@ -296,7 +285,7 @@ export default function StrategyPage() {
                 {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
 
                 <button type="button" onClick={handleCalculate}
-                    className="w-full rounded-lg bg-emerald-500 hover:bg-emerald-400 transition-colors px-4 py-3.5 text-sm font-bold text-black mb-10 cursor-pointer">
+                    className="w-full rounded-lg bg-[#0CF2A0] hover:bg-[#0CF2A0]/90 transition-colors px-4 py-3.5 text-sm font-bold text-[#111111] mb-10 cursor-pointer">
                     {t("strategy.runOptimization")}
                 </button>
 
@@ -308,7 +297,7 @@ export default function StrategyPage() {
                             <button
                                 onClick={handleExportPdf}
                                 disabled={isExporting}
-                                className="flex items-center gap-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 px-4 py-2 text-xs font-semibold text-white transition-all disabled:opacity-50 cursor-pointer"
+                                className="flex items-center gap-2 rounded-lg bg-[#1a1a1a] hover:bg-[#2a2a2a] border border-white/5 px-4 py-2 text-xs font-semibold text-white transition-all disabled:opacity-50 cursor-pointer"
                             >
                                 {isExporting ? (
                                     <>
@@ -326,9 +315,9 @@ export default function StrategyPage() {
                         {/* 1. Summary Cards */}
                         <div className="grid gap-4 sm:grid-cols-3">
                             {strategies.map(s => (
-                                <div key={s.key} className={`rounded-xl border ${s.border} bg-slate-900/80 p-5 relative`}>
+                                <div key={s.key} className={`rounded-xl border ${s.border} bg-[#1a1a1a] p-5 relative`}>
                                     {results.recommended === s.key && (
-                                        <span className="absolute top-3 right-3 text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-500/30">
+                                        <span className="absolute top-3 right-3 text-[10px] font-bold uppercase tracking-wider bg-[#0CF2A0]/20 text-[#0CF2A0] px-2 py-0.5 rounded-full border border-[#0CF2A0]/30">
                                             {language === "id" ? "Direkomendasikan" : "Recommended"}
                                         </span>
                                     )}
@@ -345,17 +334,27 @@ export default function StrategyPage() {
                         </div>
 
                         {/* 2. Stacked Bar Chart */}
-                        <div className="rounded-xl border border-white/10 bg-slate-900/60 p-6">
+                        <div className="rounded-xl border border-white/5 bg-[#1a1a1a] p-6">
                             <h2 className="text-lg font-semibold text-white mb-1 text-balance">{language === "id" ? "Rincian Biaya Tahunan" : "Annual Cost Breakdown"}</h2>
                             <p className="text-xs text-slate-400 mb-4 text-pretty">
                                 {language === "id" ? "Komponen bertumpuk per strategi per tahun" : "Stacked components per strategy per year"}
                             </p>
                             <ResponsiveContainer width="100%" height={360}>
                                 <BarChart data={barData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
-                                    <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
+                                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
                                     <XAxis dataKey="year" tick={{ fill: "#94a3b8", fontSize: 12 }} label={{ value: language === "id" ? "Tahun" : "Year", position: "insideBottom", offset: -2, fill: "#64748b", fontSize: 11 }} />
                                     <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} tickFormatter={v => `${(v / 1e9).toFixed(1)}B`} />
-                                    <Tooltip content={<BarTooltipContent />} />
+                                    <Tooltip content={({ active, payload, label }) => {
+                                        if (!active || !payload?.length) return null;
+                                        return (
+                                            <div className="rounded-lg bg-[#2a2a2a] border border-white/5 p-3 text-xs shadow-xl">
+                                                <p className="text-white font-medium mb-1">{language === "id" ? "Tahun" : "Year"} {label}</p>
+                                                {payload.map((p, i) => (
+                                                    <p key={i} style={{ color: p.color }}>{p.name}: {formatIdr(Number(p.value))}</p>
+                                                ))}
+                                            </div>
+                                        );
+                                    }} />
                                     <Legend wrapperStyle={{ fontSize: 11, color: "#94a3b8" }} />
                                     <Bar dataKey="A_credits" name={language === "id" ? "A: Kredit" : "A: Credits"} fill={COLORS.credit} stackId="a" />
                                     <Bar dataKey="B_credits" name={language === "id" ? "B: Kredit" : "B: Credits"} fill={COLORS.credit} stackId="b" opacity={0.6} />
@@ -371,7 +370,7 @@ export default function StrategyPage() {
                         </div>
 
                         {/* 3. Break-even Line Chart */}
-                        <div className="rounded-xl border border-white/10 bg-slate-900/60 p-6">
+                        <div className="rounded-xl border border-white/5 bg-[#1a1a1a] p-6">
                             <h2 className="text-lg font-semibold text-white mb-1 text-balance">{language === "id" ? "Biaya Kumulatif & Balik Modal" : "Cumulative Cost & Break-even"}</h2>
                             <p className="text-xs text-slate-400 mb-4">
                                 {results.break_even_year
@@ -384,10 +383,10 @@ export default function StrategyPage() {
                             </p>
                             <ResponsiveContainer width="100%" height={320}>
                                 <LineChart data={lineData} margin={{ top: 10, right: 10, left: 10, bottom: 0 }}>
-                                    <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
+                                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
                                     <XAxis dataKey="year" tick={{ fill: "#94a3b8", fontSize: 12 }} label={{ value: language === "id" ? "Tahun" : "Year", position: "insideBottom", offset: -2, fill: "#64748b", fontSize: 11 }} />
                                     <YAxis tick={{ fill: "#94a3b8", fontSize: 11 }} tickFormatter={v => `${(v / 1e9).toFixed(1)}B`} />
-                                    <Tooltip formatter={(v) => formatIdr(Number(v))} contentStyle={{ backgroundColor: "#1e293b", border: "1px solid #334155", borderRadius: 8, fontSize: 12 }} labelStyle={{ color: "#fff" }} />
+                                    <Tooltip formatter={(v) => formatIdr(Number(v))} contentStyle={{ backgroundColor: "#1a1a1a", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 8, fontSize: 12 }} labelStyle={{ color: "#fff" }} />
                                     <Legend wrapperStyle={{ fontSize: 11 }} />
                                     <Line type="monotone" dataKey={language === "id" ? "Strategi A" : "Strategy A"} stroke={LINE_COLORS.A} strokeWidth={2} dot={{ r: 3 }} />
                                     <Line type="monotone" dataKey={language === "id" ? "Strategi B" : "Strategy B"} stroke={LINE_COLORS.B} strokeWidth={2} dot={{ r: 3 }} />
@@ -408,7 +407,7 @@ export default function StrategyPage() {
                         </div>
 
                         {/* 4. Budget Allocation Donut */}
-                        <div className="rounded-xl border border-white/10 bg-slate-900/60 p-6">
+                        <div className="rounded-xl border border-white/5 bg-[#1a1a1a] p-6">
                             <h2 className="text-lg font-semibold text-white mb-1 text-balance">
                                 {language === "id" ? "Strategi Campuran — Alokasi Anggaran" : "Mixed Strategy — Budget Allocation"}
                             </h2>
@@ -426,7 +425,7 @@ export default function StrategyPage() {
                                             labelLine={{ stroke: "#64748b" }}>
                                             {donutData.map((_, i) => <Cell key={i} fill={DONUT_COLORS[i]} />)}
                                         </Pie>
-                                        <Tooltip formatter={(v) => formatIdr(Number(v))} contentStyle={{ backgroundColor: "#1e293b", border: "1px solid #334155", borderRadius: 8, fontSize: 12 }} />
+                                        <Tooltip formatter={(v) => formatIdr(Number(v))} contentStyle={{ backgroundColor: "#1a1a1a", border: "1px solid rgba(255,255,255,0.05)", borderRadius: 8, fontSize: 12 }} />
                                     </PieChart>
                                 </ResponsiveContainer>
                                 <div className="space-y-2">

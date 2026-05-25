@@ -49,11 +49,11 @@ export default function AIAnalystPanel({
     };
 
     return (
-        <div className="bg-slate-800 border border-slate-600 rounded-xl p-6">
+        <div className="bg-[#1a1a1a] border border-white/5 rounded-xl p-6">
             <div className="flex items-center gap-2 mb-4">
-                <span className="text-green-400 text-lg">🤖</span>
+                <span className="text-[#0CF2A0] text-lg">🤖</span>
                 <h3 className="text-white font-medium">{t("dashboard.aiPanelTitle")}</h3>
-                <span className="text-xs text-slate-400 bg-slate-700 px-2 py-0.5 rounded-full">
+                <span className="text-xs text-slate-400 bg-[#2a2a2a] px-2 py-0.5 rounded-full">
                     Powered by Gemini
                 </span>
             </div>
@@ -61,7 +61,7 @@ export default function AIAnalystPanel({
             {!analysis && !loading && (
                 <button
                     onClick={handleAnalyze}
-                    className="bg-green-600 hover:bg-green-500 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors cursor-pointer"
+                    className="bg-[#0CF2A0] hover:bg-[#0CF2A0]/90 text-[#111111] text-sm font-bold px-4 py-2 rounded-lg transition-all shadow-lg shadow-[#0CF2A0]/10 hover:shadow-[#0CF2A0]/20 cursor-pointer"
                 >
                     {currentTriggerLabel}
                 </button>
@@ -69,7 +69,7 @@ export default function AIAnalystPanel({
 
             {loading && (
                 <div className="flex items-center gap-2 text-slate-400 text-sm">
-                    <div className="w-4 h-4 border-2 border-green-400 border-t-transparent rounded-full animate-spin" />
+                    <div className="w-4 h-4 border-2 border-[#0CF2A0] border-t-transparent rounded-full animate-spin" />
                     {language === "id" ? "Menganalisis data regulasi..." : "Analyzing regulatory data..."}
                 </div>
             )}
@@ -83,7 +83,7 @@ export default function AIAnalystPanel({
                     <MarkdownRenderer content={analysis} />
                     <button
                         onClick={handleAnalyze}
-                        className="mt-3 text-xs text-slate-400 hover:text-slate-300 underline cursor-pointer"
+                        className="mt-3 text-xs text-[#0CF2A0] hover:underline cursor-pointer"
                     >
                         {language === "id" ? "Hasilkan Ulang" : "Regenerate"}
                     </button>

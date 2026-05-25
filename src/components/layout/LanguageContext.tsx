@@ -13,15 +13,15 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguageState] = useState<Language>("en");
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     // Load language preference from localStorage on mount
     const savedLanguage = localStorage.getItem("preferred-language") as Language;
     if (savedLanguage === "en" || savedLanguage === "id") {
-      setLanguageState(savedLanguage);
+      setTimeout(() => {
+        setLanguageState(savedLanguage);
+      }, 0);
     }
-    setMounted(true);
   }, []);
 
   const setLanguage = (lang: Language) => {
@@ -32,17 +32,17 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   // Helper function to get translation by dot-separated path (e.g. "nav.dashboard")
   const t = (path: string): string => {
     const keys = path.split(".");
-    let result: any = translations[language];
+    let result: unknown = translations[language];
     
     for (const key of keys) {
       if (result && typeof result === "object" && key in result) {
-        result = result[key];
+        result = (result as Record<string, unknown>)[key];
       } else {
         // Fallback to English if not found in active language
-        let fallbackResult: any = translations["en"];
+        let fallbackResult: unknown = translations["en"];
         for (const fallbackKey of keys) {
           if (fallbackResult && typeof fallbackResult === "object" && fallbackKey in fallbackResult) {
-            fallbackResult = fallbackResult[fallbackKey];
+            fallbackResult = (fallbackResult as Record<string, unknown>)[fallbackKey];
           } else {
             return path;
           }

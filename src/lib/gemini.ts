@@ -37,7 +37,7 @@ Always:
         
         let portfolioBreakdown = "";
         if (Array.isArray(d.items) && d.items.length > 0) {
-            portfolioBreakdown = "Portfolio Sector Breakdown:\n" + d.items.map((item: any) => 
+            portfolioBreakdown = "Portfolio Sector Breakdown:\n" + d.items.map((item: { sector: string; export_volume_tons?: number; total_emissions_tco2?: number; net_liability_usd?: number; }) => 
                 `- ${item.sector}: Export Volume ${item.export_volume_tons?.toLocaleString()} tons, Emissions ${item.total_emissions_tco2?.toLocaleString()} tCO2e, Net Liability: USD ${item.net_liability_usd?.toLocaleString()}`
             ).join("\n");
         } else {
