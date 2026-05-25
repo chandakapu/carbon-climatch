@@ -4,6 +4,7 @@ import AlertBanner from "@/components/dashboard/AlertBanner";
 import PriceBarChart from "@/components/dashboard/PriceBarChart";
 import IDXLineChart from "@/components/dashboard/IDXLineChart";
 import AIAnalystPanel from "@/components/ai/AIAnalystPanel";
+import { Hero } from "@/components/ui/animated-hero";
 
 export const metadata: Metadata = {
   title: "Carbon Climatch — Carbon Intelligence Platform for Indonesian CFOs",
@@ -59,69 +60,7 @@ export default function DashboardPage() {
 
         {/* ── HERO ──────────────────────────────────────────────── */}
         <section id="overview" className="pt-16 pb-12">
-          <div className="relative overflow-hidden rounded-2xl border border-white/5 bg-gradient-to-br from-slate-900 via-[#0f1e38] to-[#0b1120] px-8 py-12 md:px-14 md:py-16">
-            {/* Glow orb */}
-            <div className="pointer-events-none absolute -top-32 -right-32 h-80 w-80 rounded-full bg-emerald-500 opacity-[0.06] blur-3xl" />
-            <div className="pointer-events-none absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-blue-500 opacity-[0.04] blur-3xl" />
-
-            <div className="relative z-10 max-w-3xl">
-              {/* Eyebrow */}
-              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-400 uppercase tracking-widest">
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                Carbon Intelligence Platform
-              </div>
-
-              <h1 className="text-4xl md:text-5xl font-extrabold leading-tight tracking-tight text-white mb-4 text-balance">
-                Navigate Indonesia&apos;s Carbon{" "}
-                <span className="text-emerald-400">Compliance Landscape</span>
-              </h1>
-
-              <p className="text-slate-400 text-lg leading-relaxed mb-8 max-w-2xl text-pretty">
-                Real-time carbon market intelligence for Indonesian CFOs. Track IDXCarbon prices,
-                benchmark against global markets, quantify CBAM liability, and get AI-powered
-                regulatory analysis — all in one platform.
-              </p>
-
-              <div className="flex flex-wrap gap-3">
-                <a
-                  href="#ai-analysis"
-                  className="inline-flex items-center gap-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 transition-all duration-200 px-6 py-3 text-sm font-bold text-black shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30"
-                >
-                  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-                  </svg>
-                  Get AI Analysis
-                </a>
-                <a
-                  href="#market"
-                  className="inline-flex items-center gap-2 rounded-lg border border-white/10 hover:border-white/20 bg-white/5 hover:bg-white/10 transition-all duration-200 px-6 py-3 text-sm font-semibold text-white"
-                >
-                  View Market Data
-                  <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                  </svg>
-                </a>
-              </div>
-            </div>
-
-            {/* Feature pills */}
-            <div className="relative z-10 mt-10 flex flex-wrap gap-2">
-              {[
-                { icon: "📊", label: "IDXCarbon Live Prices" },
-                { icon: "🌍", label: "CBAM Liability Calculator" },
-                { icon: "⚖️", label: "Regulatory Timeline" },
-                { icon: "🤖", label: "Gemini AI Analysis" },
-              ].map((f) => (
-                <span
-                  key={f.label}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-white/8 bg-white/4 px-3 py-1.5 text-xs text-slate-400"
-                >
-                  <span>{f.icon}</span>
-                  {f.label}
-                </span>
-              ))}
-            </div>
-          </div>
+          <Hero />
         </section>
 
         {/* ── KPI CARDS ─────────────────────────────────────────── */}
