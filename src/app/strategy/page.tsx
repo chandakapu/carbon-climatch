@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useId } from "react";
+import { useState, useEffect, useRef, useId } from "react";
 import Link from "next/link";
 import { calculateAllStrategies } from "@/lib/strategyCalculations";
 import type { StrategyInputs, StrategyResults } from "@/types";
@@ -240,6 +240,17 @@ export default function StrategyPage() {
     const [isExporting, setIsExporting] = useState(false);
     const [error, setError] = useState("");
     const chartsRef = useRef<FormalReportChartsRef>(null);
+
+    useEffect(() => {
+        const storedEmissions = localStorage.getItem("climatch_emissions");
+        if (storedEmissions) {
+            setAnnualEmissions(parseFloat(storedEmissions).toFixed(0));
+        }
+        const storedPrice = localStorage.getItem("climatch_carbon_price_idr");
+        if (storedPrice) {
+            setCarbonPriceIdr(parseFloat(storedPrice).toFixed(0));
+        }
+    }, []);
 
     const handleApplyEstimation = () => {
         const sector = applicableSectors.find(s => s.id === estimatorSectorId);

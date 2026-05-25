@@ -173,6 +173,7 @@ export default function CalculatorPage() {
     localStorage.setItem("climatch_emissions", portfolioResult.total_emissions_tco2.toString());
     localStorage.setItem("climatch_liability", portfolioResult.total_net_liability_usd.toString());
     localStorage.setItem("climatch_liability_idr", (portfolioResult.total_net_liability_usd * USD_TO_IDR).toString());
+    localStorage.setItem("climatch_carbon_price_idr", (indoPriceNum * USD_TO_IDR).toFixed(0));
 
     setResult(portfolioResult);
     fetchAnalysis(portfolioResult, euPriceNum, indoPriceNum);
@@ -439,13 +440,22 @@ export default function CalculatorPage() {
                   }
                 </p>
               </div>
-              <Link 
-                href={`/action-hub?source=calculator&gap=${result.total_emissions_tco2}&liability=${result.total_net_liability_usd}`}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#0CF2A0] hover:bg-[#0CF2A0]/95 px-5 py-3 text-xs font-bold text-[#111111] shadow-md shadow-[#0CF2A0]/10 transition-all hover:-translate-y-0.5 cursor-pointer whitespace-nowrap"
-              >
-                <span>{language === "id" ? "Pusat Aksi Karbon" : "Go to Action Hub"}</span>
-                <span className="text-sm">→</span>
-              </Link>
+              <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                <Link 
+                  href={`/strategy?source=calculator`}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#0CF2A0]/30 bg-[#0CF2A0]/5 hover:bg-[#0CF2A0]/15 px-5 py-3 text-xs font-bold text-[#0CF2A0] shadow-md transition-all hover:-translate-y-0.5 cursor-pointer whitespace-nowrap"
+                >
+                  <span>{language === "id" ? "Optimasi Strategi Pajak & CAPEX" : "Optimize Tax & CAPEX Strategy"}</span>
+                  <span className="text-sm">⚙️</span>
+                </Link>
+                <Link 
+                  href={`/action-hub?source=calculator&gap=${result.total_emissions_tco2}&liability=${result.total_net_liability_usd}`}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#0CF2A0] hover:bg-[#0CF2A0]/95 px-5 py-3 text-xs font-bold text-[#111111] shadow-md shadow-[#0CF2A0]/10 transition-all hover:-translate-y-0.5 cursor-pointer whitespace-nowrap"
+                >
+                  <span>{language === "id" ? "Pusat Aksi Karbon" : "Go to Action Hub"}</span>
+                  <span className="text-sm">→</span>
+                </Link>
+              </div>
             </div>
 
             {/* AI Advisor Panel */}
