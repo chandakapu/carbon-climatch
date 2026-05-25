@@ -36,3 +36,31 @@ export function getUpcomingEvents(): RegulatoryEvent[] {
 export function getCBAMConfig(): CBAMConfig {
     return cbamConfig as CBAMConfig;
 }
+
+export function getEUETSCAGR(): number {
+    const prices = getCarbonPrices().filter(p => p.instrument === "ETS_EU" || p.instrument_name === "EU ETS");
+    if (prices.length < 2) return 8;
+    const sorted = [...prices].sort((a, b) => a.year - b.year);
+    const first = sorted[0];
+    const last = sorted[sorted.length - 1];
+    const years = last.year - first.year;
+    if (years <= 0) return 8;
+    const cagr = Math.pow(last.price_usd / first.price_usd, 1 / years) - 1;
+    return Math.round(cagr * 100);
+}
+
+export function getIDXCarbonCAGR(): number {
+    const data = getIDXCarbonMonthly();
+    if (data.length < 2) return 8;
+    const sorted = [...data].sort((a, b) => a.month.localeCompare(b.month));
+    const first = sorted[0];
+    const last = sorted[sorted.length - 1];
+    const parseMonth = (m: string) => {
+        const [year, month] = m.split("-").map(Number);
+        return year + (month - 1) / 12;
+    };
+    const years = parseMonth(last.month) - parseMonth(first.month);
+    if (years <= 0) return 8;
+    const cagr = Math.pow(last.avg_price_idr / first.avg_price_idr, 1 / years) - 1;
+    return Math.round(cagr * 100);
+}

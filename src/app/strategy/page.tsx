@@ -8,7 +8,7 @@ import AIAnalystPanel from "@/components/ai/AIAnalystPanel";
 import FormalReportCharts from "@/components/strategy/FormalReportCharts";
 import type { FormalReportChartsRef } from "@/components/strategy/FormalReportCharts";
 import { generateFormalReport } from "@/lib/pdfExport";
-import { getCBAMConfig, getIDXCarbonMonthly } from "@/lib/data";
+import { getCBAMConfig, getIDXCarbonMonthly, getEUETSCAGR, getIDXCarbonCAGR } from "@/lib/data";
 import { useLanguage } from "@/components/layout/LanguageContext";
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
@@ -142,6 +142,16 @@ export default function StrategyPage() {
     const [escalation, setEscalation] = useState(8);
     const [horizon, setHorizon] = useState("5");
 
+    // Escalation presets
+    const idxCagr = getIDXCarbonCAGR();
+    const euCagr = getEUETSCAGR();
+    const escalationPresets = [
+        { id: "custom", name: language === "id" ? "Kustom (Gunakan Slider)" : "Custom (Use Slider)", value: 8 },
+        { id: "idx", name: language === "id" ? `Tren IDXCarbon Indonesia (Historis: ${idxCagr}%)` : `Indonesia IDXCarbon Trend (Historical: ${idxCagr}%)`, value: idxCagr },
+        { id: "eu", name: language === "id" ? `Tren EU ETS Global (Historis: ${euCagr}%)` : `Global EU ETS Trend (Historical: ${euCagr}%)`, value: euCagr },
+    ];
+    const [selectedEscalationPreset, setSelectedEscalationPreset] = useState("custom");
+
     // Tech presets for reduction
     const techPresets = [
         { id: "custom", name: language === "id" ? "Kustom (Gunakan Slider)" : "Custom (Use Slider)", value: 70 },
@@ -189,6 +199,14 @@ export default function StrategyPage() {
         const preset = techPresets.find(p => p.id === presetId);
         if (preset && preset.id !== "custom") {
             setEmissionReduction(preset.value);
+        }
+    };
+
+    const handleEscalationPresetChange = (presetId: string) => {
+        setSelectedEscalationPreset(presetId);
+        const preset = escalationPresets.find(p => p.id === presetId);
+        if (preset && preset.id !== "custom") {
+            setEscalation(preset.value);
         }
     };
 
@@ -381,7 +399,31 @@ export default function StrategyPage() {
                                 </div>
                             </div>
                         </div>
-                        <SliderInput id="escalation" label={t("strategy.escalationLabel")} value={escalation} onChange={setEscalation} max={20} />
+                        <div className="space-y-3 mt-4">
+                            <label htmlFor="escalation-preset" className="block text-xs font-medium text-slate-300">
+                                {language === "id" ? "Proyeksi Kenaikan Harga Karbon Tahunan" : "Annual Carbon Price Escalation Basis"}
+                            </label>
+                            <select
+                                id="escalation-preset"
+                                value={selectedEscalationPreset}
+                                onChange={(e) => handleEscalationPresetChange(e.target.value)}
+                                className="w-full rounded-lg border border-white/5 bg-[#2a2a2a] px-4 py-2.5 text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#0CF2A0]/50"
+                            >
+                                {escalationPresets.map((p) => (
+                                    <option key={p.id} value={p.id}>
+                                        {p.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        {selectedEscalationPreset === "custom" ? (
+                            <SliderInput id="escalation" label={t("strategy.escalationLabel")} value={escalation} onChange={setEscalation} max={40} />
+                        ) : (
+                            <div className="flex justify-between items-center text-xs font-medium text-slate-300 py-2.5 px-4 rounded-lg bg-[#2a2a2a]/40 border border-white/5 mt-3">
+                                <span>{t("strategy.escalationLabel")}</span>
+                                <span className="text-[#0CF2A0] font-mono font-bold">{escalation}% ({language === "id" ? "Ditetapkan secara Historis" : "Calculated from History"})</span>
+                            </div>
+                        )}
                         <SelectInput id="horizon" label={t("strategy.horizonLabel")} value={horizon} options={[1, 3, 5, 10]} onChange={setHorizon} />
                     </Section>
 
