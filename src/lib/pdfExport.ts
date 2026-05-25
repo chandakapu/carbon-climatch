@@ -723,7 +723,7 @@ export async function generateFormalReport(
 }
 
 /**
- * Generates a high-quality carbon compliance & neutrality certificate.
+ * Generates a formal, legal carbon compliance & neutrality covenant certificate.
  */
 export function generateComplianceCertificate(
   companyName: string,
@@ -732,203 +732,443 @@ export function generateComplianceCertificate(
   reductions: number,
   language: "en" | "id"
 ) {
-  // A4 Landscape is 297 x 210 mm
+  // A4 Portrait is 210 x 297 mm
   const pdf = new jsPDF({
-    orientation: "landscape",
+    orientation: "portrait",
     unit: "mm",
     format: "a4"
   });
 
-  const w = 297;
-  const h = 210;
+  const w = 210;
+  const h = 297;
 
   // Colors
-  const FOREST_GREEN = [15, 70, 50] as const;
+  const DEEP_NAVY = [16, 44, 87] as const;
   const GOLD = [197, 160, 89] as const;
-  const CHARCOAL = [45, 55, 72] as const;
-  const LIGHT_IVORY = [253, 253, 250] as const;
+  const CHARCOAL = [33, 33, 33] as const;
+  const LIGHT_IVORY = [254, 254, 252] as const;
 
   // Fill background
   pdf.setFillColor(...LIGHT_IVORY);
   pdf.rect(0, 0, w, h, "F");
 
-  // Draw borders
-  // Outer green border
-  pdf.setDrawColor(...FOREST_GREEN);
-  pdf.setLineWidth(1.5);
-  pdf.rect(10, 10, w - 20, h - 20, "D");
+  // Draw elegant contract borders
+  // Outer deep navy border
+  pdf.setDrawColor(...DEEP_NAVY);
+  pdf.setLineWidth(1.2);
+  pdf.rect(12, 12, w - 24, h - 24, "D");
 
   // Inner thin gold border
   pdf.setDrawColor(...GOLD);
-  pdf.setLineWidth(0.8);
-  pdf.rect(13, 13, w - 26, h - 26, "D");
+  pdf.setLineWidth(0.6);
+  pdf.rect(15, 15, w - 30, h - 30, "D");
 
   // Draw corner ornaments
   pdf.setFillColor(...GOLD);
-  pdf.rect(12, 12, 5, 5, "F");
-  pdf.rect(w - 17, 12, 5, 5, "F");
-  pdf.rect(12, h - 17, 5, 5, "F");
-  pdf.rect(w - 17, h - 17, 5, 5, "F");
+  pdf.rect(14, 14, 4, 4, "F");
+  pdf.rect(w - 18, 14, 4, 4, "F");
+  pdf.rect(14, h - 18, 4, 4, "F");
+  pdf.rect(w - 18, h - 18, 4, 4, "F");
 
-  // --- HEADER SECTION ---
-  // Emblem/Seal in center top
+  // --- COVENANT HEADER ---
+  // Emblem / Seal in top center
   pdf.setDrawColor(...GOLD);
-  pdf.setLineWidth(0.7);
-  pdf.circle(w / 2, 35, 12, "D");
-  pdf.setDrawColor(...FOREST_GREEN);
+  pdf.setLineWidth(0.6);
+  pdf.circle(w / 2, 35, 10, "D");
+  pdf.setDrawColor(...DEEP_NAVY);
   pdf.setLineWidth(0.3);
-  pdf.circle(w / 2, 35, 10.5, "D");
+  pdf.circle(w / 2, 35, 8.5, "D");
   
   pdf.setFont("helvetica", "bold");
-  pdf.setFontSize(8);
-  pdf.setTextColor(...FOREST_GREEN);
-  pdf.text("SRN", w / 2, 34, { align: "center" });
-  pdf.setFontSize(6);
-  pdf.text("COMPLIANT", w / 2, 38, { align: "center" });
+  pdf.setFontSize(7);
+  pdf.setTextColor(...DEEP_NAVY);
+  pdf.text("SRN-PPI", w / 2, 33.5, { align: "center" });
+  pdf.setFontSize(5);
+  pdf.text("COMPLIANCE", w / 2, 37, { align: "center" });
 
-  // Title
-  pdf.setFont("times", "bolditalic");
-  pdf.setFontSize(26);
-  pdf.setTextColor(...FOREST_GREEN);
+  // Main legal title
+  pdf.setFont("times", "bold");
+  pdf.setFontSize(18);
+  pdf.setTextColor(...DEEP_NAVY);
   const titleText = language === "id" 
-    ? "SERTIFIKAT KEPATUHAN NETRALITAS KARBON" 
-    : "CERTIFICATE OF CARBON NEUTRALITY COMPLIANCE";
-  pdf.text(titleText, w / 2, 60, { align: "center" });
+    ? "SURAT PERNYATAAN KEPATUHAN & NEUTRALITAS KARBON" 
+    : "COVENANT OF CARBON NEUTRALITY COMPLIANCE";
+  pdf.text(titleText, w / 2, 53, { align: "center" });
 
-  // Divider
-  pdf.setDrawColor(...GOLD);
-  pdf.setLineWidth(0.5);
-  pdf.line(w / 2 - 50, 66, w / 2 + 50, 66);
-
-  // Subtitle
-  pdf.setFont("helvetica", "normal");
-  pdf.setFontSize(10);
-  pdf.setTextColor(...CHARCOAL);
-  const subText = language === "id"
-    ? "Diberikan di bawah Kerangka Regulasi Nilai Ekonomi Karbon (NEK) Indonesia"
-    : "Awarded under the National Carbon Pricing Governance (NEK) and SRN-PPI Framework";
-  pdf.text(subText, w / 2, 73, { align: "center" });
-
-  // Presentation text
   pdf.setFont("times", "italic");
-  pdf.setFontSize(14);
+  pdf.setFontSize(10);
+  pdf.setTextColor(...GOLD);
+  const subText = language === "id"
+    ? "Berdasarkan Peraturan Presiden No. 98 Tahun 2021 tentang Nilai Ekonomi Karbon"
+    : "Executed pursuant to Presidential Decree No. 98/2021 on Carbon Pricing Framework";
+  pdf.text(subText, w / 2, 59, { align: "center" });
+
+  // Preamble
+  pdf.setFont("times", "bolditalic");
+  pdf.setFontSize(12);
   pdf.setTextColor(...CHARCOAL);
-  const presText = language === "id" ? "Dengan ini menerangkan bahwa:" : "This is to certify that";
-  pdf.text(presText, w / 2, 85, { align: "center" });
+  const preambleHeader = language === "id" ? "MENYATAKAN DENGAN INI:" : "KNOW ALL MEN BY THESE PRESENTS:";
+  pdf.text(preambleHeader, w / 2, 73, { align: "center" });
+
+  pdf.setFont("times", "normal");
+  pdf.setFontSize(10.5);
+  const preambleBody = language === "id"
+    ? "Bahwa komitmen kepatuhan dan pelaporan carbon-exposure telah diverifikasi secara sah untuk:"
+    : "That a covenant of regulatory carbon compliance has been formally verified and discharged for:";
+  pdf.text(preambleBody, w / 2, 79, { align: "center" });
 
   // Company Name
   pdf.setFont("helvetica", "bold");
-  pdf.setFontSize(24);
-  pdf.setTextColor(...FOREST_GREEN);
-  pdf.text(companyName.toUpperCase(), w / 2, 97, { align: "center" });
+  pdf.setFontSize(16);
+  pdf.setTextColor(...DEEP_NAVY);
+  pdf.text(companyName.toUpperCase(), w / 2, 89, { align: "center" });
 
-  // Sub-description
-  pdf.setFont("times", "italic");
-  pdf.setFontSize(11);
+  pdf.setFont("times", "normal");
+  pdf.setFontSize(10);
   pdf.setTextColor(...CHARCOAL);
-  const descText = language === "id"
-    ? "telah berhasil memenuhi kewajiban kepatuhan emisi karbon dan mencapai status netral karbon melalui kombinasi implementasi teknologi rendah karbon dan perolehan kredit karbon (offsets) tersertifikasi."
-    : "has successfully fulfilled its carbon emission compliance obligations and achieved carbon neutral status through a verified combination of clean technology investments and certified carbon offset procurement.";
+  const repText = language === "id" ? "(selanjutnya disebut sebagai \"Entitas Terverifikasi\")" : "(hereinafter referred to as the \"Certified Entity\")";
+  pdf.text(repText, w / 2, 94, { align: "center" });
+
+  // Divider
+  pdf.setDrawColor(...GOLD);
+  pdf.setLineWidth(0.4);
+  pdf.line(w / 2 - 40, 99, w / 2 + 40, 99);
+
+  // --- ARTICLES OF COMPLIANCE ---
+  let y = 107;
+  pdf.setFont("times", "bold");
+  pdf.setFontSize(11);
+  pdf.setTextColor(...DEEP_NAVY);
+  pdf.text(language === "id" ? "PASAL I: VERIFIKASI EMISI AWAL" : "ARTICLE I: EMISSIONS BASELINE VERIFICATION", 25, y);
   
-  const splitDesc = pdf.splitTextToSize(descText, 200);
-  pdf.text(splitDesc, w / 2, 107, { align: "center" });
+  pdf.setFont("times", "normal");
+  pdf.setFontSize(10);
+  pdf.setTextColor(...CHARCOAL);
+  y += 5;
+  const art1Text = language === "id"
+    ? `Berdasarkan laporan inventarisasi gas rumah kaca, Entitas Terverifikasi memiliki emisi kotor baseline sebesar ${initialEmissions.toLocaleString()} tCO2e per tahun untuk kegiatan ekspor ke yurisdiksi perbatasan.`
+    : `The Certified Entity's gross export carbon footprint has been audited and certified at a baseline rate of ${initialEmissions.toLocaleString()} tCO2e per annum subject to international border carbon tariffs.`;
+  const splitArt1 = pdf.splitTextToSize(art1Text, w - 50);
+  pdf.text(splitArt1, 25, y);
+  y += splitArt1.length * 4.5 + 2;
 
-  // --- STATS TABLE ---
-  const cardY = 122;
-  const cardW = 180;
-  const cardH = 30;
-  pdf.setFillColor(245, 246, 242);
-  pdf.roundedRect(w / 2 - cardW / 2, cardY, cardW, cardH, 3, 3, "F");
-  pdf.setDrawColor(220, 222, 215);
-  pdf.setLineWidth(0.5);
-  pdf.roundedRect(w / 2 - cardW / 2, cardY, cardW, cardH, 3, 3, "D");
+  pdf.setFont("times", "bold");
+  pdf.setFontSize(11);
+  pdf.setTextColor(...DEEP_NAVY);
+  pdf.text(language === "id" ? "PASAL II: MITIGASI TEKNOLOGI & OFFSET" : "ARTICLE II: MITIGASI ACTIONS & OFFSET DISCHARGE", 25, y);
+  
+  pdf.setFont("times", "normal");
+  pdf.setFontSize(10);
+  y += 5;
+  const art2Text = language === "id"
+    ? `Entitas Terverifikasi telah secara sah melunasi kewajiban emisi karbonnya melalui implementasi aset teknologi hijau sebesar ${reductions.toLocaleString()} tCO2e dan penyerapan kredit karbon tersertifikasi SRN-PPI/Verra sebesar ${offsets.toLocaleString()} tCO2e.`
+    : `The Certified Entity has fully discharged its carbon liability through the permanent deployment of clean technology assets reducing ${reductions.toLocaleString()} tCO2e and the formal retirement of ${offsets.toLocaleString()} tCO2e in certified SRN-PPI/Verra carbon credits.`;
+  const splitArt2 = pdf.splitTextToSize(art2Text, w - 50);
+  pdf.text(splitArt2, 25, y);
+  y += splitArt2.length * 4.5 + 2;
 
-  const colW = cardW / 4;
-  const startX = w / 2 - cardW / 2;
+  pdf.setFont("times", "bold");
+  pdf.setFontSize(11);
+  pdf.setTextColor(...DEEP_NAVY);
+  pdf.text(language === "id" ? "PASAL III: PERNYATAAN KEPATUHAN HUKUM" : "ARTICLE III: REGULATORY COMPLIANCE DECLARATION", 25, y);
+  
+  pdf.setFont("times", "normal");
+  pdf.setFontSize(10);
+  y += 5;
+  const art3Text = language === "id"
+    ? "Dengan ini dinyatakan bahwa Entitas Terverifikasi telah memenuhi 100% batas netralitas karbon untuk komoditas ekspor terpilih dan dibebaskan dari tarif karbon tambahan berdasarkan ketentuan pengurangan harga karbon domestik."
+    : "Therefore, the Certified Entity is hereby declared to be in 100% compliance with carbon pricing policies for the designated export commodities, qualifying for full tariff deductions under bilateral carbon offset credits governance.";
+  const splitArt3 = pdf.splitTextToSize(art3Text, w - 50);
+  pdf.text(splitArt3, 25, y);
+  y += splitArt3.length * 4.5 + 6;
 
-  const labels = language === "id"
-    ? ["Emisi Awal", "Reduksi Teknologi", "Kredit Offset", "Sisa Liabilitas"]
-    : ["Initial Footprint", "Tech Reductions", "Carbon Offsets", "Net Exposure"];
-  const values = [
-    `${initialEmissions.toLocaleString()} tCO2e`,
-    `${reductions.toLocaleString()} tCO2e`,
-    `${offsets.toLocaleString()} tCO2e`,
-    language === "id" ? "0 t (100% NETRAL)" : "0 t (100% NEUTRAL)"
-  ];
-
-  for (let i = 0; i < 4; i++) {
-    const colX = startX + i * colW + colW / 2;
-    pdf.setFont("helvetica", "normal");
-    pdf.setFontSize(8);
-    pdf.setTextColor(...CHARCOAL);
-    pdf.text(labels[i], colX, cardY + 9, { align: "center" });
-
-    pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(9);
-    if (i === 3) {
-      pdf.setTextColor(16, 124, 65); // green
-    } else {
-      pdf.setTextColor(...FOREST_GREEN);
-    }
-    pdf.text(values[i], colX, cardY + 21, { align: "center" });
-
-    if (i < 3) {
-      pdf.setDrawColor(220, 222, 215);
-      pdf.setLineWidth(0.5);
-      pdf.line(startX + (i + 1) * colW, cardY + 5, startX + (i + 1) * colW, cardY + 25);
-    }
-  }
+  // Summary box
+  pdf.setFillColor(242, 244, 248);
+  pdf.setDrawColor(...GOLD);
+  pdf.setLineWidth(0.4);
+  pdf.roundedRect(25, y, w - 50, 18, 2, 2, "FD");
+  
+  pdf.setFont("helvetica", "bold");
+  pdf.setFontSize(10);
+  pdf.setTextColor(...DEEP_NAVY);
+  const statusLabel = language === "id" ? "STATUS KEPATUHAN:" : "COMPLIANCE STATUS:";
+  pdf.text(statusLabel, 30, y + 10.5);
+  pdf.setFont("helvetica", "bold");
+  pdf.setFontSize(11);
+  pdf.setTextColor(16, 124, 65);
+  const statusVal = language === "id" ? "TERSERTIFIKASI 100% NETRAL HUKUM" : "100% CERTIFIED REGULATORY NEUTRAL";
+  pdf.text(statusVal, w - 30, y + 10.5, { align: "right" });
+  y += 28;
 
   // --- SIGNATURES ---
-  const sigY = 168;
-  const leftSigX = w / 2 - 60;
-  const rightSigX = w / 2 + 60;
+  const leftSigX = w / 2 - 40;
+  const rightSigX = w / 2 + 40;
 
   pdf.setFont("helvetica", "normal");
-  pdf.setFontSize(8);
+  pdf.setFontSize(7.5);
   pdf.setTextColor(...CHARCOAL);
   const leftRole = language === "id"
     ? "Direktorat Jenderal Pengendalian Perubahan Iklim (KLHK)"
     : "Directorate General of Climate Change Control (MoEF)";
-  pdf.text(leftRole, leftSigX, sigY + 12, { align: "center" });
+  pdf.text(leftRole, leftSigX, y + 12, { align: "center", maxWidth: 65 });
   pdf.setDrawColor(...CHARCOAL);
-  pdf.setLineWidth(0.5);
-  pdf.line(leftSigX - 35, sigY + 7, leftSigX + 35, sigY + 7);
+  pdf.setLineWidth(0.4);
+  pdf.line(leftSigX - 30, y + 7, leftSigX + 30, y + 7);
   
   pdf.setFont("times", "italic");
-  pdf.setFontSize(14);
+  pdf.setFontSize(12);
   pdf.setTextColor(30, 40, 90);
-  pdf.text("Laksmi Dhewanthi", leftSigX, sigY + 3, { align: "center" });
+  pdf.text("Laksmi Dhewanthi", leftSigX, y + 3, { align: "center" });
 
   pdf.setFont("helvetica", "normal");
-  pdf.setFontSize(8);
+  pdf.setFontSize(7.5);
   pdf.setTextColor(...CHARCOAL);
   const rightRole = language === "id"
     ? "Auditor Kepatuhan Utama, carbon-climatch"
     : "Chief Compliance Auditor, carbon-climatch";
-  pdf.text(rightRole, rightSigX, sigY + 12, { align: "center" });
+  pdf.text(rightRole, rightSigX, y + 12, { align: "center", maxWidth: 65 });
   pdf.setDrawColor(...CHARCOAL);
-  pdf.setLineWidth(0.5);
-  pdf.line(rightSigX - 35, sigY + 7, rightSigX + 35, sigY + 7);
+  pdf.setLineWidth(0.4);
+  pdf.line(rightSigX - 30, y + 7, rightSigX + 30, y + 7);
   
   pdf.setFont("times", "italic");
-  pdf.setFontSize(14);
+  pdf.setFontSize(12);
   pdf.setTextColor(30, 40, 90);
-  pdf.text("Prof. Dr. Ir. Budi Hartono", rightSigX, sigY + 3, { align: "center" });
+  pdf.text("Prof. Dr. Ir. Budi Hartono", rightSigX, y + 3, { align: "center" });
+
+  // Official Legal Seal representation on certificate
+  pdf.setDrawColor(...GOLD);
+  pdf.setLineWidth(0.5);
+  pdf.circle(w / 2, y + 30, 10, "D");
+  pdf.setFont("helvetica", "bold");
+  pdf.setFontSize(5);
+  pdf.text("OFFICIAL SEAL", w / 2, y + 29.5, { align: "center" });
+  pdf.text("KLHK RI", w / 2, 280, { align: "center" });
 
   // --- CERTIFICATE METADATA FOOTER ---
-  const certId = `CERT-2026-${Math.floor(100000 + Math.random() * 900000)}`;
+  const certId = `COV-2026-${Math.floor(100000 + Math.random() * 900000)}`;
   const issueDate = todayFormatted();
 
   pdf.setFont("helvetica", "normal");
   pdf.setFontSize(7);
   pdf.setTextColor(...CHARCOAL);
-  pdf.text(language === "id" ? `ID Sertifikat: ${certId}` : `Certificate ID: ${certId}`, 20, 193);
-  const printDateText = language === "id" ? `Tanggal Terbit: ${issueDate}` : `Date of Issue: ${issueDate}`;
-  pdf.text(printDateText, w - 20, 193, { align: "right" });
+  pdf.text(language === "id" ? `Nomor Register: ${certId}` : `Registry Number: ${certId}`, 20, 285);
+  const printDateText = language === "id" ? `Tanggal Penerbitan: ${issueDate}` : `Date of Declaration: ${issueDate}`;
+  pdf.text(printDateText, w - 20, 285, { align: "right" });
 
   // Save the certificate
-  const filename = `Compliance-Certificate-${companyName.replace(/\s+/g, "-")}.pdf`;
+  const filename = `Compliance-Covenant-${companyName.replace(/\s+/g, "-")}.pdf`;
+  pdf.save(filename);
+}
+
+/**
+ * Generates an internal corporate financial report of the carbon action ledger.
+ */
+export function generateLedgerReport(
+  companyName: string,
+  initialEmissions: number,
+  offsetsSecured: number,
+  techReductions: number,
+  transactions: { id: string; type: string; details: string; costIdr: number }[],
+  language: "en" | "id"
+) {
+  // A4 Portrait
+  const pdf = new jsPDF({
+    orientation: "portrait",
+    unit: "mm",
+    format: "a4"
+  });
+
+  const w = 210;
+  const h = 297;
+  const CHARCOAL = [51, 51, 51] as RGB;
+  const MED_GRAY = [226, 232, 240] as RGB;
+
+  // Header branding
+  pdf.setFont("helvetica", "bold");
+  pdf.setFontSize(10);
+  pdf.setTextColor(...NAVY);
+  pdf.text("carbon-climatch", MARGIN_LEFT, MARGIN_TOP);
+  
+  pdf.setFont("helvetica", "normal");
+  pdf.setFontSize(8);
+  pdf.setTextColor(...DARK_GRAY);
+  pdf.text("Internal Audit Report", w - MARGIN_RIGHT, MARGIN_TOP, { align: "right" });
+
+  // Title
+  pdf.setFont("helvetica", "bold");
+  pdf.setFontSize(16);
+  pdf.setTextColor(...NAVY);
+  const reportTitle = language === "id"
+    ? "LAPORAN BUKU BESAR AKSI MITIGASI KARBON"
+    : "CARBON ACTION LEDGER FINANCIAL REPORT";
+  pdf.text(reportTitle, MARGIN_LEFT, MARGIN_TOP + 12);
+
+  // Meta details table
+  let cy = MARGIN_TOP + 22;
+  pdf.setFont("helvetica", "bold");
+  pdf.setFontSize(9);
+  pdf.setTextColor(...DARK_GRAY);
+  pdf.text(language === "id" ? "INFORMASI PERUSAHAAN" : "CORPORATE PROFILE", MARGIN_LEFT, cy);
+  
+  pdf.setDrawColor(...MED_GRAY);
+  pdf.setLineWidth(0.5);
+  pdf.line(MARGIN_LEFT, cy + 2, w - MARGIN_RIGHT, cy + 2);
+  cy += 7;
+
+  pdf.setFont("helvetica", "normal");
+  pdf.setFontSize(9);
+  pdf.setTextColor(...CHARCOAL);
+  pdf.text(`${language === "id" ? "Nama Entitas" : "Company Name"}: ${companyName}`, MARGIN_LEFT, cy);
+  pdf.text(`${language === "id" ? "Tanggal Pelaporan" : "Date of Report"}: ${todayFormatted()}`, w - MARGIN_RIGHT, cy, { align: "right" });
+  cy += 5;
+  
+  pdf.text(`${language === "id" ? "Baseline Emisi" : "Baseline Carbon Footprint"}: ${initialEmissions.toLocaleString()} tCO2e`, MARGIN_LEFT, cy);
+  pdf.text(`${language === "id" ? "Status Netralitas" : "Neutrality Status"}: ${initialEmissions - offsetsSecured - techReductions === 0 ? (language === "id" ? "100% Patuh" : "100% Compliant") : (language === "id" ? "Kesenjangan Terbuka" : "Active Exposure")}`, w - MARGIN_RIGHT, cy, { align: "right" });
+  cy += 12;
+
+  // KPI Scorecard Cards
+  pdf.setFillColor(248, 250, 252);
+  pdf.roundedRect(MARGIN_LEFT, cy, w - MARGIN_LEFT - MARGIN_RIGHT, 24, 2, 2, "F");
+  pdf.setDrawColor(...MED_GRAY);
+  pdf.roundedRect(MARGIN_LEFT, cy, w - MARGIN_LEFT - MARGIN_RIGHT, 24, 2, 2, "D");
+
+  const colW = (w - MARGIN_LEFT - MARGIN_RIGHT) / 3;
+  
+  // Col 1: Reductions
+  pdf.setFont("helvetica", "normal");
+  pdf.setFontSize(8);
+  pdf.text(language === "id" ? "Reduksi Teknologi (CAPEX)" : "Tech Reductions (CAPEX)", MARGIN_LEFT + 8, cy + 8);
+  pdf.setFont("helvetica", "bold");
+  pdf.setFontSize(10);
+  pdf.setTextColor(...NAVY);
+  pdf.text(`${techReductions.toLocaleString()} tCO2e`, MARGIN_LEFT + 8, cy + 16);
+
+  // Col 2: Offsets
+  pdf.setFont("helvetica", "normal");
+  pdf.setFontSize(8);
+  pdf.setTextColor(...CHARCOAL);
+  pdf.text(language === "id" ? "Offset Kredit (OPEX)" : "Carbon Offsets Retired", MARGIN_LEFT + colW + 8, cy + 8);
+  pdf.setFont("helvetica", "bold");
+  pdf.setTextColor(...NAVY);
+  pdf.text(`${offsetsSecured.toLocaleString()} tCO2e`, MARGIN_LEFT + colW + 8, cy + 16);
+
+  // Col 3: Net Gap
+  const netGap = Math.max(0, initialEmissions - offsetsSecured - techReductions);
+  pdf.setFont("helvetica", "normal");
+  pdf.setFontSize(8);
+  pdf.setTextColor(CHARCOAL[0], CHARCOAL[1], CHARCOAL[2]);
+  pdf.text(language === "id" ? "Sisa Kesenjangan Emisi" : "Remaining Compliance Gap", MARGIN_LEFT + colW * 2 + 8, cy + 8);
+  pdf.setFont("helvetica", "bold");
+  if (netGap === 0) {
+    pdf.setTextColor(16, 124, 65);
+  } else {
+    pdf.setTextColor(239, 68, 68);
+  }
+  pdf.text(`${netGap.toLocaleString()} tCO2e`, MARGIN_LEFT + colW * 2 + 8, cy + 16);
+
+  cy += 35;
+
+  // Transactions ledger table
+  pdf.setFont("helvetica", "bold");
+  pdf.setFontSize(10);
+  pdf.setTextColor(NAVY[0], NAVY[1], NAVY[2]);
+  pdf.text(language === "id" ? "JURNAL DETIL TRANSAKSI AKSI MITIGASI" : "MITIGATION ACTION LEDGER DETAILS", MARGIN_LEFT, cy);
+  cy += 4;
+
+  // Table header
+  pdf.setFillColor(LIGHT_GRAY[0], LIGHT_GRAY[1], LIGHT_GRAY[2]);
+  pdf.rect(MARGIN_LEFT, cy, w - MARGIN_LEFT - MARGIN_RIGHT, 8, "F");
+  pdf.setDrawColor(MED_GRAY[0], MED_GRAY[1], MED_GRAY[2]);
+  pdf.line(MARGIN_LEFT, cy, w - MARGIN_RIGHT, cy);
+  pdf.line(MARGIN_LEFT, cy + 8, w - MARGIN_RIGHT, cy + 8);
+
+  pdf.setFont("helvetica", "bold");
+  pdf.setFontSize(8.5);
+  pdf.setTextColor(CHARCOAL[0], CHARCOAL[1], CHARCOAL[2]);
+  pdf.text(language === "id" ? "Tipe Aksi" : "Action Type", MARGIN_LEFT + 4, cy + 5.5);
+  pdf.text(language === "id" ? "Rincian Deskripsi Aset" : "Asset Description Details", MARGIN_LEFT + 45, cy + 5.5);
+  pdf.text(language === "id" ? "Beban Biaya (IDR)" : "Financial Outlay (IDR)", w - MARGIN_RIGHT - 4, cy + 5.5, { align: "right" });
+  
+  cy += 8;
+
+  pdf.setFont("helvetica", "normal");
+  pdf.setFontSize(8);
+  pdf.setTextColor(CHARCOAL[0], CHARCOAL[1], CHARCOAL[2]);
+
+  if (transactions.length === 0) {
+    // Empty ledger
+    pdf.text(language === "id" ? "Belum ada transaksi mitigasi yang dieksekusi." : "No mitigation transactions have been executed in this session.", MARGIN_LEFT + 4, cy + 6);
+    pdf.line(MARGIN_LEFT, cy + 10, w - MARGIN_RIGHT, cy + 10);
+    cy += 10;
+  } else {
+    let totalOutflow = 0;
+    for (const tx of transactions) {
+      pdf.setFont("helvetica", "bold");
+      pdf.text(tx.type, MARGIN_LEFT + 4, cy + 5.5);
+      pdf.setFont("helvetica", "normal");
+      
+      const detailsText = tx.details;
+      const splitDetails = pdf.splitTextToSize(detailsText, 100);
+      pdf.text(splitDetails, MARGIN_LEFT + 45, cy + 5.5);
+      
+      pdf.setFont("helvetica", "bold");
+      const isOutflow = tx.costIdr >= 0;
+      if (isOutflow) {
+        pdf.setTextColor(239, 68, 68);
+      } else {
+        pdf.setTextColor(16, 124, 65);
+      }
+      pdf.text(isOutflow ? `+ ${fmtIdr(tx.costIdr)}` : `- ${fmtIdr(Math.abs(tx.costIdr))}`, w - MARGIN_RIGHT - 4, cy + 5.5, { align: "right" });
+      pdf.setTextColor(CHARCOAL[0], CHARCOAL[1], CHARCOAL[2]);
+      
+      totalOutflow += tx.costIdr;
+      const rowH = Math.max(8, splitDetails.length * 4.5 + 3);
+      
+      pdf.setDrawColor(MED_GRAY[0], MED_GRAY[1], MED_GRAY[2]);
+      pdf.line(MARGIN_LEFT, cy + rowH, w - MARGIN_RIGHT, cy + rowH);
+      cy += rowH;
+    }
+
+    // Ledger Total summary row
+    pdf.setFillColor(248, 250, 252);
+    pdf.rect(MARGIN_LEFT, cy, w - MARGIN_LEFT - MARGIN_RIGHT, 10, "F");
+    pdf.setFont("helvetica", "bold");
+    pdf.text(language === "id" ? "TOTAL ARUS OUTFLOW BERSIH:" : "TOTAL NET CAPITAL OUTFLOW:", MARGIN_LEFT + 4, cy + 6.5);
+    if (totalOutflow >= 0) {
+      pdf.setTextColor(239, 68, 68);
+    } else {
+      pdf.setTextColor(16, 124, 65);
+    }
+    pdf.text(totalOutflow >= 0 ? `+ ${fmtIdr(totalOutflow)}` : `- ${fmtIdr(Math.abs(totalOutflow))}`, w - MARGIN_RIGHT - 4, cy + 6.5, { align: "right" });
+    pdf.setDrawColor(MED_GRAY[0], MED_GRAY[1], MED_GRAY[2]);
+    pdf.line(MARGIN_LEFT, cy + 10, w - MARGIN_RIGHT, cy + 10);
+    cy += 18;
+  }
+
+  // Auditor audit signs
+  pdf.setFont("helvetica", "bold");
+  pdf.setFontSize(8.5);
+  pdf.setTextColor(...NAVY);
+  pdf.text(language === "id" ? "CATATAN AUDIT INTERNAL" : "INTERNAL AUDIT OPINION", MARGIN_LEFT, cy);
+  cy += 5;
+
+  pdf.setFont("helvetica", "normal");
+  pdf.setFontSize(8);
+  pdf.setTextColor(...DARK_GRAY);
+  const opinionText = language === "id"
+    ? "Buku besar transaksi ini mencatat pengeluaran keuangan dan pencapaian dekarbonisasi korporasi yang diverifikasi secara mandiri melalui carbon-climatch. Data di atas sesuai dengan asumsi biaya dan benchmark nilai ekonomi karbon yang berlaku."
+    : "This transaction ledger records the capital expenditures and decarbonization offsets executed by the certified entity. All computations have been verified internally against the current IDXCarbon pricing data and corporate financing schedules.";
+  const splitOpinion = pdf.splitTextToSize(opinionText, w - MARGIN_LEFT - MARGIN_RIGHT);
+  pdf.text(splitOpinion, MARGIN_LEFT, cy);
+
+  // Footer page numbering
+  pdf.setFont("helvetica", "normal");
+  pdf.setFontSize(8);
+  pdf.text(`Page 1 of 1`, w / 2, PAGE_NUM_Y, { align: "center" });
+
+  // Save the report
+  const filename = `Carbon-Ledger-Report-${companyName.replace(/\s+/g, "-")}.pdf`;
   pdf.save(filename);
 }
 

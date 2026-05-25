@@ -4,7 +4,7 @@ import { useState, useEffect, useId } from "react";
 import { useLanguage } from "@/components/layout/LanguageContext";
 import { calculateGreenTechReturns, calculateGreenLoanAmortization } from "@/lib/actionCalculations";
 import type { GreenTechResult, GreenLoanResult } from "@/lib/actionCalculations";
-import { generateComplianceCertificate } from "@/lib/pdfExport";
+import { generateComplianceCertificate, generateLedgerReport } from "@/lib/pdfExport";
 import Link from "next/link";
 import { 
   Leaf, 
@@ -410,6 +410,17 @@ export default function ActionHubPage() {
     );
   };
 
+  const handleDownloadLedger = () => {
+    generateLedgerReport(
+      companyName,
+      initialEmissions,
+      offsetsSecured,
+      techReductions,
+      transactions,
+      language
+    );
+  };
+
   return (
     <div className="min-h-screen bg-[#111111] text-white font-sans">
       <main className="mx-auto max-w-7xl px-6 py-12">
@@ -783,16 +794,26 @@ export default function ActionHubPage() {
                 </div>
               )}
 
-              {/* Generate Certificate PDF Button */}
-              <button
-                type="button"
-                onClick={handleDownloadCertificate}
-                disabled={remainingGap > 0}
-                className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#0CF2A0] hover:bg-[#0CF2A0]/90 disabled:bg-[#2a2a2a] text-xs font-bold text-[#111111] disabled:text-slate-500 py-3.5 transition-all shadow-md cursor-pointer disabled:cursor-not-allowed"
-              >
-                <FileText className="h-4 w-4" />
-                <span>{language === "id" ? t("actionHub.scorecard.downloadCert") : t("actionHub.scorecard.downloadCert")}</span>
-              </button>
+              {/* Generate Certificate PDF Button Stack */}
+              <div className="space-y-3">
+                <button
+                  type="button"
+                  onClick={handleDownloadCertificate}
+                  disabled={remainingGap > 0}
+                  className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#0CF2A0] hover:bg-[#0CF2A0]/90 disabled:bg-[#2a2a2a] text-xs font-bold text-[#111111] disabled:text-slate-500 py-3.5 transition-all shadow-md cursor-pointer disabled:cursor-not-allowed"
+                >
+                  <FileText className="h-4 w-4" />
+                  <span>{language === "id" ? "Unduh Kovenan Kepatuhan Ekspor" : "Download Export Compliance Covenant"}</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDownloadLedger}
+                  className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#2a2a2a] hover:bg-[#2a2a2a]/85 border border-white/5 text-xs font-bold text-slate-300 hover:text-white py-3 transition-all cursor-pointer"
+                >
+                  <FileText className="h-4 w-4 text-emerald-400" />
+                  <span>{language === "id" ? "Unduh Buku Besar Aksi Karbon" : "Download Carbon Action Ledger"}</span>
+                </button>
+              </div>
             </div>
 
             {/* Strategy Optimizer Recommendation Context Card */}
