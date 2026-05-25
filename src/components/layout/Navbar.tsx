@@ -44,7 +44,8 @@ export default function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/5 bg-[#111111]/90 backdrop-blur-xl">
+    <>
+      <header className="sticky top-0 z-50 border-b border-white/5 bg-[#111111]/90 backdrop-blur-xl">
       <nav aria-label="Primary Navigation" className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         {/* Logo */}
         <Link href={isLoggedIn ? "/dashboard" : "/"} className="flex items-center gap-3">
@@ -271,9 +272,11 @@ export default function Navbar() {
         </div>
       )}
 
+      </header>
+
       {/* Login Modal Overlay */}
       <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} />
-    </header>
+    </>
   );
 }
 
