@@ -1,153 +1,113 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { motion } from "framer-motion";
-import { MoveRight, Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useLanguage } from "@/components/layout/LanguageContext";
+import { Sparkles, Calendar, ArrowUpRight } from "lucide-react";
+import Link from "next/link";
 
-function Hero() {
+export function Hero() {
   const { language, t } = useLanguage();
-  const [titleNumber, setTitleNumber] = useState(0);
-
-  const titles = useMemo(
-    () => [
-      t("hero.titles.0"),
-      t("hero.titles.1"),
-      t("hero.titles.2"),
-      t("hero.titles.3"),
-      t("hero.titles.4"),
-    ],
-    [t]
-  );
+  const [currentDate, setCurrentDate] = useState("");
+  const [userEmail, setUserEmail] = useState("cfo@indosteel.co.id");
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (titleNumber === titles.length - 1) {
-        setTitleNumber(0);
-      } else {
-        setTitleNumber(titleNumber + 1);
+    // Defer state updates to prevent synchronous setState in effect trigger
+    const timer = setTimeout(() => {
+      const options: Intl.DateTimeFormatOptions = { 
+        weekday: "long", 
+        year: "numeric", 
+        month: "long", 
+        day: "numeric" 
+      };
+      const locale = language === "id" ? "id-ID" : "en-US";
+      setCurrentDate(new Date().toLocaleDateString(locale, options));
+
+      // Get signed in email if available
+      const savedEmail = sessionStorage.getItem("user_email");
+      if (savedEmail) {
+        setUserEmail(savedEmail);
       }
-    }, 2000);
-    return () => clearTimeout(timeoutId);
-  }, [titleNumber, titles]);
+    }, 0);
+
+    return () => clearTimeout(timer);
+  }, [language]);
 
   return (
     <div className="w-full">
-      <div className="relative overflow-hidden rounded-2xl border border-white/5 bg-gradient-to-br from-slate-900 via-[#0f1e38] to-[#0b1120] px-6 py-12 md:px-14 md:py-16">
+      <div className="relative overflow-hidden rounded-2xl border border-white/5 bg-slate-900/60 p-6 md:p-8">
         {/* Glow orbs */}
-        <div className="pointer-events-none absolute -top-32 -right-32 h-80 w-80 rounded-full bg-emerald-500 opacity-[0.06] blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-blue-500 opacity-[0.04] blur-3xl" />
+        <div className="pointer-events-none absolute -top-24 -right-24 h-48 w-48 rounded-full bg-emerald-500 opacity-[0.05] blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-20 -left-20 h-48 w-48 rounded-full bg-blue-500 opacity-[0.03] blur-3xl" />
 
-        <div className="relative z-10 flex gap-8 items-center justify-center flex-col text-center">
-          <div>
-            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-400 uppercase tracking-widest">
+        <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-2.5 py-0.5 text-xs font-semibold text-emerald-400">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              {t("hero.platformBadge")}
+              {language === "id" ? "Sesi Demo Aktif" : "Active Demo Session"}
             </div>
-          </div>
-          <div className="flex gap-4 flex-col items-center">
-            <h1 className="text-4xl md:text-6xl max-w-3xl tracking-tighter text-center font-extrabold leading-tight text-white">
-              {language === "id" ? (
-                <>
-                  <span>Navigasi </span>
-                  <span className="relative flex w-full justify-center overflow-hidden text-center h-[52px] md:h-[72px] text-emerald-400">
-                    {titles.map((title, index) => (
-                      <motion.span
-                        key={index}
-                        className="absolute font-extrabold"
-                        initial={{ opacity: 0, y: "-100" }}
-                        transition={{ type: "spring", stiffness: 50 }}
-                        animate={
-                          titleNumber === index
-                            ? {
-                                y: 0,
-                                opacity: 1,
-                              }
-                            : {
-                                y: titleNumber > index ? -150 : 150,
-                                opacity: 0,
-                              }
-                        }
-                      >
-                        {title}
-                      </motion.span>
-                    ))}
-                  </span>
-                  <span className="block mt-1">Indonesia</span>
-                </>
-              ) : (
-                <>
-                  <span>Navigate Indonesia&apos;s </span>
-                  <span className="relative flex w-full justify-center overflow-hidden text-center h-[52px] md:h-[72px] text-emerald-400">
-                    {titles.map((title, index) => (
-                      <motion.span
-                        key={index}
-                        className="absolute font-extrabold"
-                        initial={{ opacity: 0, y: "-100" }}
-                        transition={{ type: "spring", stiffness: 50 }}
-                        animate={
-                          titleNumber === index
-                            ? {
-                                y: 0,
-                                opacity: 1,
-                              }
-                            : {
-                                y: titleNumber > index ? -150 : 150,
-                                opacity: 0,
-                              }
-                        }
-                      >
-                        {title}
-                      </motion.span>
-                    ))}
-                  </span>
-                </>
-              )}
+            
+            <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-white">
+              {language === "id" ? "Selamat datang kembali, CFO" : "Welcome back, CFO"}
             </h1>
-
-            <p className="text-slate-400 text-base md:text-lg leading-relaxed max-w-2xl text-center text-pretty">
-              {t("hero.description")}
+            
+            <p className="text-sm text-slate-400 flex items-center gap-2">
+              <span className="font-semibold text-slate-300">{userEmail}</span>
+              <span className="text-slate-600">•</span>
+              <span>IndoSteel Group</span>
             </p>
           </div>
 
-          <div className="flex flex-row flex-wrap justify-center gap-3">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
+            {/* Current Date Display */}
+            <div className="flex items-center gap-2 rounded-xl bg-slate-950/40 border border-white/5 px-4 py-2.5 text-xs text-slate-400">
+              <Calendar className="h-3.5 w-3.5 text-emerald-400 flex-shrink-0" />
+              <span className="whitespace-nowrap">{currentDate}</span>
+            </div>
+
+            {/* Quick action button to direct to AI Analyst */}
             <a
               href="#ai-analysis"
-              className="inline-flex items-center gap-2 rounded-lg bg-emerald-500 hover:bg-emerald-400 transition-all duration-200 px-6 py-3 text-sm font-bold text-black shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 cursor-pointer"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 px-4 py-2.5 text-xs font-bold text-black shadow-lg shadow-emerald-500/10 hover:shadow-emerald-500/20 transition-all cursor-pointer whitespace-nowrap"
             >
-              <Sparkles className="h-4 w-4" />
-              {t("hero.getAiAnalysis")}
-            </a>
-            <a
-              href="#market"
-              className="inline-flex items-center gap-2 rounded-lg border border-white/10 hover:border-white/20 bg-white/5 hover:bg-white/10 transition-all duration-200 px-6 py-3 text-sm font-semibold text-white cursor-pointer"
-            >
-              {t("hero.viewMarketData")}
-              <MoveRight className="h-4 w-4" />
+              <Sparkles className="h-3.5 w-3.5" />
+              {t("dashboard.runAnalysisBtn")}
             </a>
           </div>
+        </div>
 
-          {/* Feature pills */}
-          <div className="mt-6 flex flex-wrap justify-center gap-2">
-            {[
-              { icon: "📊", label: t("hero.pills.livePrices") },
-              { icon: "🌍", label: t("hero.pills.calculator") },
-              { icon: "⚖️", label: t("hero.pills.timeline") },
-              { icon: "🤖", label: t("hero.pills.aiAnalysis") },
-            ].map((f) => (
-              <span
-                key={f.label}
-                className="inline-flex items-center gap-1.5 rounded-full border border-white/8 bg-white/4 px-3 py-1.5 text-xs text-slate-400"
-              >
-                <span>{f.icon}</span>
-                {f.label}
-              </span>
-            ))}
-          </div>
+        {/* Quick Links Cards Row */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6 border-t border-white/5 pt-6">
+          <Link href="/calculator" className="group rounded-xl border border-white/5 bg-slate-950/20 hover:bg-slate-950/50 p-4 transition-all duration-200 flex items-center justify-between">
+            <div className="space-y-1">
+              <p className="text-xs text-slate-500 uppercase tracking-wider">{t("nav.calculator")}</p>
+              <p className="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">
+                {language === "id" ? "Hitung Paparan CBAM" : "Quantify CBAM Liability"}
+              </p>
+            </div>
+            <ArrowUpRight className="h-4 w-4 text-slate-500 group-hover:text-emerald-400 transition-colors flex-shrink-0" />
+          </Link>
+
+          <Link href="/strategy" className="group rounded-xl border border-white/5 bg-slate-950/20 hover:bg-slate-950/50 p-4 transition-all duration-200 flex items-center justify-between">
+            <div className="space-y-1">
+              <p className="text-xs text-slate-500 uppercase tracking-wider">{t("nav.strategy")}</p>
+              <p className="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">
+                {language === "id" ? "Model Strategi CAPEX" : "Optimize CAPEX/OPEX"}
+              </p>
+            </div>
+            <ArrowUpRight className="h-4 w-4 text-slate-500 group-hover:text-emerald-400 transition-colors flex-shrink-0" />
+          </Link>
+
+          <Link href="/timeline" className="group rounded-xl border border-white/5 bg-slate-950/20 hover:bg-slate-950/50 p-4 transition-all duration-200 flex items-center justify-between">
+            <div className="space-y-1">
+              <p className="text-xs text-slate-500 uppercase tracking-wider">{t("nav.timeline")}</p>
+              <p className="text-sm font-semibold text-white group-hover:text-emerald-400 transition-colors">
+                {language === "id" ? "Cek Deadline Regulasi" : "Monitor Policy Deadlines"}
+              </p>
+            </div>
+            <ArrowUpRight className="h-4 w-4 text-slate-500 group-hover:text-emerald-400 transition-colors flex-shrink-0" />
+          </Link>
         </div>
       </div>
     </div>
   );
 }
-
-export { Hero };
