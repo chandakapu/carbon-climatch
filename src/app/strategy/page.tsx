@@ -430,7 +430,25 @@ export default function StrategyPage() {
                     <Section title={language === "id" ? "🏭 Rincian Investasi CAPEX" : "🏭 CAPEX Investment Details"} defaultOpen>
                         <div className="grid gap-4 sm:grid-cols-2 pt-4">
                             <NumInput id="capex-amount" label={t("strategy.capexLabel")} value={capexAmount} onChange={setCapexAmount} suffix="IDR" />
-                            <NumInput id="interest-rate" label={language === "id" ? "Suku Bunga (%)" : "Interest Rate (%)"} value={interestRate} onChange={setInterestRate} suffix="%" min="0" />
+                            <div>
+                                <NumInput id="interest-rate" label={language === "id" ? "Suku Bunga (%)" : "Interest Rate (%)"} value={interestRate} onChange={setInterestRate} suffix="%" min="0" />
+                                <div className="mt-2 flex flex-col gap-1.5">
+                                    <button
+                                        type="button"
+                                        onClick={() => setInterestRate("6.25")}
+                                        className="text-[10px] text-slate-400 hover:text-white flex items-center gap-1 text-left cursor-pointer"
+                                    >
+                                        📍 {language === "id" ? "Suku Bunga Acuan BI (BI-Rate):" : "BI Benchmark (BI-Rate):"} <span className="text-[#0CF2A0] font-mono">6.25%</span>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => setInterestRate("9.50")}
+                                        className="text-[10px] text-slate-400 hover:text-white flex items-center gap-1 text-left cursor-pointer"
+                                    >
+                                        📍 {language === "id" ? "Rata-rata Kredit Korporasi IDR:" : "Avg Corporate Loan Rate (IDR):"} <span className="text-[#0CF2A0] font-mono">9.50%</span>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                         <div className="space-y-3">
                             <label htmlFor="tech-preset" className="block text-xs font-medium text-slate-300">
