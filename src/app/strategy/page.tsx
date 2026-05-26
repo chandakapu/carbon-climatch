@@ -10,14 +10,13 @@ import type { FormalReportChartsRef } from "@/components/strategy/FormalReportCh
 import { generateFormalReport } from "@/lib/pdfExport";
 import { getCBAMConfig, getIDXCarbonMonthly, getEUETSCAGR, getIDXCarbonCAGR } from "@/lib/data";
 import { useLanguage } from "@/components/layout/LanguageContext";
+import { useExchangeRate } from "@/components/layout/ExchangeRateContext";
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
     LineChart, Line, ReferenceLine,
     PieChart, Pie, Cell,
     ResponsiveContainer,
 } from "recharts";
-
-const USD_TO_IDR = 16000;
 
 /* ── Collapsible Section ─────────────────────────────────────── */
 function Section({ title, defaultOpen, children }: { title: string; defaultOpen?: boolean; children: React.ReactNode }) {
@@ -74,9 +73,9 @@ function NumInput({
                     onChange={e => onChange(e.target.value)}
                     disabled={disabled}
                     aria-describedby={`${id}-error`}
-                    className="w-full rounded-lg border border-white/5 bg-[#2a2a2a] px-4 py-2.5 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#0CF2A0]/50 disabled:opacity-50 disabled:cursor-not-allowed" 
+                    className={`w-full rounded-lg border border-white/5 bg-[#2a2a2a] pl-4 ${suffix ? 'pr-16' : 'pr-4'} py-2.5 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#0CF2A0]/50 disabled:opacity-50 disabled:cursor-not-allowed`}
                 />
-                {suffix && <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500">{suffix}</span>}
+                {suffix && <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-500 select-none">{suffix}</span>}
             </div>
             <span id={`${id}-error`} className="error-msg-inline hidden text-red-400 text-xs mt-1.5 font-medium">
                 ❌ Please enter a valid number.
@@ -136,12 +135,13 @@ const LINE_COLORS = { A: "#ef4444", B: "#3b82f6", C: "#a855f7" };
 /* ══════════════════════════════════════════════════════════════ */
 export default function StrategyPage() {
     const { language, t } = useLanguage();
+    const { usdToIdr } = useExchangeRate();
 
     function formatIdr(v: number) {
         return `IDR ${v.toLocaleString("id-ID", { maximumFractionDigits: 0 })}`;
     }
     function formatUsdSmall(v: number) {
-        return `~USD ${(v / USD_TO_IDR).toLocaleString(language === "id" ? "id-ID" : "en-US", { maximumFractionDigits: 0 })}`;
+        return `~USD ${(v / usdToIdr).toLocaleString(language === "id" ? "id-ID" : "en-US", { maximumFractionDigits: 0 })}`;
     }
 
 
@@ -151,7 +151,7 @@ export default function StrategyPage() {
     const sortedIDX = [...getIDXCarbonMonthly()].sort((a, b) => a.month.localeCompare(b.month));
     const latestIdx = sortedIDX[sortedIDX.length - 1];
     const defaultIdxPriceIdr = latestIdx ? latestIdx.avg_price_idr : 76862;
-    const defaultEuPriceIdr = config.eu_ets_price_usd * USD_TO_IDR;
+    const defaultEuPriceIdr = config.eu_ets_price_usd * usdToIdr;
 
     // Estimator Helpers state
     const [showEstimator, setShowEstimator] = useState(false);
@@ -326,7 +326,7 @@ export default function StrategyPage() {
             initialGap = e * (1 - (strategyResults.optimal_mixed_allocation_pct / 100) * (emissionReduction / 100));
         }
         localStorage.setItem("climatch_emissions_gap", initialGap.toString());
-        const initialLiabilityUsd = (initialGap * p) / USD_TO_IDR;
+        const initialLiabilityUsd = (initialGap * p) / usdToIdr;
         localStorage.setItem("climatch_liability", initialLiabilityUsd.toString());
         localStorage.setItem("climatch_liability_idr", (initialGap * p).toString());
 

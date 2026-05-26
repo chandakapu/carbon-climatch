@@ -1,5 +1,6 @@
 import jsPDF from "jspdf";
 import type { StrategyInputs, StrategyResults } from "@/types";
+import { USD_TO_IDR } from "./calculations";
 
 /* ══════════════════════════════════════════════════════════════
  * Design tokens — formal report palette
@@ -10,7 +11,6 @@ const DARK_GRAY = [74, 85, 104] as const;  // #4a5568 — muted text
 const MED_GRAY = [203, 213, 225] as const; // #cbd5e1 — table borders
 const LIGHT_GRAY = [241, 245, 249] as const; // #f1f5f9 — table header bg
 
-const USD_TO_IDR = 16000;
 
 /* ── Formatting helpers ──────────────────────────────────────── */
 function fmtIdr(v: number): string {

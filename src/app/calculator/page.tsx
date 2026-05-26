@@ -8,11 +8,11 @@ import type { CBAMPortfolioItem, CBAMPortfolioResult } from "@/types";
 import MarkdownRenderer from "@/components/ui/MarkdownRenderer";
 import CBAMPortfolioCharts from "@/components/dashboard/CBAMPortfolioCharts";
 import { useLanguage } from "@/components/layout/LanguageContext";
-
-const USD_TO_IDR = 16000;
+import { useExchangeRate } from "@/components/layout/ExchangeRateContext";
 
 export default function CalculatorPage() {
   const { language, t } = useLanguage();
+  const { usdToIdr } = useExchangeRate();
 
   function formatUsd(value: number): string {
     return value.toLocaleString(language === "id" ? "id-ID" : "en-US", {
@@ -31,7 +31,7 @@ export default function CalculatorPage() {
     const applicableSectors = config.sectors.filter((s) => s.cbam_applicable);
     const sortedIDX = [...getIDXCarbonMonthly()].sort((a, b) => a.month.localeCompare(b.month));
     const latestIdx = sortedIDX[sortedIDX.length - 1];
-    const defaultIdxPriceUsd = latestIdx ? latestIdx.avg_price_idr / USD_TO_IDR : 2.0; // Fallback to ~$2 carbon tax floor
+    const defaultIdxPriceUsd = latestIdx ? latestIdx.avg_price_idr / usdToIdr : 2.0; // Fallback to ~$2 carbon tax floor
 
     return {
       applicableSectors,
@@ -39,7 +39,7 @@ export default function CalculatorPage() {
       defaultIdxPriceUsd,
       latestIdx,
     };
-  }, []);
+  }, [usdToIdr]);
 
   // State management
   const [portfolioItems, setPortfolioItems] = useState<CBAMPortfolioItem[]>([
@@ -166,14 +166,15 @@ export default function CalculatorPage() {
       portfolioItems,
       applicableSectors,
       euPriceNum,
-      indoPriceNum
+      indoPriceNum,
+      usdToIdr
     );
 
     // Save to localStorage for Action Hub integration
     localStorage.setItem("climatch_emissions", portfolioResult.total_emissions_tco2.toString());
     localStorage.setItem("climatch_liability", portfolioResult.total_net_liability_usd.toString());
-    localStorage.setItem("climatch_liability_idr", (portfolioResult.total_net_liability_usd * USD_TO_IDR).toString());
-    localStorage.setItem("climatch_carbon_price_idr", (indoPriceNum * USD_TO_IDR).toFixed(0));
+    localStorage.setItem("climatch_liability_idr", (portfolioResult.total_net_liability_usd * usdToIdr).toString());
+    localStorage.setItem("climatch_carbon_price_idr", (indoPriceNum * usdToIdr).toFixed(0));
 
     setResult(portfolioResult);
     fetchAnalysis(portfolioResult, euPriceNum, indoPriceNum);
@@ -404,7 +405,7 @@ export default function CalculatorPage() {
                   {formatUsd(result.total_indonesia_carbon_credit_usd)}
                 </p>
                 <p className="text-[10px] text-slate-500 mt-0.5">
-                  {formatIdr(result.total_indonesia_carbon_credit_usd * USD_TO_IDR)}
+                  {formatIdr(result.total_indonesia_carbon_credit_usd * usdToIdr)}
                 </p>
               </div>
 
@@ -435,8 +436,8 @@ export default function CalculatorPage() {
                 </h3>
                 <p className="text-xs text-slate-400 leading-relaxed text-pretty">
                   {language === "id" 
-                    ? `Anda memiliki sisa kesenjangan karbon sebesar ${result.total_emissions_tco2.toLocaleString()} tCO₂e dengan estimasi liabilitas bersih sebesar ${formatUsd(result.total_net_liability_usd)} (${formatIdr(result.total_net_liability_usd * USD_TO_IDR)}). Segera netralkan eksposur Anda dengan membeli kredit karbon atau mendanai efisiensi energi.`
-                    : `You have a remaining carbon gap of ${result.total_emissions_tco2.toLocaleString()} tCO₂e with a net liability of ${formatUsd(result.total_net_liability_usd)} (${formatIdr(result.total_net_liability_usd * USD_TO_IDR)}). Instantly offset this liability by purchasing carbon credits or financing energy efficiency projects.`
+                    ? `Anda memiliki sisa kesenjangan karbon sebesar ${result.total_emissions_tco2.toLocaleString()} tCO₂e dengan estimasi liabilitas bersih sebesar ${formatUsd(result.total_net_liability_usd)} (${formatIdr(result.total_net_liability_usd * usdToIdr)}). Segera netralkan eksposur Anda dengan membeli kredit karbon atau mendanai efisiensi energi.`
+                    : `You have a remaining carbon gap of ${result.total_emissions_tco2.toLocaleString()} tCO₂e with a net liability of ${formatUsd(result.total_net_liability_usd)} (${formatIdr(result.total_net_liability_usd * usdToIdr)}). Instantly offset this liability by purchasing carbon credits or financing energy efficiency projects.`
                   }
                 </p>
               </div>

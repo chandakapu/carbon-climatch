@@ -12,11 +12,11 @@ import {
 } from "recharts";
 import type { IDXCarbonMonthly } from "@/types";
 
+import { useExchangeRate } from "@/components/layout/ExchangeRateContext";
+
 interface IDXLineChartProps {
   data: IDXCarbonMonthly[];
 }
-
-const USD_PER_IDR = 1 / 16000;
 
 function formatMonth(month: string): string {
   const [year, m] = month.split("-");
@@ -60,9 +60,12 @@ function CustomTooltip({ active, payload, label }: any) {
 }
 
 export default function IDXLineChart({ data }: IDXLineChartProps) {
+  const { usdToIdr } = useExchangeRate();
+  const usdPerIdr = 1 / usdToIdr;
+
   const chartData = data.map((d) => ({
     ...d,
-    price_usd: parseFloat((d.avg_price_idr * USD_PER_IDR).toFixed(2)),
+    price_usd: parseFloat((d.avg_price_idr * usdPerIdr).toFixed(2)),
   }));
 
   const avg =
@@ -84,6 +87,7 @@ export default function IDXLineChart({ data }: IDXLineChartProps) {
           tick={{ fill: "#94a3b8", fontSize: 11, fontWeight: 500 }}
           axisLine={false}
           tickLine={false}
+          interval={0}
         />
         <YAxis
           tickFormatter={(v: number) => `$${v.toFixed(2)}`}

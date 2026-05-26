@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import AriaSync from "@/components/ui/AriaSync";
 import { LanguageProvider } from "@/components/layout/LanguageContext";
+import { ExchangeRateProvider } from "@/components/layout/ExchangeRateContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -26,9 +27,11 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} h-full`}>
       <body className="min-h-full flex flex-col antialiased bg-[#111111]">
         <LanguageProvider>
-          <AriaSync />
-          <Navbar />
-          {children}
+          <ExchangeRateProvider>
+            <AriaSync />
+            <Navbar />
+            {children}
+          </ExchangeRateProvider>
         </LanguageProvider>
       </body>
     </html>
