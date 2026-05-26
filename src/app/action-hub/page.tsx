@@ -138,7 +138,8 @@ export default function ActionHubPage() {
   }, []);
 
   // Compute scorecard values
-  const remainingGap = Math.max(0, initialGap - offsetsSecured - techReductions);
+  const rawRemainingGap = initialGap - offsetsSecured - techReductions;
+  const remainingGap = rawRemainingGap < 0.0001 ? 0 : rawRemainingGap;
   // Net remaining liability
   const remainingLiabilityUsd = (remainingGap * (initialLiability / initialGap));
   const remainingLiabilityIdr = remainingLiabilityUsd * usdToIdr;
