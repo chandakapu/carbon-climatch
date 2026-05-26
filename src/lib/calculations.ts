@@ -1,12 +1,13 @@
 import type { CBAMCalculationResult, CBAMSector, CBAMPortfolioItem, CBAMPortfolioResult } from "@/types";
 
-const USD_TO_IDR = 16000; // Update periodically or fetch live
+export const USD_TO_IDR = 17796; // Fallback static exchange rate
 
 export function calculateCBAMExposure(
     sector: CBAMSector,
     exportVolumeTons: number,
     euEtsPriceUsd: number,
-    indonesiaCarbonPriceUsd: number
+    indonesiaCarbonPriceUsd: number,
+    usdToIdrRate: number = USD_TO_IDR
 ): CBAMCalculationResult {
     const totalEmissions = exportVolumeTons * sector.emission_factor_tco2_per_ton;
     const grossCBAMUsd = totalEmissions * euEtsPriceUsd;
@@ -20,7 +21,7 @@ export function calculateCBAMExposure(
         export_volume_tons: exportVolumeTons,
         total_emissions_tco2: totalEmissions,
         cbam_liability_usd: grossCBAMUsd,
-        cbam_liability_idr: grossCBAMUsd * USD_TO_IDR,
+        cbam_liability_idr: grossCBAMUsd * usdToIdrRate,
         indonesia_carbon_credit_usd: indonesiaCredit,
         net_liability_usd: netLiabilityUsd,
     };
@@ -30,7 +31,8 @@ export function calculateCBAMPortfolio(
     items: CBAMPortfolioItem[],
     sectors: CBAMSector[],
     euEtsPriceUsd: number,
-    indonesiaCarbonPriceUsd: number
+    indonesiaCarbonPriceUsd: number,
+    usdToIdrRate: number = USD_TO_IDR
 ): CBAMPortfolioResult {
     const computedItems = items.flatMap((item) => {
         const sector = sectors.find((s) => s.id === item.sectorId);
@@ -40,7 +42,8 @@ export function calculateCBAMPortfolio(
             sector,
             item.export_volume_tons,
             euEtsPriceUsd,
-            indonesiaCarbonPriceUsd
+            indonesiaCarbonPriceUsd,
+            usdToIdrRate
         );
 
         return [{
@@ -61,9 +64,9 @@ export function calculateCBAMPortfolio(
         total_export_volume_tons: totalVolume,
         total_emissions_tco2: totalEmissions,
         total_cbam_liability_usd: totalGrossLiabilityUsd,
-        total_cbam_liability_idr: totalGrossLiabilityUsd * USD_TO_IDR,
+        total_cbam_liability_idr: totalGrossLiabilityUsd * usdToIdrRate,
         total_indonesia_carbon_credit_usd: totalIndonesiaCreditUsd,
         total_net_liability_usd: totalNetLiabilityUsd,
-        total_net_liability_idr: totalNetLiabilityUsd * USD_TO_IDR,
+        total_net_liability_idr: totalNetLiabilityUsd * usdToIdrRate,
     };
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useLanguage } from "@/components/layout/LanguageContext";
+import { useExchangeRate } from "@/components/layout/ExchangeRateContext";
 import { getUpcomingEvents, getLatestPriceByJurisdiction, getIDXCarbonMonthly } from "@/lib/data";
 import AlertBanner from "@/components/dashboard/AlertBanner";
 import PriceBarChart from "@/components/dashboard/PriceBarChart";
@@ -15,6 +16,7 @@ const FEATURED_JURISDICTIONS = ["Indonesia", "EU27+", "Singapore", "Korea, Rep."
 
 export default function DashboardPage() {
   const { language, t } = useLanguage();
+  const { usdToIdr } = useExchangeRate();
   const router = useRouter();
 
   const displayNames: Record<string, string> = useMemo(() => ({
@@ -39,7 +41,7 @@ export default function DashboardPage() {
   // IDXCarbon: latest price & change for KPI card
   const sortedIDX = [...idxMonthly].sort((a, b) => a.month.localeCompare(b.month));
   const latestIDX = sortedIDX[sortedIDX.length - 1];
-  const idxPriceUSD = latestIDX ? (latestIDX.avg_price_idr / 16000).toFixed(2) : "—";
+  const idxPriceUSD = latestIDX ? (latestIDX.avg_price_idr / usdToIdr).toFixed(2) : "—";
   
   const last3Months = sortedIDX.slice(-3);
   const prev3Months = sortedIDX.slice(-6, -3);
@@ -190,7 +192,7 @@ export default function DashboardPage() {
                     // Pre-fill CBAM Calculator parameters
                     localStorage.setItem("climatch_emissions", "55000");
                     localStorage.setItem("climatch_liability", "264000"); // 55,000 * 4.8 USD per ton net
-                    localStorage.setItem("climatch_liability_idr", (264000 * 16000).toString());
+                    localStorage.setItem("climatch_liability_idr", (264000 * usdToIdr).toString());
                     localStorage.setItem("climatch_carbon_price_idr", "76862"); // default idx pricing
                     localStorage.setItem("climatch_emissions_gap", "55000");
 
@@ -267,7 +269,7 @@ export default function DashboardPage() {
                 <div>
                   <p className="text-xs text-slate-500">{language === "id" ? "Harga Rerata (USD)" : "Avg. Price (USD)"}</p>
                   <p className="text-sm font-bold text-[#0CF2A0]">
-                    ${(idxMonthly.reduce((s, d) => s + d.avg_price_idr, 0) / idxMonthly.length / 16000).toFixed(2)}
+                    ${(idxMonthly.reduce((s, d) => s + d.avg_price_idr, 0) / idxMonthly.length / usdToIdr).toFixed(2)}
                   </p>
                 </div>
                 <div className="w-px h-8 bg-white/5" />

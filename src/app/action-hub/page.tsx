@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useId } from "react";
 import { useLanguage } from "@/components/layout/LanguageContext";
+import { useExchangeRate } from "@/components/layout/ExchangeRateContext";
 import { calculateGreenTechReturns, calculateGreenLoanAmortization } from "@/lib/actionCalculations";
 import type { GreenTechResult, GreenLoanResult } from "@/lib/actionCalculations";
 import { generateComplianceCertificate, generateLedgerReport } from "@/lib/pdfExport";
@@ -21,7 +22,6 @@ import {
   Award
 } from "lucide-react";
 
-const USD_TO_IDR = 16000;
 const DEFAULT_CARBON_PRICE_IDR = 76862;
 
 // Custom Section component matching design system
@@ -55,6 +55,7 @@ function formatUsd(v: number) {
 
 export default function ActionHubPage() {
   const { language, t } = useLanguage();
+  const { usdToIdr } = useExchangeRate();
 
   // Profile
   const [companyName, setCompanyName] = useState("IndoSteel Corporation");
@@ -140,7 +141,7 @@ export default function ActionHubPage() {
   const remainingGap = Math.max(0, initialGap - offsetsSecured - techReductions);
   // Net remaining liability
   const remainingLiabilityUsd = (remainingGap * (initialLiability / initialGap));
-  const remainingLiabilityIdr = remainingLiabilityUsd * USD_TO_IDR;
+  const remainingLiabilityIdr = remainingLiabilityUsd * usdToIdr;
 
   // Carbon Offsets projects list
   const creditProjects = [
