@@ -84,6 +84,7 @@ export default function IDXLineChart({ data }: IDXLineChartProps) {
           tick={{ fill: "#94a3b8", fontSize: 11, fontWeight: 500 }}
           axisLine={false}
           tickLine={false}
+          interval={0}
         />
         <YAxis
           tickFormatter={(v: number) => `$${v.toFixed(2)}`}
