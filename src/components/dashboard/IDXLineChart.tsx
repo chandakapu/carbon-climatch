@@ -24,13 +24,12 @@ function formatMonth(month: string): string {
   return date.toLocaleDateString("en-GB", { month: "short", year: "2-digit" });
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function CustomTooltip({ active, payload, label }: any) {
+function CustomTooltip({ active, payload, label }: { active?: boolean; payload?: Array<{ payload: IDXCarbonMonthly & { price_usd: number } }>; label?: string }) {
   if (!active || !payload?.length) return null;
   const d = payload[0].payload as IDXCarbonMonthly & { price_usd: number };
   return (
     <div className="rounded-xl border border-white/10 bg-[#1a1a1a]/95 backdrop-blur px-4 py-3 shadow-2xl text-sm min-w-[180px]">
-      <p className="font-semibold text-white mb-2">{formatMonth(label)}</p>
+      <p className="font-semibold text-white mb-2">{formatMonth(label ?? "")}</p>
       <div className="space-y-1">
         <div className="flex justify-between gap-6">
           <span className="text-slate-400 text-xs">Price (IDR)</span>

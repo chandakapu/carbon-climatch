@@ -32,6 +32,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("cfo@indosteel.co.id");
   const [password, setPassword] = useState("••••••••");
+  const [modalFeedback, setModalFeedback] = useState<{ type: "success" | "error" | ""; message: string }>({ type: "", message: "" });
 
   // Prevent scroll when modal is open
   useEffect(() => {
@@ -64,7 +65,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
 
   const handleSignIn = () => {
     if (!email || !password) {
-      alert(t("landing.alertEnterCredentials"));
+      setModalFeedback({ type: "error", message: t("landing.alertEnterCredentials") });
       return;
     }
     // Set mock authentication flag and user email
@@ -85,11 +86,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
   };
 
   const handleResetPassword = () => {
-    alert(t("landing.alertResetSent"));
+    setModalFeedback({ type: "success", message: t("landing.alertResetSent") });
   };
 
   const handleCreateAccount = () => {
-    alert(t("landing.alertAccountDisabled"));
+    setModalFeedback({ type: "error", message: t("landing.alertAccountDisabled") });
   };
 
   return (
@@ -125,6 +126,15 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
             {t("landing.description")}
           </p>
         </div>
+        {modalFeedback.message && (
+          <div className={`mb-6 p-3.5 rounded-2xl text-xs font-semibold text-center border ${
+            modalFeedback.type === "error" 
+              ? "bg-red-500/10 border-red-500/20 text-red-400" 
+              : "bg-[#0CF2A0]/10 border-[#0CF2A0]/20 text-[#0CF2A0]"
+          }`}>
+            {modalFeedback.message}
+          </div>
+        )}
 
         {/* Form Inputs */}
         <div className="space-y-4">

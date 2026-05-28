@@ -31,8 +31,7 @@ const DISPLAY_NAMES: Record<string, string> = {
   "Korea, Rep.": "South Korea",
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function CustomTooltip({ active, payload }: any) {
+function CustomTooltip({ active, payload }: { active?: boolean; payload?: Array<{ payload: { jurisdiction: string; price_usd: number; instrument_name: string } }> }) {
   if (!active || !payload?.length) return null;
   const d = payload[0].payload as { jurisdiction: string; price_usd: number; instrument_name: string };
   return (

@@ -64,58 +64,39 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-6 text-sm">
           {isLoggedIn ? (
             <>
-              <Link
-                href="/dashboard"
-                className={`transition-colors ${
-                  pathname === "/dashboard" ? "text-[#0CF2A0] font-semibold" : "text-slate-400 hover:text-white"
-                }`}
-              >
-                {t("nav.dashboard")}
-              </Link>
-              <Link
-                href="/calculator"
-                className={`transition-colors ${
-                  pathname === "/calculator" ? "text-[#0CF2A0] font-semibold" : "text-slate-400 hover:text-white"
-                }`}
-              >
-                {t("nav.calculator")}
-              </Link>
-              <Link
-                href="/strategy"
-                className={`transition-colors ${
-                  pathname === "/strategy" ? "text-[#0CF2A0] font-semibold" : "text-slate-400 hover:text-white"
-                }`}
-              >
-                {t("nav.strategy")}
-              </Link>
-              <Link
-                href="/action-hub"
-                className={`transition-colors ${
-                  pathname === "/action-hub" ? "text-[#0CF2A0] font-semibold" : "text-slate-400 hover:text-white"
-                }`}
-              >
-                {t("nav.actionHub")}
-              </Link>
-              <Link
-                href="/timeline"
-                className={`transition-colors ${
-                  pathname === "/timeline" ? "text-[#0CF2A0] font-semibold" : "text-slate-400 hover:text-white"
-                }`}
-              >
-                {t("nav.timeline")}
-              </Link>
+              {[
+                { href: "/dashboard", label: t("nav.dashboard") },
+                { href: "/calculator", label: t("nav.calculator") },
+                { href: "/strategy", label: t("nav.strategy") },
+                { href: "/action-hub", label: t("nav.actionHub") },
+                { href: "/timeline", label: t("nav.timeline") },
+              ].map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`transition-colors ${
+                    pathname === link.href ? "text-[#0CF2A0] font-semibold" : "text-slate-400 hover:text-white"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              ))}
             </>
           ) : (
             <>
-              <Link href="/#features" className="text-slate-400 hover:text-white transition-colors">
-                {language === "id" ? "Fitur" : "Features"}
-              </Link>
-              <Link href="/#pricing" className="text-slate-400 hover:text-white transition-colors">
-                {language === "id" ? "Harga" : "Pricing"}
-              </Link>
-              <Link href="/#testimonials" className="text-slate-400 hover:text-white transition-colors">
-                Testimonials
-              </Link>
+              {[
+                { href: "/#features", label: language === "id" ? "Fitur" : "Features" },
+                { href: "/#pricing", label: language === "id" ? "Harga" : "Pricing" },
+                { href: "/#testimonials", label: "Testimonials" },
+              ].map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="text-slate-400 hover:text-white transition-colors"
+                >
+                  {link.label}
+                </Link>
+              ))}
             </>
           )}
         </div>
@@ -206,41 +187,22 @@ export default function Navbar() {
           <div className="flex flex-col gap-3">
             {isLoggedIn ? (
               <>
-                <Link
-                  href="/dashboard"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={`text-sm py-1.5 ${pathname === "/dashboard" ? "text-[#0CF2A0]" : "text-slate-300"}`}
-                >
-                  {t("nav.dashboard")}
-                </Link>
-                <Link
-                  href="/calculator"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={`text-sm py-1.5 ${pathname === "/calculator" ? "text-[#0CF2A0]" : "text-slate-300"}`}
-                >
-                  {t("nav.calculator")}
-                </Link>
-                <Link
-                  href="/strategy"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={`text-sm py-1.5 ${pathname === "/strategy" ? "text-[#0CF2A0]" : "text-slate-300"}`}
-                >
-                  {t("nav.strategy")}
-                </Link>
-                <Link
-                  href="/action-hub"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={`text-sm py-1.5 ${pathname === "/action-hub" ? "text-[#0CF2A0]" : "text-slate-300"}`}
-                >
-                  {t("nav.actionHub")}
-                </Link>
-                <Link
-                  href="/timeline"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={`text-sm py-1.5 ${pathname === "/timeline" ? "text-[#0CF2A0]" : "text-slate-300"}`}
-                >
-                  {t("nav.timeline")}
-                </Link>
+                {[
+                  { href: "/dashboard", label: t("nav.dashboard") },
+                  { href: "/calculator", label: t("nav.calculator") },
+                  { href: "/strategy", label: t("nav.strategy") },
+                  { href: "/action-hub", label: t("nav.actionHub") },
+                  { href: "/timeline", label: t("nav.timeline") },
+                ].map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`text-sm py-1.5 ${pathname === link.href ? "text-[#0CF2A0]" : "text-slate-300"}`}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
                 <button
                   type="button"
                   onClick={handleSignOut}
@@ -252,27 +214,20 @@ export default function Navbar() {
               </>
             ) : (
               <>
-                <Link
-                  href="/#features"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-sm py-1.5 text-slate-300"
-                >
-                  {language === "id" ? "Fitur" : "Features"}
-                </Link>
-                <Link
-                  href="/#pricing"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-sm py-1.5 text-slate-300"
-                >
-                  {language === "id" ? "Harga" : "Pricing"}
-                </Link>
-                <Link
-                  href="/#testimonials"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-sm py-1.5 text-slate-300"
-                >
-                  Testimonials
-                </Link>
+                {[
+                  { href: "/#features", label: language === "id" ? "Fitur" : "Features" },
+                  { href: "/#pricing", label: language === "id" ? "Harga" : "Pricing" },
+                  { href: "/#testimonials", label: "Testimonials" },
+                ].map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="text-sm py-1.5 text-slate-300"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
                 <button
                   type="button"
                   onClick={triggerSignIn}

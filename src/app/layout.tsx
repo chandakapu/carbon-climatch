@@ -5,6 +5,7 @@ import Navbar from "@/components/layout/Navbar";
 import AriaSync from "@/components/ui/AriaSync";
 import { LanguageProvider } from "@/components/layout/LanguageContext";
 import { ExchangeRateProvider } from "@/components/layout/ExchangeRateContext";
+import ErrorBoundary from "@/components/ui/ErrorBoundary";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -30,7 +31,9 @@ export default function RootLayout({
           <ExchangeRateProvider>
             <AriaSync />
             <Navbar />
-            {children}
+            <ErrorBoundary>
+              {children}
+            </ErrorBoundary>
           </ExchangeRateProvider>
         </LanguageProvider>
       </body>

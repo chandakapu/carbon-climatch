@@ -1,56 +1,31 @@
 "use client";
 
-import { useState, useEffect, useId } from "react";
+import { useState, useEffect } from "react";
 import { useLanguage } from "@/components/layout/LanguageContext";
 import { useExchangeRate } from "@/components/layout/ExchangeRateContext";
 import { calculateGreenTechReturns, calculateGreenLoanAmortization } from "@/lib/actionCalculations";
 import type { GreenTechResult, GreenLoanResult } from "@/lib/actionCalculations";
 import { generateComplianceCertificate, generateLedgerReport } from "@/lib/pdfExport";
-import Link from "next/link";
 import { 
   Leaf, 
   Cpu, 
   DollarSign, 
-  ChevronRight, 
   CheckCircle, 
-  HelpCircle, 
-  Zap, 
-  TrendingUp, 
   FileText,
-  Calendar,
-  Building,
   Award
 } from "lucide-react";
+import Section from "@/components/ui/Section";
+import { formatIdr, formatUsd } from "@/lib/utils";
+import type { CreditProject, GreenTech, Bank } from "@/types";
 
 const DEFAULT_CARBON_PRICE_IDR = 76862;
 
-// Custom Section component matching design system
-function Section({ title, defaultOpen = true, children }: { title: string; defaultOpen?: boolean; children: React.ReactNode }) {
-  const [open, setOpen] = useState(defaultOpen);
-  const contentId = useId();
-  return (
-    <div className="rounded-xl border border-white/5 bg-[#1a1a1a] overflow-hidden">
-      <button type="button" onClick={() => setOpen(!open)}
-        aria-expanded={open}
-        aria-controls={contentId}
-        className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-[#2a2a2a]/50 transition-colors cursor-pointer">
-        <span className="text-sm font-semibold text-white">{title}</span>
-        <svg className={`h-4 w-4 text-slate-400 transition-transform ${open ? "rotate-180" : ""}`}
-          viewBox="0 0 20 20" fill="currentColor">
-          <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
-        </svg>
-      </button>
-      {open && <div id={contentId} className="px-5 pb-5 space-y-4 border-t border-white/5">{children}</div>}
-    </div>
-  );
+function generateYoloOffsetId(): string {
+  return `yolo-offset-${Date.now()}-${Math.random()}`;
 }
 
-// Helpers for formatted values
-function formatIdr(v: number) {
-  return `IDR ${v.toLocaleString("id-ID", { maximumFractionDigits: 0 })}`;
-}
-function formatUsd(v: number) {
-  return `$${v.toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
+function generateYoloTechId(): string {
+  return `yolo-tech-${Date.now()}-${Math.random()}`;
 }
 
 export default function ActionHubPage() {
@@ -82,16 +57,16 @@ export default function ActionHubPage() {
   
   // Modals state
   const [creditModalOpen, setCreditModalOpen] = useState(false);
-  const [selectedCreditProj, setSelectedCreditProj] = useState<any>(null);
+  const [selectedCreditProj, setSelectedCreditProj] = useState<CreditProject | null>(null);
   const [creditQuantity, setCreditQuantity] = useState("5000");
 
   const [techModalOpen, setTechModalOpen] = useState(false);
-  const [selectedTech, setSelectedTech] = useState<any>(null);
+  const [selectedTech, setSelectedTech] = useState<GreenTech | null>(null);
   const [techCapacity, setTechCapacity] = useState("1000"); // kWp or Units
   const [techSimulation, setTechSimulation] = useState<GreenTechResult | null>(null);
 
   const [loanModalOpen, setLoanModalOpen] = useState(false);
-  const [selectedBank, setSelectedBank] = useState<any>(null);
+  const [selectedBank, setSelectedBank] = useState<Bank | null>(null);
   const [loanAmount, setLoanAmount] = useState("4000000000");
   const [loanTerm, setLoanTerm] = useState("5");
   const [loanInterest, setLoanInterest] = useState("8.0");
@@ -106,35 +81,38 @@ export default function ActionHubPage() {
     const sesRecommended = localStorage.getItem("climatch_recommended_strategy");
     const sesCapex = localStorage.getItem("climatch_strategy_capex");
 
-    if (sesEmissions) setInitialEmissions(Number(sesEmissions));
-    if (sesGap) {
-      setInitialGap(Number(sesGap));
-    } else if (sesEmissions) {
-      setInitialGap(Number(sesEmissions));
-    }
-
-    if (sesLiability) {
-      setInitialLiability(Number(sesLiability));
-    } else if (sesEmissions) {
-      // default: emissions * $65 (EU ETS price)
-      setInitialLiability(Number(sesEmissions) * 65);
-    }
-
-    if (sesRecommended) setRecommendedStrat(sesRecommended);
-    if (sesCapex) setStrategyCapex(Number(sesCapex));
-
-    // Parse URL params for direct tab deep-linking
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
     const tabParam = params.get("tab") || params.get("source");
-    if (tabParam === "strategy") {
-      setActiveTab("finance");
-      const paramCapex = params.get("capex");
-      if (paramCapex) setLoanAmount(paramCapex);
-    } else if (tabParam === "calculator") {
-      setActiveTab("credits");
-      const paramGap = params.get("gap");
-      if (paramGap) setCreditQuantity(Math.ceil(Number(paramGap)).toString());
-    }
+    const paramCapex = params.get("capex");
+    const paramGap = params.get("gap");
+
+    setTimeout(() => {
+      if (sesEmissions) setInitialEmissions(Number(sesEmissions));
+      if (sesGap) {
+        setInitialGap(Number(sesGap));
+      } else if (sesEmissions) {
+        setInitialGap(Number(sesEmissions));
+      }
+
+      if (sesLiability) {
+        setInitialLiability(Number(sesLiability));
+      } else if (sesEmissions) {
+        // default: emissions * $65 (EU ETS price)
+        setInitialLiability(Number(sesEmissions) * 65);
+      }
+
+      if (sesRecommended) setRecommendedStrat(sesRecommended);
+      if (sesCapex) setStrategyCapex(Number(sesCapex));
+
+      // Parse URL params for direct tab deep-linking
+      if (tabParam === "strategy") {
+        setActiveTab("finance");
+        if (paramCapex) setLoanAmount(paramCapex);
+      } else if (tabParam === "calculator") {
+        setActiveTab("credits");
+        if (paramGap) setCreditQuantity(Math.ceil(Number(paramGap)).toString());
+      }
+    }, 0);
   }, []);
 
   // Compute scorecard values
@@ -264,7 +242,7 @@ export default function ActionHubPage() {
   ];
 
   // Handlers
-  const handleOpenCreditModal = (proj: any) => {
+  const handleOpenCreditModal = (proj: CreditProject) => {
     setSelectedCreditProj(proj);
     setCreditModalOpen(true);
   };
@@ -293,13 +271,13 @@ export default function ActionHubPage() {
     setCreditModalOpen(false);
   };
 
-  const handleOpenTechModal = (tech: any) => {
+  const handleOpenTechModal = (tech: GreenTech) => {
     setSelectedTech(tech);
     setTechModalOpen(true);
     simulateTech(tech, techCapacity);
   };
 
-  const simulateTech = (tech: any, capStr: string) => {
+  const simulateTech = (tech: GreenTech, capStr: string) => {
     const cap = Number(capStr) || 0;
     const returns = calculateGreenTechReturns({
       capexIdr: cap * tech.costPerUnitIdr,
@@ -339,7 +317,7 @@ export default function ActionHubPage() {
     setTechModalOpen(false);
   };
 
-  const handleOpenLoanModal = (bank: any) => {
+  const handleOpenLoanModal = (bank: Bank) => {
     setSelectedBank(bank);
     setLoanModalOpen(true);
     setLoanInterest(bank.baseRate.toString());
@@ -348,7 +326,7 @@ export default function ActionHubPage() {
     simulateLoan(bank, loanAmount, "5", bank.baseRate.toString(), bank.minDownPayment.toString());
   };
 
-  const simulateLoan = (bank: any, amtStr: string, termStr: string, rateStr: string, dpStr: string) => {
+  const simulateLoan = (bank: Bank, amtStr: string, termStr: string, rateStr: string, dpStr: string) => {
     const amt = Number(amtStr) || 0;
     const term = Number(termStr) || 5;
     const rate = Number(rateStr) || 8.0;
@@ -424,10 +402,12 @@ export default function ActionHubPage() {
   };
 
   const [yoloLoading, setYoloLoading] = useState(false);
+  const [yoloError, setYoloError] = useState("");
 
   const handleYoloOptimize = async () => {
     if (remainingGap <= 0) return;
     setYoloLoading(true);
+    setYoloError("");
     try {
       const response = await fetch("/api/analyze", {
         method: "POST",
@@ -474,7 +454,7 @@ export default function ActionHubPage() {
               newOffsets += qty;
               newCostSpent += total;
               newTx.push({
-                id: `yolo-offset-${Date.now()}-${Math.random()}`,
+                id: generateYoloOffsetId(),
                 type: language === "id" ? "Beli Kredit (YOLO)" : "Buy Credits (YOLO)",
                 details: `${proj.name} (${qty.toLocaleString()} tCO2e)`,
                 costIdr: total
@@ -496,7 +476,7 @@ export default function ActionHubPage() {
               newCostSpent += totalCapex;
               newActiveTech.push(`${tech.name} (${cap.toLocaleString()} ${tech.unitLabel})`);
               newTx.push({
-                id: `yolo-tech-${Date.now()}-${Math.random()}`,
+                id: generateYoloTechId(),
                 type: language === "id" ? "Pasang Teknologi (YOLO)" : "Install Tech (YOLO)",
                 details: `${tech.name} (${cap.toLocaleString()} ${tech.unitLabel})`,
                 costIdr: totalCapex
@@ -518,7 +498,7 @@ export default function ActionHubPage() {
 
     } catch (e) {
       console.error(e);
-      alert(language === "id" ? "Gagal memproses rekomendasi AI YOLO." : "Failed to run YOLO AI optimization.");
+      setYoloError(language === "id" ? "Gagal memproses rekomendasi AI YOLO." : "Failed to run YOLO AI optimization.");
     } finally {
       setYoloLoading(false);
     }
@@ -872,6 +852,14 @@ export default function ActionHubPage() {
                     {remainingGap === 0 ? "$0" : `${formatUsd(remainingLiabilityUsd)} (${formatIdr(remainingLiabilityIdr)})`}
                   </span>
                 </div>
+
+                {/* 6. Total Capital Spent */}
+                <div className="flex justify-between items-center text-xs pt-1">
+                  <span className="text-slate-500">{language === "id" ? "Total Investasi & Biaya" : "Total Investment & Cost"}:</span>
+                  <span className="font-mono text-slate-400">
+                    {formatIdr(totalCostSpent)}
+                  </span>
+                </div>
               </div>
 
                {/* Status Alert Banner */}
@@ -904,6 +892,11 @@ export default function ActionHubPage() {
                   >
                     <span>{yoloLoading ? (language === "id" ? "Mengoptimalkan..." : "AI Optimizing...") : "⚡ YOLO Auto-Optimize"}</span>
                   </button>
+                  {yoloError && (
+                    <div className="p-3 bg-red-950/20 border border-red-500/20 text-red-400 rounded-lg text-xs font-medium text-center animate-fadeIn">
+                      {yoloError}
+                    </div>
+                  )}
                 </div>
               )}
 

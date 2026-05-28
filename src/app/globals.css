@@ -142,4 +142,16 @@ select:user-invalid ~ .error-msg-inline {
 .animate-delay-1200 { animation-delay: 1200ms; }
 .animate-delay-1400 { animation-delay: 1400ms; }
 
+/* ShinyText overlay animation */
+.shiny-text-overlay {
+  background: linear-gradient(90deg, transparent, rgba(12, 242, 160, 0.4), transparent);
+  animation: shine 2.5s infinite linear;
+  opacity: 0.7;
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
 

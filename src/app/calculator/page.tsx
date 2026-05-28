@@ -9,22 +9,11 @@ import MarkdownRenderer from "@/components/ui/MarkdownRenderer";
 import CBAMPortfolioCharts from "@/components/dashboard/CBAMPortfolioCharts";
 import { useLanguage } from "@/components/layout/LanguageContext";
 import { useExchangeRate } from "@/components/layout/ExchangeRateContext";
+import { formatIdr, formatUsd } from "@/lib/utils";
 
 export default function CalculatorPage() {
   const { language, t } = useLanguage();
   const { usdToIdr } = useExchangeRate();
-
-  function formatUsd(value: number): string {
-    return value.toLocaleString(language === "id" ? "id-ID" : "en-US", {
-      style: "currency",
-      currency: "USD",
-      maximumFractionDigits: 0,
-    });
-  }
-
-  function formatIdr(value: number): string {
-    return `IDR ${value.toLocaleString("id-ID", { maximumFractionDigits: 0 })}`;
-  }
 
   const { applicableSectors, defaultEuPriceUsd, defaultIdxPriceUsd, latestIdx } = useMemo(() => {
     const config = getCBAMConfig();

@@ -8,7 +8,7 @@ import PriceBarChart from "@/components/dashboard/PriceBarChart";
 import IDXLineChart from "@/components/dashboard/IDXLineChart";
 import AIAnalystPanel from "@/components/ai/AIAnalystPanel";
 import { Hero } from "@/components/ui/animated-hero";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 // Jurisdictions to feature in the price comparison chart
@@ -18,6 +18,7 @@ export default function DashboardPage() {
   const { language, t } = useLanguage();
   const { usdToIdr } = useExchangeRate();
   const router = useRouter();
+  const [uploadState, setUploadState] = useState<"idle" | "scanning" | "success">("idle");
 
   const displayNames: Record<string, string> = useMemo(() => ({
     Indonesia: "Indonesia",
@@ -180,39 +181,67 @@ export default function DashboardPage() {
                   type="file"
                   id="audit-pdf-upload"
                   accept=".pdf"
+                  disabled={uploadState !== "idle"}
                   onChange={async (e) => {
                     const file = e.target.files?.[0];
                     if (!file) return;
 
+                    setUploadState("scanning");
+
                     // Simulated visual scanning/OCR sequence
-                    const alertMsg = language === "id" ? "Memindai file audit PDF..." : "Scanning audit PDF file...";
-                    const successMsg = language === "id" ? "Audit berhasil diverifikasi! Mengalihkan ke Action Hub." : "Audit verified successfully! Redirecting to Action Hub.";
-                    alert(alertMsg);
+                    setTimeout(() => {
+                      // Pre-fill CBAM Calculator parameters
+                      localStorage.setItem("climatch_emissions", "55000");
+                      localStorage.setItem("climatch_liability", "264000"); // 55,000 * 4.8 USD per ton net
+                      localStorage.setItem("climatch_liability_idr", (264000 * usdToIdr).toString());
+                      localStorage.setItem("climatch_carbon_price_idr", "76862"); // default idx pricing
+                      localStorage.setItem("climatch_emissions_gap", "55000");
 
-                    // Pre-fill CBAM Calculator parameters
-                    localStorage.setItem("climatch_emissions", "55000");
-                    localStorage.setItem("climatch_liability", "264000"); // 55,000 * 4.8 USD per ton net
-                    localStorage.setItem("climatch_liability_idr", (264000 * usdToIdr).toString());
-                    localStorage.setItem("climatch_carbon_price_idr", "76862"); // default idx pricing
-                    localStorage.setItem("climatch_emissions_gap", "55000");
+                      // Pre-fill Strategy Optimizer parameters
+                      localStorage.setItem("climatch_strategy_capex", "5000000000");
+                      localStorage.setItem("climatch_recommended_strategy", "C"); // Mixed strategy recommended for high volume
 
-                    // Pre-fill Strategy Optimizer parameters
-                    localStorage.setItem("climatch_strategy_capex", "5000000000");
-                    localStorage.setItem("climatch_recommended_strategy", "C"); // Mixed strategy recommended for high volume
-
-                    alert(successMsg);
-                    router.push("/action-hub?source=audit_pdf&gap=55000");
+                      setUploadState("success");
+                      
+                      setTimeout(() => {
+                        router.push("/action-hub?source=audit_pdf&gap=55000");
+                      }, 1000);
+                    }, 2000);
                   }}
                   className="hidden"
                 />
                 <label
-                  htmlFor="audit-pdf-upload"
-                  className="w-full lg:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-[#0CF2A0] hover:bg-[#0CF2A0]/95 px-5 py-3.5 text-xs font-bold text-[#111111] shadow-md shadow-[#0CF2A0]/10 transition-all hover:-translate-y-0.5 cursor-pointer whitespace-nowrap"
+                  htmlFor={uploadState === "idle" ? "audit-pdf-upload" : undefined}
+                  className={`w-full lg:w-auto inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3.5 text-xs font-bold text-[#111111] shadow-md transition-all whitespace-nowrap select-none ${
+                    uploadState === "scanning" 
+                      ? "bg-amber-400 cursor-wait animate-pulse" 
+                      : uploadState === "success" 
+                      ? "bg-emerald-400" 
+                      : "bg-[#0CF2A0] hover:bg-[#0CF2A0]/95 hover:-translate-y-0.5 cursor-pointer shadow-[#0CF2A0]/10"
+                  }`}
                 >
-                  <span>📤 {language === "id" ? "Unggah Dokumen Audit" : "Upload Audit PDF"}</span>
+                  {uploadState === "scanning" ? (
+                    <>
+                      <div className="w-3.5 h-3.5 border-2 border-[#111111] border-t-transparent rounded-full animate-spin" />
+                      <span>{language === "id" ? "Memindai file PDF..." : "Scanning PDF..."}</span>
+                    </>
+                  ) : uploadState === "success" ? (
+                    <>
+                      <span>✓</span>
+                      <span>{language === "id" ? "Audit Terverifikasi!" : "Audit Verified!"}</span>
+                    </>
+                  ) : (
+                    <span>📤 {language === "id" ? "Unggah Dokumen Audit" : "Upload Audit PDF"}</span>
+                  )}
                 </label>
               </div>
             </div>
+            
+            <p className="text-[10px] text-amber-500 font-semibold mt-2.5 flex items-center gap-1.5 self-end lg:self-auto">
+              ⚠️ {language === "id" 
+                ? "Simulasi: Unggah berkas disimulasikan. Menggunakan data statis terverifikasi." 
+                : "Simulation: PDF upload is simulated. Populates verified static demo values."}
+            </p>
           </div>
         </section>
 

@@ -114,3 +114,70 @@ export interface CBAMPortfolioResult {
     total_net_liability_usd: number;
     total_net_liability_idr: number;
 }
+
+// ── Action Hub Types ──────────────────────────────────────────
+
+export interface CreditProject {
+  id: string;
+  name: string;
+  location: string;
+  type: string;
+  registry: string;
+  vintage: string;
+  priceIdr: number;
+  efficiency: string;
+  icon: string;
+}
+
+export interface GreenTech {
+  id: string;
+  name: string;
+  provider: string;
+  costPerUnitIdr: number;
+  emissionsPerUnit: number;
+  energySavingsPerUnit: number;
+  unitLabel: string;
+  description: string;
+  icon: string;
+}
+
+export interface Bank {
+  id: string;
+  name: string;
+  headline: string;
+  baseRate: number;
+  maxTermYears: number;
+  minDownPayment: number;
+  description: string;
+  icon: string;
+}
+
+export interface ActionTransaction {
+  id: string;
+  type: string;
+  details: string;
+  costIdr: number;
+}
+
+export interface LoanRecord {
+  bank: string;
+  amount: number;
+  term: number;
+}
+
+// ── YOLO Optimizer AI Response Types ──────────────────────────
+
+export interface YoloOptimizerCreditItem {
+  id: string;
+  quantity: number;
+}
+
+export interface YoloOptimizerTechItem {
+  id: string;
+  capacity: number;
+}
+
+export interface YoloOptimizerResult {
+  credits?: YoloOptimizerCreditItem[];
+  tech?: YoloOptimizerTechItem[];
+}

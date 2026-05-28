@@ -4,7 +4,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 const model = genAI.getGenerativeModel({ model: "gemini-3.1-flash-lite" });
 
 export interface AnalysisRequest {
-    type: "dashboard_summary" | "cbam_result" | "regulation_explainer" | "strategy_optimizer";
+    type: "dashboard_summary" | "cbam_result" | "regulation_explainer" | "strategy_optimizer" | "yolo_optimizer";
     data: Record<string, unknown>;
     context?: string;
     language?: string;
@@ -93,7 +93,7 @@ In 4 sentences: state which strategy is cheapest over the horizon, when CAPEX br
 what risk the carbon price escalation assumption carries, and one specific action to take 
 in the next 90 days.
     `.trim();
-    } else if (request.type as string === "yolo_optimizer") {
+    } else if (request.type === "yolo_optimizer") {
         const d = request.data;
         userPrompt = `
 You are the YOLO Carbon Optimizer. Your objective is to return a strict JSON payload that represents the absolute lowest-cost combination of offsets and green technologies to completely cover a carbon exposure gap.

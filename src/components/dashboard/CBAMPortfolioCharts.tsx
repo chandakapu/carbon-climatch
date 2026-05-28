@@ -28,8 +28,7 @@ const COLORS = [
   "#06b6d4", // cyan
 ];
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function BarTooltip({ active, payload }: any) {
+function BarTooltip({ active, payload }: { active?: boolean; payload?: Array<{ payload: { sector: string; export_volume_tons: number; cbam_liability_usd: number; indonesia_carbon_credit_usd: number; net_liability_usd: number } }> }) {
   if (!active || !payload?.length) return null;
   const d = payload[0].payload;
   return (
@@ -51,8 +50,7 @@ function BarTooltip({ active, payload }: any) {
   );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function PieTooltip({ active, payload }: any) {
+function PieTooltip({ active, payload }: { active?: boolean; payload?: Array<{ value: number; payload: { sector: string; total_emissions_tco2: number } }> }) {
   if (!active || !payload?.length) return null;
   const d = payload[0].payload;
   const pct = payload[0].value;

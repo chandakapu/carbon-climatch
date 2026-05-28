@@ -980,7 +980,6 @@ export function generateLedgerReport(
   });
 
   const w = 210;
-  const h = 297;
   const CHARCOAL = [51, 51, 51] as RGB;
   const MED_GRAY = [226, 232, 240] as RGB;
 

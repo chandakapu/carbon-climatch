@@ -111,12 +111,12 @@ export default function TimelinePage() {
               <h4 className="text-sm font-bold text-white mb-4">{language === "id" ? "Sumber Daya" : "Resources"}</h4>
               <ul className="space-y-3">
                 <li>
-                  <a href="https://idxcarbon.co.id/" target="_blank" className="text-xs text-slate-400 hover:text-[#0CF2A0] flex items-center gap-2">
+                  <a href="https://idxcarbon.co.id/" target="_blank" rel="noopener noreferrer" className="text-xs text-slate-400 hover:text-[#0CF2A0] flex items-center gap-2">
                     <span>↗</span> IDXCarbon Official
                   </a>
                 </li>
                 <li>
-                  <a href="https://taxation-customs.ec.europa.eu/carbon-border-adjustment-mechanism_en" target="_blank" className="text-xs text-slate-400 hover:text-[#0CF2A0] flex items-center gap-2">
+                  <a href="https://taxation-customs.ec.europa.eu/carbon-border-adjustment-mechanism_en" target="_blank" rel="noopener noreferrer" className="text-xs text-slate-400 hover:text-[#0CF2A0] flex items-center gap-2">
                     <span>↗</span> EU CBAM Portal
                   </a>
                 </li>

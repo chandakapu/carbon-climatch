@@ -11,7 +11,6 @@ export function generateMockupAuditReport(companyName: string) {
   });
 
   const w = 210;
-  const h = 297;
 
   // Header branding
   pdf.setFont("helvetica", "bold");
