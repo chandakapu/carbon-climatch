@@ -34,15 +34,18 @@ export default function AIAnalystPanel({
                 body: JSON.stringify({ type: requestType, data, language }),
             });
 
-            if (!response.ok) throw new Error("Analysis failed");
+            if (!response.ok) {
+                const body = await response.json().catch(() => ({}));
+                throw new Error(body.error || `Server error: ${response.status}`);
+            }
 
             const result = await response.json();
             setAnalysis(result.analysis);
             if (onAnalysisComplete) {
                 onAnalysisComplete(result.analysis);
             }
-        } catch {
-            setError(t("dashboard.errorGeneratingAnalysis"));
+        } catch (err: any) {
+            setError(err.message || t("dashboard.errorGeneratingAnalysis"));
         } finally {
             setLoading(false);
         }

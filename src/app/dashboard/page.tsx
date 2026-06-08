@@ -322,12 +322,20 @@ export default function DashboardPage() {
 
         {/* ── AI ANALYSIS PANEL ─────────────────────────────────── */}
         <section id="ai-analysis" className="scroll-mt-24 pt-12">
-          <AIAnalystPanel 
-            requestType="dashboard_summary" 
-            data={{ 
-              latestPrices, 
-              idxMonthly: idxMonthly.slice(-6) 
-              }}
+          <AIAnalystPanel
+            requestType="dashboard_summary"
+            data={{
+              latestPrices: FEATURED_JURISDICTIONS.reduce((acc, jur) => {
+                const p = latestPrices[jur];
+                if (p) acc[jur] = { price_usd: p.price_usd, year: p.year, instrument_name: p.instrument_name };
+                return acc;
+              }, {} as Record<string, any>),
+              idxMonthly: idxMonthly.slice(-6).map(d => ({
+                month: d.month,
+                avg_price_idr: d.avg_price_idr,
+                volume_tco2e: d.volume_tco2e,
+              })),
+            }}
             triggerLabel={language === "id" ? "Hasilkan Ringkasan Intelijen Pasar" : "Generate Market Intelligence Summary"}
           />
         </section>

@@ -102,13 +102,16 @@ export default function CalculatorPage() {
         }),
       });
 
-      if (!response.ok) throw new Error("Analysis failed");
+      if (!response.ok) {
+        const body = await response.json().catch(() => ({}));
+        throw new Error(body.error || `Server error: ${response.status}`);
+      }
 
       const { analysis: text } = await response.json();
       setAnalysis(text);
-    } catch {
+    } catch (err: any) {
       setAnalysisError(
-        t("dashboard.errorGeneratingAnalysis")
+        err.message || t("dashboard.errorGeneratingAnalysis")
       );
     } finally {
       setAnalysisLoading(false);

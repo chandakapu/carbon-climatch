@@ -14,7 +14,7 @@ const VALID_TYPES = new Set([
     "yolo_optimizer",
 ]);
 
-const MAX_PAYLOAD_SIZE = 10_000; // 10 KB
+const MAX_PAYLOAD_SIZE = 50_000; // 50 KB
 
 /** Strip control characters (U+0000–U+001F except \t \n \r) from all string values */
 function stripControlChars(obj: Record<string, unknown>): Record<string, unknown> {
@@ -39,17 +39,23 @@ function stripControlChars(obj: Record<string, unknown>): Record<string, unknown
     return cleaned;
 }
 
+// Dev mode: skip aggressive rate limiting for localhost or single anonymous user
+const isDev = process.env.NODE_ENV === "development";
+
 export async function POST(request: NextRequest) {
     // --- Rate limiting ---
-    const ip = request.headers.get("x-forwarded-for") || "anonymous";
+    const forwarded = request.headers.get("x-forwarded-for");
+    const ip = forwarded || request.headers.get("x-real-ip") || "anonymous";
     const now = Date.now();
     const entry = rateLimitMap.get(ip);
 
+    // In dev mode, use a higher limit (100 req/min) to avoid blocking single dev users
+    const effectiveMax = forwarded || ip !== "anonymous" ? RATE_LIMIT_MAX : isDev ? 100 : RATE_LIMIT_MAX;
+
     if (entry) {
         if (now - entry.timestamp > RATE_LIMIT_WINDOW_MS) {
-            // Window expired — reset
             rateLimitMap.set(ip, { count: 1, timestamp: now });
-        } else if (entry.count >= RATE_LIMIT_MAX) {
+        } else if (entry.count >= effectiveMax) {
             return NextResponse.json(
                 { error: "Rate limit exceeded. Please wait before making more requests." },
                 { status: 429 }

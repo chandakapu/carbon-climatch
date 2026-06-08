@@ -423,7 +423,10 @@ export default function ActionHubPage() {
         })
       });
 
-      if (!response.ok) throw new Error("Optimization call failed");
+      if (!response.ok) {
+        const body = await response.json().catch(() => ({}));
+        throw new Error(body.error || `Server error: ${response.status}`);
+      }
       const result = await response.json();
       
       // Clean up markdown block wraps if Gemini accidentally outputted it
@@ -496,9 +499,9 @@ export default function ActionHubPage() {
         setTransactions(prev => [...newTx, ...prev]);
       }
 
-    } catch (e) {
-      console.error(e);
-      setYoloError(language === "id" ? "Gagal memproses rekomendasi AI YOLO." : "Failed to run YOLO AI optimization.");
+    } catch (err: any) {
+      console.error(err);
+      setYoloError(err.message || (language === "id" ? "Gagal memproses rekomendasi AI YOLO." : "Failed to run YOLO AI optimization."));
     } finally {
       setYoloLoading(false);
     }
